@@ -1,5 +1,6 @@
 import unittest
 import Deck
+import Player
 
 class TestDeck(unittest.TestCase):
     
