@@ -14,7 +14,7 @@ class TestDeck(unittest.TestCase):
         self.tempPlayer = Player
         startSize = self.deck.cardList.size()
         self.deck.deal(self.tempPlayer)
-        self.assertEqual(startSize, self.deck.cardList.size() - 8)
+        self.assertEqual(startSize, self.deck.cardList.size() + 8)
         del self.tempPlayer
 
     def tearDown(self):
