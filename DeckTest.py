@@ -19,3 +19,6 @@ class TestDeck(unittest.TestCase):
 
     def tearDown(self):
         del self.deck
+
+if __name__ == "__main__":
+    unittest.main()
