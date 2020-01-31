@@ -1,7 +1,7 @@
-from Card import Card
-from Deck import Deck
-from Game import Game
-from Hand import Hand
-from Trick import Trick
-from Round import Round
-from Player import Player
+from GameObjects import Card
+import Deck
+import Game
+import Hand
+import Trick
+import Round
+import Player
