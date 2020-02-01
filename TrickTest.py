@@ -8,10 +8,10 @@ class TrickTest(unittest.TestCase):
 
     def test_on_init(self):
         self.assertEqual(self.testTrick.cardsInPlay.size(), 0)
-        self.tempCard1 = Card() #should the card constructor take prams?
+        self.tempCard1 = FailCard(12,"hearts")
         self.testTrick.accept(self.tempCard1)
         self.assertEqual(self.testTrick.cardsInPlay.size(), 1)
-        self.tempCard2 = Card()
+        self.tempCard2 = FailCard(11,"hearts")
 
     def tearDown(self):
         del self.testTrick
