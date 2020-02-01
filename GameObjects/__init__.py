@@ -1,4 +1,5 @@
-from GameObjects import Card
+from GameObjects import *
+import Card
 import Deck
 import Game
 import Hand
