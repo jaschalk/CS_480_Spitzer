@@ -3,14 +3,21 @@ from GameObjects import FailCard
 from GameObjects import TrumpCard
 class Trick:
 
-    parentGame = None
+    parentRound = None
     suitLead = None
     winnningPlayer = None
+    leadingPlayer = None
     containedCards = []
 
-    def __init__(self):
-        pass
+    def __init__(self, aRound, aPlayer):
+        self.parentRound = aRound
+        self.leadingPlayer = aPlayer
 
     def accept(self, aCard):
         if self.winnningPlayer is not None:
-            pass
+            isValid = self.winnningPlayer.accept(aCard)
+            if isValid:
+                self.containedCards.append(aCard)
+        else:
+            self.winnningPlayer = aCard.playingPlayer
+
