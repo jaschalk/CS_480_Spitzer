@@ -7,7 +7,7 @@ class Trick:
     suitLead = None
     winnningPlayer = None
     leadingPlayer = None
-    containedCards = []
+    playedCards = []
 
     def __init__(self, aRound, aPlayer):
         self.parentRound = aRound
@@ -17,7 +17,6 @@ class Trick:
         if self.winnningPlayer is not None:
             isValid = self.winnningPlayer.accept(aCard)
             if isValid:
-                self.containedCards.append(aCard)
+                self.playedCards.append(aCard)
         else:
             self.winnningPlayer = aCard.playingPlayer
-
