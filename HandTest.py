@@ -4,7 +4,7 @@ from GameObjects import *
 class HandTest(unittest.TestCase):
 
     def setUp(self):
-        self.testHand = Hand()
+        self.testHand = Hand() #How to fix this error
 
     def test_on_init(self):
         self.assertEqual(self.testHand.cardsInHand.size(), 8)
