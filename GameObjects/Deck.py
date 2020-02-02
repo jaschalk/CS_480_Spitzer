@@ -15,10 +15,10 @@ class Deck:
         '''
         Populating the deck will clear the contents of the cardlist and refill it with the proper collection of cards to play the game with.
         '''
-        for i in range(14):
-            if i < 9:
+        for i in range(14): #highest rank is expected to be 0 and lowest 13
+            if i < 8:
                 self.cardlist.append(TrumpCard(i))
-            elif i != 14:
+            elif i != 13:
                 self.cardlist.append(TrumpCard(i))
                 self.cardlist.append(FailCard(i, "spades"))
                 self.cardlist.append(FailCard(i, "hearts"))
