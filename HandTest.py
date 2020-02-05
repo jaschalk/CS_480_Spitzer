@@ -7,18 +7,28 @@ class HandTest(unittest.TestCase):
         self.testHand = Hand()
 
     def test_on_init(self):
+        self.assertEqual(self.testHand.cardsInHand.size(), 0)
+        for entry in self.testHand.validPlayList:
+            self.assertTrue(entry)
+
+    def test_on_deal(self):
+        self.tempDeck = Deck()
+        self.tempPlayer = Player()
+        self.tempPlayer.hand = self.testHand
+        self.tempDeck.deal_cards_to(self.tempPlayer)
         self.assertEqual(self.testHand.cardsInHand.size(), 8)
-        #How to assert that a valid play list exists and is initialized to true?
 
     def test_card_played(self):
-        startSize = self.testHand.cardsInHand.size()
-        self.testHand.playCard() #should this have anything passed in?
-        self.assertEqual(self.testHand.cardsInHand.size(), startSize - 1)
+        self.tempTrick = Trick()
+        startHandSize = self.testHand.cardsInHand.size()
+        startValidListSize = self.testHand.validPlayList.size()
+        self.testHand.playCard(self.tempTrick)
+        self.assertEqual(self.testHand.cardsInHand.size(), startHandSize - 1)
         self.testHand.updateValidPlay()
-        #How to assert that play list has been updated properly?
+        self.assertEqual(self.testHand.validPlayList.size(), startValidListSize - 1)
+
 
     def tearDown(self):
-        self.assertEqual(self.testHand.cardsInHand.size(), 0)
         del self.testHand
 
 if __name__ == "__main__":
