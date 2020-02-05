@@ -13,10 +13,10 @@ class TrickTest(unittest.TestCase):
 
     def test_on_init(self):
         self.assertEqual(self.testTrick.cardsInPlay.size(), 0)
-        self.assertIs(self.testTrick.suitLead, None)
-        self.assertIs(self.testTrick.parentRound, None)
-        self.assertIs(self.testTrick.leadingPlayer, None)
-        self.assertIs(self.testTrick.winnningPlayer, None)
+        self.assertIsNone(self.testTrick.suitLead)
+        self.assertIsNone(self.testTrick.parentRound)
+        self.assertIsNone(self.testTrick.leadingPlayer)
+        self.assertIsNone(self.testTrick.winnningPlayer)
         self.assertEqual(self.testTrick.containedPoints, 0)
 
     def test_on_accept_card(self):
@@ -36,7 +36,6 @@ class TrickTest(unittest.TestCase):
         for i in range(4):
             self.testTrick.accept(self.tempPlayers[i].hand.cards[0])
         self.assertIsNone(self.testTrick)
-
 
     def tearDown(self):
         for player in self.tempPlayers:
