@@ -6,7 +6,7 @@ class RoundTest(unittest.TestCase):
     def setUp(self):
         self.tempPlayers = []
         for i in range(4):
-            self.tempPlayers.append(Player())
+            self.tempPlayers.append(Player(i))
         self.testRound = Round(self.tempPlayers)
 
     def test_init(self):
@@ -19,9 +19,9 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.testRound.partnersMatrix.size(), 4) #4x4 for each players relation to all other players
         self.assertEqual(self.testRound.partnersMatrix[0].size(), 4)
         self.assertEqual(self.testRound.callMatrix.size(), 4)
-        self.assertEqual(self.testRound.callMatrix[0].size(), 6) #4x6 for each players call state of: 3 ace calls, and 3 solo calls
+        self.assertEqual(self.testRound.callMatrix[0].size(), 7) #4x7 for each players call state of: first trick, 3 ace calls, and 3 solo calls
         for row in range(4):
-            for col in range(6):
+            for col in range(7):
                 self.assertEqual(self.testRound.callMatrix[row][col], 0)
 
     def test_on_trick_finish(self):
