@@ -19,29 +19,43 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.testRound.partnersMatrix.size(), 4) #4x4 for each players relation to all other players
         self.assertEqual(self.testRound.partnersMatrix[0].size(), 4)
         self.assertEqual(self.testRound.callMatrix.size(), 4)
-        self.assertEqual(self.testRound.callMatrix[0].size(), 7) #4x7 for each players call state of: first trick, 3 ace calls, and 3 solo calls
+        self.assertEqual(self.testRound.callMatrix[0].size(), 8) #4x8 for each players call state of: no call, first trick, 3 ace calls, and 3 solo calls
         for row in range(4):
-            for col in range(7):
+            for col in range(8):
                 self.assertEqual(self.testRound.callMatrix[row][col], 0)
 
     def test_on_trick_finish(self):
-        self.tempTrick = Trick(self.testRound, self.tempPlayers[0])
+        tempTrick = Trick(self.testRound, self.tempPlayers[0])
         for i in range(4):
             self.tempPlayers[i].accept(FailCard(12-i, "Clubs"))
-            self.tempPlayers[i].playValidCard(self.tempTrick)
+            self.tempPlayers[i].playValidCard(tempTrick)
         #Now the trick should be finished and we can test accordingly
+        tempPlayerTrickScore = self.tempPlayers[3].trickScore
         for i in range(4):
             self.assertEqual(self.testRound.trickHistory[i][0][12-i], 1)
             #The 3rd player will have played the Ace of Clubs, the 2nd player the 10 of Clubs, the 1st the King of Clubs, the 0th the 9 of Clubs
         self.assertEqual(self.testRound.leadingPlayer, self.tempPlayers[3])
+        self.assertEqual(tempPlayerTrickScore + 25, self.tempPlayers[3].trickScore)
+        #Ace, 10, King on a trick will be worth 25 points
+
         
     
     def test_on_round_finish(self):
-        #Need to use a method to run a round to completion here, not manually step through
-        self.tempDeck = Deck()
+        tempGame = Game()
+        tempDeck = Deck()
+        tempGame.deck = tempDeck
+        initialPlayerScores = []
+        tempGame.playerList = self.tempPlayers
         for player in self.tempPlayers:
-            self.tempDeck.deal_cards_to(player)
-        #On Round finish: 
+            tempDeck.deal_cards_to(player)
+            initialPlayerScores.append(player.roundScore)
+        self.testRound.playRound() #Need to use a method to run a round to completion here, not manually step through
+        self.assertNotEqual(sum(initialPlayerScores), 0) #after a round has been played the sum of the scores cannot be 0
+        self.assertEqual(tempDeck.cardList.size(), 32)
+        #On Round finish:
+        #tell players to update total scores, tell the game to repopulate the deck, if the game has not ended (make a new deck)
+        #have some sort of file out happen. Assert that opening the data log file doesn’t raise an exception.
+
 
 
     def tearDown(self):
