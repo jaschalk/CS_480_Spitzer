@@ -9,7 +9,7 @@ class TrickTest(unittest.TestCase):
         self.tempPlayers = [Player(0), Player(1), Player(2), Player(3)]
         self.testTrick.parentRound.playerList = self.tempPlayers
         for i in range(4):
-            self.tempPlayers[i].accept(FailCard(9+i, "hearts"))
+            self.tempPlayers[i].accept(Card(9+i, "hearts"))
 
     def test_on_init(self):
         self.assertEqual(self.testTrick.cardsInPlay.size(), 0)
@@ -28,7 +28,7 @@ class TrickTest(unittest.TestCase):
         self.assertEqual(self.testTrick.playedCards.size(), 2)
         self.assertEqual(self.testTrick.suitlead, "hearts")
         self.assertEqual(self.testTrick.winningPlayer, self.tempPlayers[0])
-        self.tempPlayers[2].accept(TrumpCard(0))
+        self.tempPlayers[2].accept(Card(0, "trump"))
         self.testTrick.accept(self.tempPlayers[2].hand.play_card(1))
         self.assertEqual(self.testTrick.winningPlayer, self.tempPlayers[2])
 

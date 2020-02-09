@@ -31,12 +31,16 @@ class RoundTest(unittest.TestCase):
             self.tempPlayers[i].playValidCard(tempTrick)
         #Now the trick should be finished and we can test accordingly
         tempPlayerTrickScore = self.tempPlayers[3].trickScore
+        temp_point_history = self.testRound.point_history
+        temp_potential_partners_history = self.testRound.potential_partners_history
         for i in range(4):
             self.assertEqual(self.testRound.trickHistory[i][0][12-i], 1)
             #The 3rd player will have played the Ace of Clubs, the 2nd player the 10 of Clubs, the 1st the King of Clubs, the 0th the 9 of Clubs
         self.assertEqual(self.testRound.leadingPlayer, self.tempPlayers[3])
         self.assertEqual(tempPlayerTrickScore + 25, self.tempPlayers[3].trickScore)
         #Ace, 10, King on a trick will be worth 25 points
+        #Check if the Trick Point history has updated properly
+        #Check if the Potential Partners history has been updated properly -- needs a different trick to test with
 
         
     
@@ -49,14 +53,18 @@ class RoundTest(unittest.TestCase):
         for player in self.tempPlayers:
             tempDeck.deal_cards_to(player)
             initialPlayerScores.append(player.roundScore)
-        self.testRound.playRound() #Need to use a method to run a round to completion here, not manually step through
-        self.assertNotEqual(sum(initialPlayerScores), 0) #after a round has been played the sum of the scores cannot be 0
-        self.assertEqual(tempDeck.cardList.size(), 32)
         #On Round finish:
         #tell players to update total scores, tell the game to repopulate the deck, if the game has not ended (make a new deck)
+        self.testRound.playRound() #Need to use a method to run a round to completion here, not manually step through
+        self.assertNotEqual(sum(self.testRound.scoreList), 0) #after a round has been played the sum of the scores cannot be 0
+        self.assertEqual(tempDeck.cardList.size(), 32)
+        
+    def test_file_out_behavior(self):
+        tempDeck = Deck()
+        for player in self.tempPlayers:
+            tempDeck.deal_cards_to(player)
+        self.testRound.playRound()
         #have some sort of file out happen. Assert that opening the data log file doesn’t raise an exception.
-
-
 
     def tearDown(self):
         for player in self.tempPlayers:
