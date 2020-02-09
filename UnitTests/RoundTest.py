@@ -1,4 +1,6 @@
 import unittest
+import copy
+import pickle
 from GameObjects import *
 
 class RoundTest(unittest.TestCase):
@@ -27,23 +29,30 @@ class RoundTest(unittest.TestCase):
     def test_on_trick_finish(self):
         tempTrick = Trick(self.testRound, self.tempPlayers[0])
         for i in range(4):
-            self.tempPlayers[i].accept(FailCard(12-i, "Clubs"))
+            self.tempPlayers[i].accept(Card(12-i, "clubs"))
             self.tempPlayers[i].playValidCard(tempTrick)
         #Now the trick should be finished and we can test accordingly
-        tempPlayerTrickScore = self.tempPlayers[3].trickScore
-        temp_point_history = self.testRound.point_history
-        temp_potential_partners_history = self.testRound.potential_partners_history
+        tempPlayerTrickScore = copy.copy(self.tempPlayers[3].trickScore)
+        temp_point_history = copy.copy(self.testRound.point_history)
         for i in range(4):
             self.assertEqual(self.testRound.trickHistory[i][0][12-i], 1)
             #The 3rd player will have played the Ace of Clubs, the 2nd player the 10 of Clubs, the 1st the King of Clubs, the 0th the 9 of Clubs
         self.assertEqual(self.testRound.leadingPlayer, self.tempPlayers[3])
-        self.assertEqual(tempPlayerTrickScore + 25, self.tempPlayers[3].trickScore)
-        #Ace, 10, King on a trick will be worth 25 points
-        #Check if the Trick Point history has updated properly
-        #Check if the Potential Partners history has been updated properly -- needs a different trick to test with
+        self.assertEqual(tempPlayerTrickScore + 25, self.tempPlayers[3].trickScore)#Ace, 10, King on a trick will be worth 25 points
+        self.assertEqual(self.testRound.point_history[3][0], 25)#Check if the Trick Point history has updated properly
 
+
+    def test_potential_partners_history(self): #Check if the Potential Partners history has been updated properly
+        tempTrick = Trick(self.testRound, self.tempPlayers[0])
+        for i in range(4):
+            self.tempPlayers[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+            self.tempPlayers[i].playValidCard(tempTrick)
+        #               self.testRound.potential_partners_history[player_num][potential_partner_num][trick_depth]
+        self.assertEqual(self.testRound.potential_partners_history[0][2][0], 1)
+        self.assertEqual(self.testRound.potential_partners_history[1][3][0], 1)
+        self.assertEqual(self.testRound.potential_partners_history[2][0][0], 1)
+        self.assertEqual(self.testRound.potential_partners_history[3][1][0], 1)
         
-    
     def test_on_round_finish(self):
         tempGame = Game()
         tempDeck = Deck()
@@ -64,7 +73,10 @@ class RoundTest(unittest.TestCase):
         for player in self.tempPlayers:
             tempDeck.deal_cards_to(player)
         self.testRound.playRound()
-        #have some sort of file out happen. Assert that opening the data log file doesn’t raise an exception.
+        #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
+        with open(self.testRound.file_name, 'rb') as input:
+            file_data = pickle.load(input)
+            self.assertEqual(self.testRound.file_data, file_data)
 
     def tearDown(self):
         for player in self.tempPlayers:
