@@ -28,12 +28,18 @@ class RoundTest(unittest.TestCase):
 
     def test_on_trick_finish(self):
         tempTrick = Trick(self.testRound, self.tempPlayers[0])
+        initial_card_count = 0
         for i in range(4):
             self.tempPlayers[i].accept(Card(12-i, "clubs"))
+            initial_card_count += self.tempPlayers[i].hand.cardList.size()
+        for i in range(4):
             self.tempPlayers[i].playValidCard(tempTrick)
+        post_trick_card_count = 0
+        for i in range(4):
+            post_trick_card_count += self.tempPlayers[i].hand.cardList.size()
+        self.assertEqual(initial_card_count, post_trick_card_count+4)
         #Now the trick should be finished and we can test accordingly
         tempPlayerTrickScore = copy.copy(self.tempPlayers[3].trickScore)
-        temp_point_history = copy.copy(self.testRound.point_history)
         for i in range(4):
             self.assertEqual(self.testRound.trickHistory[i][0][12-i], 1)
             #The 3rd player will have played the Ace of Clubs, the 2nd player the 10 of Clubs, the 1st the King of Clubs, the 0th the 9 of Clubs
