@@ -15,6 +15,9 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(self.testPlayer.totalScore, 0)
         self.assertFalse(self.testPlayer.isLeading)
         self.assertIsInstance(self.testPlayer.hand, Hand)
+        self.assertIsInstance(self.testPlayer.validCallsList.size(), 8)
+        self.assertIsInstance(self.testPlayer.weightedCallsList.size(), 8)
+        self.assertIsInstance(self.testPlayer.probabilityCallsList.size(), 8)
         self.assertEqual(self.testPlayer.potentialPartnersList.size(), 4)
         self.assertEqual(self.testPlayer.potentialPartnersList[0], 1)
         for index in range(1,4):
@@ -26,8 +29,7 @@ class PlayerTest(unittest.TestCase):
         testRound.currentTrick = testTrick
         currentRoundScore = self.testPlayer.roundScore
         for index in range(4):
-            self.tempPlayers[index].accept(TrumpCard(index))
-        for index in range(4):
+            self.tempPlayers[index].accept(Card(index, "trump"))
             self.tempPlayers[index].playValidCard(testTrick)
         self.assertEqual(self.testPlayer.roundScore, (currentRoundScore + self.testPlayer.trickScore))
         self.assertEqual(self.tempPlayers[0].potentialPartnersList, [1,0,1,0])
@@ -35,46 +37,80 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(self.tempPlayers[2].potentialPartnersList, [1,0,1,0])
         self.assertEqual(self.tempPlayers[3].potentialPartnersList, [0,1,0,1])
 
-    #When testing for ace calls, and first trick calls give cards to all players and update all the ppl based on
-    #the call made and who has what cards
-    #When testing for first trick give cards to players in a way that I know who will win the trick, assert that that
-    #all ppl are updated according to who won the trick.
-    #Look in round to find list of cards in order of rank and an example of playing out a trick.
+    def test_card_acceptance(self):
+        for index in range(5):
+            self.testPlayer.accept(Card(index, "trump"))
+        self.assertEqual(self.testPlayer.hand[5], Card(5, "trump")) #Don't think this is the proper way to test this?
     
-    def test_zss_call_is_made(self):
-        self.testPlayer.makeCall(7)
+    def test_z_call_is_made(self):
+        self.testPlayer.makeCall(5)
+        self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
+
+    def test_zs_call_is_made(self):
+        self.testPlayer.makeCall(6)
         self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
 
     def test_zss_call_is_made(self):
         self.testPlayer.makeCall(7)
         self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
 
-    def test_zss_call_is_made(self):
-        self.testPlayer.makeCall(7)
+#32 cards in order: QC,7D,QS,QH,QD,JC,JS,JH,JD,AD,10D,KD,9D,8D,(A,10,K,9,8,7)C,(A,10,K,9,8,7)S,(A,10,K,9,8,7)H
+    def test_ace_of_hearts_call_is_made(self):
+        self.tempPlayers[0].hand = {Card(0, "trump"), Card(2, "trump"), Card(10, "hearts"), Card(13, "hearts"), Card(11, "spades"), Card(9, "clubs"), Card(12, "hearts"), Card(14, "clubs")} #Am I doing this properly?
+        self.tempPlayers[1].hand = {Card(1, "trump"), Card(3, "trump"), Card(11, "hearts"), Card(14, "hearts"), Card(12, "spades"), Card(10, "clubs"), Card(9, "hearts"), Card(11, "clubs")}
+        self.tempPlayers[2].hand = {Card(4, "trump"), Card(6, "trump"), Card(8, "trump"), Card(10, "trump"), Card(12, "trump"), Card(12, "clubs"), Card(9, "spades"), Card(13, "spades")}
+        self.tempPlayers[3].hand = {Card(5, "trump"), Card(7, "trump"), Card(9, "trump"), Card(11, "trump"), Card(13, "trump"), Card(13, "clubs"), Card(10, "spades"), Card(14, "spades")}
+        self.tempPlayers[0].makeCall(3)
+        self.assertEqual(self.tempPlayers[1].potentialPartnersList, [1,1,0,0])
+
+    def test_ace_of_clubs_call_is_made(self):
+        self.tempPlayers[0].hand = {Card(1, "trump"), Card(3, "trump"), Card(10, "hearts"), Card(13, "hearts"), Card(11, "spades"), Card(9, "clubs"), Card(12, "hearts"), Card(14, "clubs")} #Am I doing this properly?
+        self.tempPlayers[1].hand = {Card(0, "trump"), Card(2, "trump"), Card(11, "hearts"), Card(14, "hearts"), Card(12, "spades"), Card(10, "clubs"), Card(9, "hearts"), Card(11, "clubs")}
+        self.tempPlayers[2].hand = {Card(4, "trump"), Card(6, "trump"), Card(8, "trump"), Card(10, "trump"), Card(12, "trump"), Card(12, "clubs"), Card(9, "spades"), Card(13, "spades")}
+        self.tempPlayers[3].hand = {Card(5, "trump"), Card(7, "trump"), Card(9, "trump"), Card(11, "trump"), Card(13, "trump"), Card(13, "clubs"), Card(10, "spades"), Card(14, "spades")}
+        self.tempPlayers[1].makeCall(1)
+        self.assertEqual(self.tempPlayers[0].potentialPartnersList, [1,1,0,0])
+
+    def test_ace_of_spades_call_is_made(self):
+        self.tempPlayers[0].hand = {Card(4, "trump"), Card(6, "trump"), Card(10, "hearts"), Card(13, "hearts"), Card(11, "spades"), Card(9, "clubs"), Card(12, "hearts"), Card(14, "clubs")} #Am I doing this properly?
+        self.tempPlayers[1].hand = {Card(1, "trump"), Card(3, "trump"), Card(11, "hearts"), Card(14, "hearts"), Card(12, "spades"), Card(10, "clubs"), Card(9, "hearts"), Card(11, "clubs")}
+        self.tempPlayers[2].hand = {Card(0, "trump"), Card(2, "trump"), Card(8, "trump"), Card(10, "trump"), Card(12, "trump"), Card(12, "clubs"), Card(9, "spades"), Card(13, "spades")}
+        self.tempPlayers[3].hand = {Card(5, "trump"), Card(7, "trump"), Card(9, "trump"), Card(11, "trump"), Card(13, "trump"), Card(13, "clubs"), Card(10, "spades"), Card(14, "spades")}
+        self.tempPlayers[2].makeCall(2)
+        self.assertEqual(self.tempPlayers[3].potentialPartnersList, [0,0,1,1])
+
+    def test_first_trick_call_is_made(self):
+        self.tempPlayers[0].hand = {Card(0, "trump"), Card(2, "trump"), Card(10, "hearts"), Card(9, "hearts"), Card(9, "spades"), Card(9, "clubs"), Card(12, "hearts"), Card(14, "clubs")} #Am I doing this properly?
+        self.tempPlayers[1].hand = {Card(1, "trump"), Card(3, "trump"), Card(11, "hearts"), Card(14, "hearts"), Card(12, "spades"), Card(10, "clubs"), Card(13, "hearts"), Card(11, "clubs")}
+        self.tempPlayers[2].hand = {Card(4, "trump"), Card(6, "trump"), Card(8, "trump"), Card(10, "trump"), Card(12, "trump"), Card(12, "clubs"), Card(11, "spades"), Card(13, "spades")}
+        self.tempPlayers[3].hand = {Card(5, "trump"), Card(7, "trump"), Card(9, "trump"), Card(11, "trump"), Card(13, "trump"), Card(13, "clubs"), Card(10, "spades"), Card(14, "spades")}
+        self.tempPlayers[0].makeCall(4)
+        #Play through the trick here. Don't think I did this properly
+        testRound = Round(self.tempPlayers)
+        testTrick = Trick(testRound)
+        testRound.currentTrick = testTrick
+        testTrick = Trick(testRound, self.tempPlayers[0])
+        self.tempPlayers[0].hand.playCard(Card(2, "trump"), testTrick)        
+        self.tempPlayers[0].hand.playCard(Card(1, "trump"), testTrick) #Player 2 wins the trick
+        self.tempPlayers[0].hand.playCard(Card(4, "trump"), testTrick)
+        self.tempPlayers[0].hand.playCard(Card(7, "trump"), testTrick)
+        self.assertEqual(self.tempPlayers[0].potentialPartnersList, [1,1,0,0])
+        self.assertEqual(self.tempPlayers[1].potentialPartnersList, [1,1,0,0])
+        self.assertEqual(self.tempPlayers[2].potentialPartnersList, [0,0,1,1])
+        self.assertEqual(self.tempPlayers[3].potentialPartnersList, [0,0,1,1])
+
+    def test_no_call_is_made(self):
+        self.testPlayer.makeCall(0)
         self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
 
-    def test_zss_call_is_made(self):
-        self.testPlayer.makeCall(7)
-        self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
-
-    def test_zss_call_is_made(self):
-        self.testPlayer.makeCall(7)
-        self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
-
-    def test_zss_call_is_made(self):
-        self.testPlayer.makeCall(7)
-        self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
-
-    def test_zss_call_is_made(self):
-        self.testPlayer.makeCall(7)
-        self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
-
-    def test_zss_call_is_made(self):
-        self.testPlayer.makeCall(7)
-        self.assertEqual(self.testPlayer.potentialPartnersList, [1,0,0,0])
+    def tearDown(self):
+        #Don't know if this is quite right.
+        for index in range(4):
+            del self.tempPlayers[index]
+        del self.tempPlayers
 
     #When testing for mid trick update, give each player a known set of cards such that when a card is played
-    #we know what the new list should be 
+    #we know what the new list should be --What was this comment in reference to?
 
 if __name__ == "__main__":
     unittest.main()
