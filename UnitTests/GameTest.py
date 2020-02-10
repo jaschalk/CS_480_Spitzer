@@ -47,6 +47,13 @@ class GameTest(unittest.TestCase):
         self.assertFalse(self.tempPlayer3.wins())
         self.assertFalse(self.tempPlayer4.wins())
 
+    def testDown(self):
+        del self.testGame
+        del self.tempPlayer1
+        del self.tempPlayer2
+        del self.tempPlayer3
+        del self.tempPlayer4
+
 
     if __name__ == "__main__":
         unittest.main()
