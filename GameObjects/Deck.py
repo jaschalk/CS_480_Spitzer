@@ -1,5 +1,4 @@
-from GameObjects import TrumpCard
-from GameObjects import FailCard
+from GameObjects import Card
 from random import shuffle
 
 class Deck:
@@ -17,16 +16,16 @@ class Deck:
         '''
         for i in range(14): #highest rank is expected to be 0 and lowest 13
             if i < 8:
-                self.cardlist.append(TrumpCard(i))
+                self.cardlist.append(Card(i, "trump"))
             elif i != 13:
-                self.cardlist.append(TrumpCard(i))
-                self.cardlist.append(FailCard(i, "spades"))
-                self.cardlist.append(FailCard(i, "hearts"))
-                self.cardlist.append(FailCard(i, "clubs"))
+                self.cardlist.append(Card(i, "trump"))
+                self.cardlist.append(Card(i, "spades"))
+                self.cardlist.append(Card(i, "hearts"))
+                self.cardlist.append(Card(i, "clubs"))
             else:
-                self.cardlist.append(FailCard(i, "spades"))
-                self.cardlist.append(FailCard(i, "hearts"))
-                self.cardlist.append(FailCard(i, "clubs"))
+                self.cardlist.append(Card(i, "spades"))
+                self.cardlist.append(Card(i, "hearts"))
+                self.cardlist.append(Card(i, "clubs"))
         shuffle(self.cardlist)
 
     def deal_cards_to(self, targetPlayer):
