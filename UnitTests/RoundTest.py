@@ -24,7 +24,10 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.testRound.callMatrix[0].size(), 8) #4x8 for each players call state of: no call, first trick, AC call, AS call, AH call, and 3 solo calls
         for row in range(4):
             for col in range(8):
-                self.assertEqual(self.testRound.callMatrix[row][col], 0)
+                if col == 0:
+                    self.assertEqual(self.testRound.callMatrix[row][col], 1)
+                else:
+                    self.assertEqual(self.testRound.callMatrix[row][col], 0)
 
     def test_on_trick_finish(self):
         tempTrick = Trick(self.testRound, self.tempPlayers[0])
