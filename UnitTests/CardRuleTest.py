@@ -1,5 +1,5 @@
 import unittest
-from GameObjects import CardRuleTree
+from GameObjects import CardRuleTree as CRT
 from GameObjects import Player
 from GameObjects import Round
 from GameObjects import Trick
@@ -8,20 +8,20 @@ from GameObjects import Card
 class CardRuleTest(unittest.TestCase):
 
     def setUp(self):
-        self.test_tree = CardRuleTree()
-        self.temp_round = Round(0)
-        self.temp_trick = Trick(self.temp_round, None)
+        self.test_tree = CRT.CardRuleTree()
+        self.temp_round = Round.Round(0)
+        self.temp_trick = Trick.Trick(self.temp_round, None)
         self.temp_round.current_trick = self.temp_trick
-        self.temp_player = Player(0)
+        self.temp_player = Player.Player(0)
         self.card_list = []
         for i in range(15):
-            self.card_list.append(Card(i, "trump"))
+            self.card_list.append(Card.Card(i, "trump"))
         for i in range(9,15):
-            self.card_list.append(Card(i, "clubs"))
+            self.card_list.append(Card.Card(i, "clubs"))
         for i in range(9,15):
-            self.card_list.append(Card(i, "spades"))
+            self.card_list.append(Card.Card(i, "spades"))
         for i in range(9,15):
-            self.card_list.append(Card(i, "hearts"))
+            self.card_list.append(Card.Card(i, "hearts"))
 
     def test_is_leading(self): # if the suit lead of the trick is None then all cards are valid, no need to check anything about a hand
         for card in self.card_list:
