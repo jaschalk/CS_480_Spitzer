@@ -21,7 +21,7 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.testRound.partnersMatrix.size(), 4) #4x4 for each players relation to all other players
         self.assertEqual(self.testRound.partnersMatrix[0].size(), 4)
         self.assertEqual(self.testRound.callMatrix.size(), 4)
-        self.assertEqual(self.testRound.callMatrix[0].size(), 8) #4x8 for each players call state of: no call, first trick, 3 ace calls, and 3 solo calls
+        self.assertEqual(self.testRound.callMatrix[0].size(), 8) #4x8 for each players call state of: no call, first trick, AC call, AS call, AH call, and 3 solo calls
         for row in range(4):
             for col in range(8):
                 self.assertEqual(self.testRound.callMatrix[row][col], 0)
