@@ -1,6 +1,5 @@
 from GameObjects import Player
-from GameObjects import FailCard
-from GameObjects import TrumpCard
+from GameObjects import Card
 class Trick:
 
     parentRound = None
