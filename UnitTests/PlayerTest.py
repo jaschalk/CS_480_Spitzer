@@ -16,8 +16,6 @@ class PlayerTest(unittest.TestCase):
         self.assertFalse(self.testPlayer.isLeading)
         self.assertIsInstance(self.testPlayer.hand, Hand)
         self.assertIsInstance(self.testPlayer.validCallsList.size(), 8)
-        self.assertIsInstance(self.testPlayer.weightedCallsList.size(), 8)
-        self.assertIsInstance(self.testPlayer.probabilityCallsList.size(), 8)
         self.assertEqual(self.testPlayer.potentialPartnersList.size(), 4)
         self.assertEqual(self.testPlayer.potentialPartnersList[0], 1)
         for index in range(1,4):
@@ -31,6 +29,7 @@ class PlayerTest(unittest.TestCase):
         for index in range(4):
             self.tempPlayers[index].accept(Card(index, "trump"))
             self.tempPlayers[index].playValidCard(testTrick)
+        self.assertEqual(self.testPlayer.roundScore, 9)
         self.assertEqual(self.testPlayer.roundScore, (currentRoundScore + self.testPlayer.trickScore))
         self.assertEqual(self.tempPlayers[0].potentialPartnersList, [1,0,1,0])
         self.assertEqual(self.tempPlayers[1].potentialPartnersList, [0,1,0,1])
