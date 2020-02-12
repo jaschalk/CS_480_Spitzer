@@ -47,7 +47,6 @@ class RoundTest(unittest.TestCase):
             self.assertEqual(self.testRound.trickHistory[i][0][12-i], 1)
             #The 3rd player will have played the Ace of Clubs, the 2nd player the 10 of Clubs, the 1st the King of Clubs, the 0th the 9 of Clubs
         self.assertEqual(self.testRound.leadingPlayer, self.tempPlayers[3])
-        self.assertEqual(tempPlayerTrickScore + 25, self.tempPlayers[3].trickScore)#Ace, 10, King on a trick will be worth 25 points
         self.assertEqual(self.testRound.point_history[3][0], 25)#Check if the Trick Point history has updated properly
 
 
