@@ -18,7 +18,7 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card.Card(9, "hearts")) #give the player the AH
         self.temp_player.accept(Card.Card(9, "spades")) #give the player the AS
         self.temp_player.accept(Card.Card(9, "clubs")) #give the player the AC
-        self.temp_player.evaluate_calls() #since we're now expecting the player the hold on to the rule trees some method like this should work
+        self.test_call_rule_tree.validate(self.temp_player)
         self.assertEqual(self.temp_player.valid_call_list, [1,1,0,0,0,1,1,1])
 
     def test_can_call_ace_of_clubs(self):
@@ -26,7 +26,7 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card.Card(2, "trump")) #give the player the QS
         self.temp_player.accept(Card.Card(9, "hearts")) #give the player the AH
         self.temp_player.accept(Card.Card(9, "spades")) #give the player the AS
-        self.temp_player.evaluate_calls() #since we're now expecting the player the hold on to the rule trees some method like this should work
+        self.test_call_rule_tree.validate(self.temp_player)
         self.assertEqual(self.temp_player.valid_call_list, [1,0,1,0,0,1,1,1])
 
     def test_can_call_ace_of_spades(self):
@@ -34,7 +34,7 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card.Card(2, "trump")) #give the player the QS
         self.temp_player.accept(Card.Card(9, "hearts")) #give the player the AH
         self.temp_player.accept(Card.Card(9, "clubs")) #give the player the AS
-        self.temp_player.evaluate_calls() #since we're now expecting the player the hold on to the rule trees some method like this should work
+        self.test_call_rule_tree.validate(self.temp_player)
         self.assertEqual(self.temp_player.valid_call_list, [1,0,0,1,0,1,1,1])
 
     def test_can_call_ace_of_hearts(self):
@@ -42,11 +42,11 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card.Card(2, "trump")) #give the player the QS
         self.temp_player.accept(Card.Card(9, "clubs")) #give the player the AH
         self.temp_player.accept(Card.Card(9, "spades")) #give the player the AS
-        self.temp_player.evaluate_calls() #since we're now expecting the player the hold on to the rule trees some method like this should work
+        self.test_call_rule_tree.validate(self.temp_player)
         self.assertEqual(self.temp_player.valid_call_list, [1,0,0,0,1,1,1,1])
 
     def test_base_calls(self):
-        self.temp_player.evaluate_calls() #since we're now expecting the player the hold on to the rule trees some method like this should work
+        self.test_call_rule_tree.validate(self.temp_player)
         self.assertEqual(self.temp_player.valid_call_list, [1,0,0,0,0,1,1,1]) #even if the player has no cards they can make no call or any solo call
 
     def tearDown(self):
