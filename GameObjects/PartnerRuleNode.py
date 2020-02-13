@@ -1,3 +1,5 @@
+from GameObjects import Card
+from GameObjects import Player
 
 class PartnerRuleNode:
 
