@@ -73,9 +73,9 @@ class PartnerRuleTest(unittest.TestCase):
             self.tempPlayerList[1].accept(Card.Card(index, "spades"))
             self.tempPlayerList[1].accept(Card.Card(index, "hearts"))
         for index in range(3, 9):
-            self.tempPlayersList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
-        self.tempPlayersList[2].accept(self.cardList[1]) #spitzer
-        self.tempPlayersList[2].accept(self.cardList[11]) #KD
+            self.tempPlayerList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
+        self.tempPlayerList[2].accept(self.cardList[1]) #spitzer
+        self.tempPlayerList[2].accept(self.cardList[11]) #KD
         self.tempPlayerList[0].makeCall(3)
         self.assertTrue(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call and target player has ace called
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call and target player doesn't have ace called
@@ -94,9 +94,9 @@ class PartnerRuleTest(unittest.TestCase):
             self.tempPlayerList[1].accept(Card.Card(index, "spades"))
             self.tempPlayerList[1].accept(Card.Card(index, "hearts"))
         for index in range(3, 9):
-            self.tempPlayersList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
-        self.tempPlayersList[2].accept(self.cardList[1]) #spitzer
-        self.tempPlayersList[2].accept(self.cardList[11]) #KD
+            self.tempPlayerList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
+        self.tempPlayerList[2].accept(self.cardList[1]) #spitzer
+        self.tempPlayerList[2].accept(self.cardList[11]) #KD
         self.tempPlayerList[0].makeCall(2)
         self.assertTrue(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call and target player has ace called
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call and target player doesn't have ace called
@@ -115,9 +115,9 @@ class PartnerRuleTest(unittest.TestCase):
             self.tempPlayerList[1].accept(Card.Card(index, "spades"))
             self.tempPlayerList[1].accept(Card.Card(index, "hearts"))
         for index in range(3, 9):
-            self.tempPlayersList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
-        self.tempPlayersList[2].accept(self.cardList[1]) #spitzer
-        self.tempPlayersList[2].accept(self.cardList[11]) #KD
+            self.tempPlayerList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
+        self.tempPlayerList[2].accept(self.cardList[1]) #spitzer
+        self.tempPlayerList[2].accept(self.cardList[11]) #KD
         self.tempPlayerList[0].makeCall(1)
         self.assertTrue(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call and target player has ace called
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call and target player doesn't have ace called
@@ -126,14 +126,14 @@ class PartnerRuleTest(unittest.TestCase):
 
     def test_z_called(self):
         for index in range(8):
-            self.tempPlayers[0].accept(self.cardList[index]) #give cards to players in order
+            self.tempPlayerList[0].accept(self.cardList[index]) #give cards to players in order
         for index in range(8, 16):
-            self.tempPlayers[1].accept(self.cardList[index])
+            self.tempPlayerList[1].accept(self.cardList[index])
         for index in range(16, 24):
-            self.tempPlayers[2].accept(self.cardList[index])
+            self.tempPlayerList[2].accept(self.cardList[index])
         for index in range(24, 32):
-            self.tempPlayers[0].accept(self.cardList[index])
-        self.tempPlayers[0].makeCall(5)
+            self.tempPlayerList[0].accept(self.cardList[index])
+        self.tempPlayerList[0].makeCall(5)
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[3], self.tempRound)) #asking player makes call
@@ -143,14 +143,14 @@ class PartnerRuleTest(unittest.TestCase):
 
     def test_zs_called(self):
         for index in range(8):
-            self.tempPlayers[0].accept(self.cardList[index]) #give cards to players in order
+            self.tempPlayerList[0].accept(self.cardList[index]) #give cards to players in order
         for index in range(8, 16):
-            self.tempPlayers[1].accept(self.cardList[index])
+            self.tempPlayerList[1].accept(self.cardList[index])
         for index in range(16, 24):
-            self.tempPlayers[2].accept(self.cardList[index])
+            self.tempPlayerList[2].accept(self.cardList[index])
         for index in range(24, 32):
-            self.tempPlayers[0].accept(self.cardList[index])
-        self.tempPlayers[0].makeCall(6)
+            self.tempPlayerList[0].accept(self.cardList[index])
+        self.tempPlayerList[0].makeCall(6)
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[3], self.tempRound)) #asking player makes call
@@ -160,14 +160,14 @@ class PartnerRuleTest(unittest.TestCase):
 
     def test_zss_called(self):
         for index in range(8):
-            self.tempPlayers[0].accept(self.cardList[index]) #give cards to players in order
+            self.tempPlayerList[0].accept(self.cardList[index]) #give cards to players in order
         for index in range(8, 16):
-            self.tempPlayers[1].accept(self.cardList[index])
+            self.tempPlayerList[1].accept(self.cardList[index])
         for index in range(16, 24):
-            self.tempPlayers[2].accept(self.cardList[index])
+            self.tempPlayerList[2].accept(self.cardList[index])
         for index in range(24, 32):
-            self.tempPlayers[0].accept(self.cardList[index])
-        self.tempPlayers[0].makeCall(7)
+            self.tempPlayerList[0].accept(self.cardList[index])
+        self.tempPlayerList[0].makeCall(7)
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call
         self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[3], self.tempRound)) #asking player makes call
