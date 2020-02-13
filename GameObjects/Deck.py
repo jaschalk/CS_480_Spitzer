@@ -29,7 +29,5 @@ class Deck:
         This method will cause 8 cards to visit the targetPlayer. 
         '''
         for i in range(8):
-            tempCard = self.cardlist.pop()
-            targetPlayer.accept(tempCard)
+            targetPlayer.accept(self.card_list.pop())
             
-
