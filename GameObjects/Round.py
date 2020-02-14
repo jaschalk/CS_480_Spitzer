@@ -7,13 +7,10 @@ class Round:
     current_trick = None
     parent_game = None
     players_list = [None, None, None, None]
-    trick_history = np.zeros((4,8,32))
-    player_partners = np.zeros((4,4))
-    call_matrix = [[1,0,0,0,0,0,0,0],
-                   [1,0,0,0,0,0,0,0],
-                   [1,0,0,0,0,0,0,0],
-                   [1,0,0,0,0,0,0,0]]
-    player_score_history = np.zeros((4,8))
+    trick_history = np.zeros((4,8,32),dtype=np.int8)
+    player_partners = np.zeros((4,4),dtype=np.int8)
+    call_matrix = np.zeros((4,8),dtype=np.int8)
+    player_score_history = np.zeros((4,8),dtype=np.int8)
     leading_player = None
     trick_point_history = []
     #the values in the file_out_data dict are mutable so changes to the variables will be reflected here
@@ -26,6 +23,8 @@ class Round:
     def __init__(self, a_game):
         self.parent_game = a_game
         self.players_list = a_game.get_players()
+        for i in range(4):
+            self.call_matrix[i][0] = 1
 
     def on_trick_end(self, winning_player, points_on_trick, card_list):
         for card in card_list:
