@@ -5,12 +5,6 @@ from GameObjects import Round
 from GameObjects import Trick
 from GameObjects import Card
 
-#HAVE THE arePartners METHOD RETURN A BOOLEAN. TRUE = PLAYERS ARE PARTNERS. FALSE = PLAYERS ARE NOT PARTNERS OR UNSURE. (This is my initial thought)
-#All of the ace calls and solo calls look almost identical. Is there a shorter way to test for any of this?????
-
-#This is getting very long. I feel like I am caring about too many players...?
-#I only used 3 players for all of the ace calls, since the fourth player is not really needed. Or is it?
-
 class PartnerRuleTest(unittest.TestCase):
 
     def setUp(self):
@@ -55,13 +49,11 @@ class PartnerRuleTest(unittest.TestCase):
         self.tempPlayerList[1].hand.playCard(13, self.tempTrick) #8D player 2 wins the trick
         self.tempPlayerList[2].hand.playCard(22, self.tempTrick) #KS
         self.tempPlayerList[3].hand.playCard(23, self.tempTrick) #9S
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call and target player wins the trick
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call and target player doesn't win the trick
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[1], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player takes the trick
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[2], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player does not take the trick
-        #do i need to test every combination of partners on this call because it is known by all players who the partners are at the end of the trick?
-
-    def test_ace_of_hearts_called(self):
+        self.assertEqual(self.tempPlayerList[0].potentialPartnersList, [1,1,0,0])
+        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [1,1,0,0])
+        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [0,0,1,1])
+        
+    def test_ace_called(self):
         self.tempPlayerList[0].accept(self.cardList[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
         self.tempPlayerList[0].accept(self.cardList[2])
         for index in range(12, 15):
@@ -77,103 +69,63 @@ class PartnerRuleTest(unittest.TestCase):
         self.tempPlayerList[2].accept(self.cardList[1]) #spitzer
         self.tempPlayerList[2].accept(self.cardList[11]) #KD
         self.tempPlayerList[0].makeCall(3)
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call and target player has ace called
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call and target player doesn't have ace called
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[1], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player has ace called
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[2], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player does not have ace called
+        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [1,1,0,0]) #Only update the potential partners list of the player with the ace matching the one called.
+        self.assertEqual(self.tempPlayerList[0].potentialPartnersList[0], 1)
+        for index in range(1,4):
+            self.assertAlmostEqual(self.tempPlayerList[0].potentialPartnersList[index], 1/3)
 
-    def test_ace_of_spades_called(self):
-        self.tempPlayerList[0].accept(self.cardList[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
-        self.tempPlayerList[0].accept(self.cardList[2])
-        for index in range(12, 15):
-            self.tempPlayerList[0].accept(Card.Card(index, "spades"))
-            self.tempPlayerList[0].accept(Card.Card(index, "hearts"))
-        for index in range(9, 11):
-            self.tempPlayerList[1].accept(Card.Card(index, "trump")) #give player 2 all aces and 10s
-            self.tempPlayerList[1].accept(Card.Card(index, "clubs"))
-            self.tempPlayerList[1].accept(Card.Card(index, "spades"))
-            self.tempPlayerList[1].accept(Card.Card(index, "hearts"))
-        for index in range(3, 9):
-            self.tempPlayerList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
-        self.tempPlayerList[2].accept(self.cardList[1]) #spitzer
-        self.tempPlayerList[2].accept(self.cardList[11]) #KD
-        self.tempPlayerList[0].makeCall(2)
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call and target player has ace called
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call and target player doesn't have ace called
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[1], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player has ace called
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[2], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player does not have ace called
-
-    def test_ace_of_clubs_called(self):
-        self.tempPlayerList[0].accept(self.cardList[0]) #give player 1 both black queens and 7, 8, 9 of clubs and hearts
-        self.tempPlayerList[0].accept(self.cardList[2])
-        for index in range(12, 15):
-            self.tempPlayerList[0].accept(Card.Card(index, "clubs"))
-            self.tempPlayerList[0].accept(Card.Card(index, "hearts"))
-        for index in range(9, 11):
-            self.tempPlayerList[1].accept(Card.Card(index, "trump")) #give player 2 all aces and 10s
-            self.tempPlayerList[1].accept(Card.Card(index, "clubs"))
-            self.tempPlayerList[1].accept(Card.Card(index, "spades"))
-            self.tempPlayerList[1].accept(Card.Card(index, "hearts"))
-        for index in range(3, 9):
-            self.tempPlayerList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
-        self.tempPlayerList[2].accept(self.cardList[1]) #spitzer
-        self.tempPlayerList[2].accept(self.cardList[11]) #KD
-        self.tempPlayerList[0].makeCall(1)
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call and target player has ace called
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call and target player doesn't have ace called
-        self.assertTrue(self.testTree.arePartners(self.tempPlayerList[1], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player has ace called
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[2], self.tempPlayerList[0], self.tempRound)) #target player makes call and asking player does not have ace called
-
-    def test_z_called(self):
-        for index in range(8):
-            self.tempPlayerList[0].accept(self.cardList[index]) #give cards to players in order
-        for index in range(8, 16):
-            self.tempPlayerList[1].accept(self.cardList[index])
-        for index in range(16, 24):
-            self.tempPlayerList[2].accept(self.cardList[index])
-        for index in range(24, 32):
-            self.tempPlayerList[0].accept(self.cardList[index])
+    def test_solo_called(self):
         self.tempPlayerList[0].makeCall(5)
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[3], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[1], self.tempPlayerList[0], self.tempRound)) #target player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[2], self.tempPlayerList[0], self.tempRound)) #target player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[3], self.tempPlayerList[0], self.tempRound)) #target player makes call
+        self.assertEqual(self.tempPlayerList[0].potentialPartnersList, [1,0,0,0])
+        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [0,1,1,1])
+        self.assertEqual(self.tempPlayerList[2].potentialPartnersList, [0,1,1,1])
+        self.assertEqual(self.tempPlayerList[3].potentialPartnersList, [0,1,1,1])
 
-    def test_zs_called(self):
+    def test_no_call_both_queens(self):
         for index in range(8):
-            self.tempPlayerList[0].accept(self.cardList[index]) #give cards to players in order
-        for index in range(8, 16):
-            self.tempPlayerList[1].accept(self.cardList[index])
-        for index in range(16, 24):
-            self.tempPlayerList[2].accept(self.cardList[index])
-        for index in range(24, 32):
-            self.tempPlayerList[0].accept(self.cardList[index])
-        self.tempPlayerList[0].makeCall(6)
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[3], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[1], self.tempPlayerList[0], self.tempRound)) #target player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[2], self.tempPlayerList[0], self.tempRound)) #target player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[3], self.tempPlayerList[0], self.tempRound)) #target player makes call
+            self.tempPlayerList[0].accept(self.cardList[index]) #Give player 1 the first 8 cards
+        self.assertEqual(self.tempPlayerList[0].potentialPartnersList, [1,0,0,0])
 
-    def test_zss_called(self):
-        for index in range(8):
-            self.tempPlayerList[0].accept(self.cardList[index]) #give cards to players in order
-        for index in range(8, 16):
-            self.tempPlayerList[1].accept(self.cardList[index])
-        for index in range(16, 24):
-            self.tempPlayerList[2].accept(self.cardList[index])
-        for index in range(24, 32):
-            self.tempPlayerList[0].accept(self.cardList[index])
-        self.tempPlayerList[0].makeCall(7)
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[1], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[2], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[0], self.tempPlayerList[3], self.tempRound)) #asking player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[1], self.tempPlayerList[0], self.tempRound)) #target player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[2], self.tempPlayerList[0], self.tempRound)) #target player makes call
-        self.assertFalse(self.testTree.arePartners(self.tempPlayerList[3], self.tempPlayerList[0], self.tempRound)) #target player makes call
+    def test_no_call_one_queen(self):
+        self.tempPlayerList[0].accept(self.cardList[0])
+        self.tempPlayerList[1].accept(self.cardList[2])
+        self.tempPlayerList[1].accept(self.cardList[1])
+        self.tempPlayerList[2].accept(self.cardList[30])
+        self.tempPlayerList[3].accept(self.cardList[31])
+        self.tempPlayerList[0].hand.playCard(0, self.tempTrick) 
+        self.tempPlayerList[1].hand.playCard(1, self.tempTrick)
+        self.tempPlayerList[2].hand.playCard(30, self.tempTrick)
+        self.tempPlayerList[3].hand.playCard(31, self.tempTrick)
+        self.assertEqual(self.tempPlayerList[0].potentialPartnersList[0], 1)
+        for index in range(1,4):
+            self.assertAlmostEqual(self.tempPlayerList[0].potentialPartnersList[index], 1/3)
+        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [1,1,0,0])
+        self.assertEqual(self.tempPlayerList[2].potentialPartnersList[0], 0)
+        self.assertAlmostEqual(self.tempPlayerList[2].potentialPartnersList[1], 1/2)
+        self.assertEqual(self.tempPlayerList[2].potentialPartnersList[2], 1)
+        self.assertAlmostEqual(self.tempPlayerList[2].potentialPartnersList[3], 1/2)
+        self.assertEqual(self.tempPlayerList[3].potentialPartnersList[0], 0)
+        self.assertAlmostEqual(self.tempPlayerList[3].potentialPartnersList[1], 1/2)
+        self.assertAlmostEqual(self.tempPlayerList[3].potentialPartnersList[2], 1/2)
+        self.assertEqual(self.tempPlayerList[3].potentialPartnersList[3], 1)
+        
+    def test_no_call_no_queen(self):
+        self.tempPlayerList[0].accept(self.cardList[0])
+        self.tempPlayerList[0].accept(self.cardList[3])
+        self.tempPlayerList[1].accept(self.cardList[2])
+        self.tempPlayerList[1].accept(self.cardList[1])
+        self.tempPlayerList[2].accept(self.cardList[30])
+        self.tempPlayerList[2].accept(self.cardList[29])
+        self.tempPlayerList[3].accept(self.cardList[31])
+        self.tempPlayerList[3].accept(self.cardList[28])
+        self.tempPlayerList[0].hand.playCard(3, self.tempTrick) 
+        self.tempPlayerList[1].hand.playCard(1, self.tempTrick)
+        self.tempPlayerList[2].hand.playCard(30, self.tempTrick)
+        self.tempPlayerList[3].hand.playCard(31, self.tempTrick)
+        for index in range(4):
+            self.assertEqual(self.tempPlayerList[index].potentialPartnersList[index], 1)
+            for i in range(4):
+                self.assertAlmostEqual(self.tempPlayerList[index].potentialPartnersList[i], 1/3)
 
 if __name__ == "__main__":
     unittest.main()
