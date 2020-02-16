@@ -28,7 +28,7 @@ class Round:
 
     def __init__(self, a_game):
         self._parent_game = a_game
-        self._players_list = a_game.get_players()
+        self._players_list = a_game.get_players_list()
         for i in range(4):
             self._call_matrix[i][0] = 1
 
