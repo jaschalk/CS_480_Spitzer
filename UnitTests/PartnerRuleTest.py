@@ -86,7 +86,7 @@ class PartnerRuleTest(unittest.TestCase):
             self.tempPlayerList[0].accept(self.cardList[index]) #Give player 1 the first 8 cards
         self.assertEqual(self.tempPlayerList[0].potentialPartnersList, [1,0,0,0])
 
-    def test_no_call_one_queen(self):
+    def test_no_call_one_queen_played(self):
         self.tempPlayerList[0].accept(self.cardList[0])
         self.tempPlayerList[1].accept(self.cardList[2])
         self.tempPlayerList[1].accept(self.cardList[1])
@@ -109,7 +109,7 @@ class PartnerRuleTest(unittest.TestCase):
         self.assertAlmostEqual(self.tempPlayerList[3].potentialPartnersList[2], 1/2)
         self.assertEqual(self.tempPlayerList[3].potentialPartnersList[3], 1)
         
-    def test_no_call_no_queen(self):
+    def test_no_call_no_queen_played(self):
         self.tempPlayerList[0].accept(self.cardList[0])
         self.tempPlayerList[0].accept(self.cardList[3])
         self.tempPlayerList[1].accept(self.cardList[2])
