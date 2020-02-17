@@ -26,4 +26,3 @@ class Trick:
        self.points_on_trick += aCard.get_point_value()
        if len(self.played_cards_list) == 4:#the trick is now done, process accordingly
            self.parent_round.on_trick_end(self.winning_player, self.points_on_trick, self.played_cards_list)
-
