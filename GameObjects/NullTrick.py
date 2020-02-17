@@ -17,6 +17,7 @@ class NullTrick(Trick.Trick): #what is this actually going to be used for?
             NullTrick.instance.a_suit = a_suit
 
     def accept(self, a_card): #in theory I want to use this to eliminate the need to do first card on trick checks
+                                #That behavior would be better solved with a NullCard class
         new_trick = Trick.Trick(self._parent_round, self._leading_player, a_card.get_suit())
         self._parent_round.set_current_trick(new_trick)
         new_trick.accept(a_card)

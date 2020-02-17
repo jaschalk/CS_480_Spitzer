@@ -28,7 +28,7 @@ class Trick:
     def get_played_cards_list(self): # the only way to set the cards played list should be to play cards to the trick, i.e. the trick accepting cards
         return self._played_cards_list
 
-    def __init__(self, a_round, a_player, a_suit = None):
+    def __init__(self, a_round, a_player, a_suit = None): # I don't like that this is taking a suit right now, it seems unintuitive
         self.__parent_round = a_round
         self._leading_player = a_player
         self._suit_lead = a_suit
