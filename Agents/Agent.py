@@ -1,5 +1,5 @@
 from GameObjects import *
-
+import tensorflow as tf
 class Agent: #currently unsure what other information an agent should have?
 
     _player_interface = None # single _ because the subclasses will want access to this as well
