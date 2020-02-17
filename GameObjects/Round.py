@@ -28,7 +28,7 @@ class Round:
 
     def __init__(self, a_game):
         self._parent_game = a_game
-        self._players_list = a_game.get_players()
+        self._players_list = a_game.get_players_list()
         for i in range(4):
             self._call_matrix[i][0] = 1
 
@@ -67,10 +67,10 @@ class Round:
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         for card in card_list:
-            player_number = card.get_owning_player().get_player_number()
+            player_number = card.get_owning_player().get_player_number() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_index()] = 1
         self.__trick_point_history[winning_player][self._trick_count] = points_on_trick
-        self.update_player_partner_prediction_history()
+        self.update_player_partner_prediction_history() #I don't remember how was supposed to work?
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick
                                                                     # using deep copy here to actually duplicate the data and not just link to it's location in memory
         self._trick_count += 1
