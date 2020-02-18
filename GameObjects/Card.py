@@ -48,3 +48,5 @@ class Card:
 
     def visit(self, a_card_rule_object):
         #What should belong in this method?
+        #Check out principles
+        pass
