@@ -1,5 +1,6 @@
 from GameObjects import Player
 from GameObjects import Card
+from GameObjects import NullCard
 class Trick:
 
     _parent_round = None
@@ -28,10 +29,10 @@ class Trick:
     def get_played_cards_list(self): # the only way to set the cards played list should be to play cards to the trick, i.e. the trick accepting cards
         return self._played_cards_list
 
-    def __init__(self, a_round, a_player, a_suit = None): # I don't like that this is taking a suit right now, it seems unintuitive
+    def __init__(self, a_round, a_player):
         self.__parent_round = a_round
         self._leading_player = a_player
-        self._suit_lead = a_suit
+        self._winning_card = NullCard.NullCard(0,"")
 
     def accept(self, a_card):
        if self._suit_lead is None:
