@@ -13,6 +13,3 @@ class FailCard(Card.Card):
                 return False
         else:
             return True
-    
-    def accept_trump(self, a_trump_card): #A fail card accepts a trump card. Might be unnecessary.
-        return False
