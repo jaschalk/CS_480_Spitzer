@@ -10,7 +10,15 @@ class Game:
    _partner_rules = None
    _call_rules = None
 
-   def __init__(self, a_game_id): #Should the calls to initialize everything happen in the constructor?
+   def __init__(self, a_game_id): #initializes the deck, round, players list, and all three sets of rules.
       self._game_id = a_game_id
+      self._deck = Deck.Deck()
+      self._round = Round.Round(self)
       for index in range(4):
-        self._players_list[index] = Player()
+        self._players_list[index] = Player.Player(index)
+      self._card_rules = CardRuleTree.CardRuleTree(self)
+      self._partner_rules = PartnerRuleTree.PartnerRuleTree(self)
+      self._call_rules = CallRules.CallRules(self)
+
+   def _begin_round(): #tells the round to use its begin play method
+      self._round._begin_play()

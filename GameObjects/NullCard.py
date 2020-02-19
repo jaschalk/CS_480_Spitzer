@@ -1,6 +1,4 @@
 class NullCard:
-    
-    #I'm not exactly sure how this should be implemented or what it should include.
 
     _card_id = None
     _card_suit = None
