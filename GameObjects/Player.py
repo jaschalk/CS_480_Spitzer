@@ -11,12 +11,16 @@ class Player:
     _hand = None
     _is_leading = False #Should we use gets and sets for isLeading and tookFirstTrick?
     _took_first_trick = False
+    _player_id = None
+    _parent_game = None
 
     def __init__(self, a_game, player_id): #initializes the hand object and sets the potential partners list to correct values.
+        self._player_id = player_id
+        self._parent_game = a_game
         self._trick = Trick()
-        self._potential_partners_list[player_id] = 1
+        self._potential_partners_list[self.player_id] = 1
         for index in range(4):
-            if index != player_id:
+            if index != self.player_id:
                 self._potential_partners_list[index] = (1/3)
         self._hand = Hand()
 
@@ -44,7 +48,7 @@ class Player:
     def set_valid_call_list(self, a_valid_call_list):
         self._valid_call_list = a_valid_call_list
 
-    def get_potential_players_list(self):
+    def get_potential_partners_list(self):
         return self._potential_partners_list
     
     def set_potential_partners_list(self, a_potential_partners_list):
@@ -56,13 +60,29 @@ class Player:
     def set_hand(self, a_hand):
         self._hand = a_hand
 
+    def accept(self, a_card):
+        #This method should send the card to the hand when a player is dealt a card
+        self._hand.accept(a_card)
+
     def play_card(self): #Ask the hand to play a valid card.
         self._hand.play_valid_card(self._trick) #Might need to re-think this behavior to include the agent
 
     def determine_potential_partners(self):
-        #This method should use the current potential partners list and the partner rules
-        #to change the potential partners list after new information has been gathered.
+        #This method should ask the partner rules to run its validate method on two players
+        #and set the potential partners list according to the string returned from that method.
+        #I don't think I'm doing this right...
+        #What about going from 1/3 to 1/2??
+        for index in range(4):
+            if index != self._player_id:
+                _result = self._parent_game._partner_rules.validate_partners(self, self._parent_game._players_list[index], self._parent_game._round)
+            if _result = "target is my partner":
+                self._potential_partners_list[index] = 1
+            elif _result = "target is not my partner":
+                self._potential_partners_list[index] = 0
+            else:
+                #don't modify anything?
 
     def determine_valid_calls(self):
-        #This method should use the current valid call list and call rules to change
-        #the valid calls list based on the cards in the players hand.
+        #This method should ask the call rules to run its validate method on the current
+        #call list (and the cards in the players hand?) and re-set the call list to the 
+        #value returned from that method.
