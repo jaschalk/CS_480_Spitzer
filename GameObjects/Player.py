@@ -9,12 +9,13 @@ class Player:
     _valid_call_list = [1, 0, 0, 0, 1, 1, 1, 1]
     _potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
     _hand = None
-    _is_leading = False #Should we use gets and sets for isLeading and tookFirstTrick?
+    _is_leading = False
     _took_first_trick = False
     _player_id = None
     _parent_game = None
 
-    def __init__(self, a_game, player_id): #initializes the hand object and sets the potential partners list to correct values.
+    def __init__(self, a_game, player_id): 
+        #initializes the hand object and sets the potential partners list to correct values.
         self._player_id = player_id
         self._parent_game = a_game
         self._trick = Trick()
@@ -64,25 +65,38 @@ class Player:
         #This method should send the card to the hand when a player is dealt a card
         self._hand.accept(a_card)
 
-    def play_card(self): #Ask the hand to play a valid card.
-        self._hand.play_valid_card(self._trick) #Might need to re-think this behavior to include the agent
+    def play_card(self, a_card_index): 
+        #Ask the hand to play a card specified by the agent.
+        self._hand.play_card_at_index(self._trick, a_card_index)
+
+    def validate_card(self, a_card):
+        #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
+        return self._parent_game.validate_card(a_card, self)
 
     def determine_potential_partners(self):
-        #This method should ask the partner rules to run its validate method on two players
-        #and set the potential partners list according to the string returned from that method.
-        #I don't think I'm doing this right...
-        #What about going from 1/3 to 1/2??
+        #Asks the parent game to use its validate partners method to modify the potential partners list based on the returned string.
         for index in range(4):
             if index != self._player_id:
-                _result = self._parent_game._partner_rules.validate_partners(self, self._parent_game._players_list[index], self._parent_game._round)
+                _result = self._parent_game.validate_partners(self, index)
             if _result = "target is my partner":
                 self._potential_partners_list[index] = 1
             elif _result = "target is not my partner":
                 self._potential_partners_list[index] = 0
-            else:
-                #don't modify anything?
+                for i in range(4):
+                    if i != self._player_id or index:
+                      self._potential_partners_list[i] = 1/2 #This number might need to be modified later.
+
+    def make_call_at_index(self, a_call_index):
+        #the player has to relay the call being made to the round -- might want to take another look at this.
+        self._round.update_call(self._player_id, a_call_index)
 
     def determine_valid_calls(self):
-        #This method should ask the call rules to run its validate method on the current
-        #call list (and the cards in the players hand?) and re-set the call list to the 
-        #value returned from that method.
+        #Asks the parent game to return the legal calls based on the information in the hand.
+        self._valid_call_list = self._parent_game.validate_calls(self._hand)
+
+    def does_play_continue(self):
+        #If there are no more cards in the hand, play should not continue.
+        if self._hand.get_cards_in_hand().size() == 0:
+            return False
+        else:
+            return True

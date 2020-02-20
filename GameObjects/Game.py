@@ -20,5 +20,17 @@ class Game:
       self._partner_rules = PartnerRuleTree.PartnerRuleTree(self)
       self._call_rules = CallRules.CallRules(self)
 
-   def _begin_round(): #tells the round to use its begin play method
+   def begin_round():
       self._round._begin_play()
+
+   def validate_card(self, a_card, a_player):
+      #Accesses the card rules and returns whether or not the card passed in is valid to the player.
+      return self._card_rules.validate_card(a_card, a_player, self._round)
+
+   def validate_partners(self, asking_player, target_player_index):
+      #Accesses the partner rules and returns whether or not two players are partners to the player.
+      return self._partner_rules.validate_partners(asking_player, self._players_list[target_player_index], self._round)
+
+   def validate_calls(self, a_hand):
+      #Accesses the call rules and returns the list of valid calls to the player.
+      return self._call_rules.validate_calls(a_hand.get_binary_representation())

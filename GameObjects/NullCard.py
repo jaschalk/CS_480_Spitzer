@@ -1,10 +1,9 @@
-class NullCard:
+from GameObjects import Card
 
-    _card_id = None
-    _card_suit = None
-    _card_rank = None
+class NullCard(Card.Card):
 
     def __init__(self, a_rank, a_suit):
+        #Probably change this. unsure how to structure as of yet.
         pass
 
     def get_card_id(self):

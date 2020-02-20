@@ -3,10 +3,14 @@ from GameObjects import Card
 class TrumpCard(Card.Card):
 
     def __init__(self):
-        Card.Card.__init__(self, self._card_rank, "trump") #Is this the correct rank?
+        #Probably change this. unsure how to structure as of yet.
+        Card.Card.__init__(self, self._card_rank, "trump")
 
-    def accept_trump(self, a_trump_card): #A trump card accepts a trump card.
-        if self.get_card_rank() < a_trump_card.get_card_rank():
-            return True
+    def accept(self, a_card): #A trump card accepts a card.
+        if a_card._card_suit == "trump":
+            if self.get_card_rank() < a_card.get_card_rank():
+                return True
+            else:
+                return False
         else:
-            return False
+            return True

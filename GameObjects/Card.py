@@ -1,4 +1,6 @@
-class Card:
+from abc import ABC, abstractmethod
+
+class Card(ABC):
     
     _card_id = None
     _card_suit = None
@@ -16,10 +18,9 @@ class Card:
             self._card_id = (self._card_rank + 17)
         else:
             self._card_id = self._card_rank
-        #THERE HAS GOT TO BE A BETTER WAY TO DO THIS!!!
-        if self.card_rank == 0 or self.card_rank == 2 or self.card_rank == 3 or self.card_rank == 4:
+        if self.card_rank == 0 or self.card_rank in range(2, 5):
             self._point_value = 3
-        elif self.card_rank == 5 or self.card_rank == 6 or self.card_rank == 7 or self.card_rank == 8:
+        elif self.card_rank in range(5, 9):
             self._point_value = 2
         elif: self._card_rank == 9:
             self._point_value = 11
@@ -40,7 +41,9 @@ class Card:
     def get_card_rank(self):
         return self._card_rank
 
-    def accept(self, a_card): #Broke down some of the conditionals. Can I break it down any more? And did I do this properly?
+    @abstractmethod
+    def accept(self, a_card):
+        '''
         if self.get_card_suit() == "trump":
             if a_card.get_card_suit() == "trump":
                 return self.accept_trump(self, a_card)
@@ -51,11 +54,9 @@ class Card:
                 return False
             else:
                 return self.accept_fail(self, a_card)
+        '''
 
-    def visit(self, a_card_rule_object):
-        #Check out principles visitation methods to figure out what should be in this method.
-        #I might be getting this wrong, but the smalltalk code looks like what should happen when
-        #something visits a card. However, nothing visits a card, a card visits everything else.
-        #I may need some assistance on piecing this part together, as I don't remember much of what
-        #was ACTUALLY happening in the smalltalk program.
-        pass
+    def visit(self, an_object):
+        #Not 100% on this right now, will talk about at some point.
+        #Talk to Sark about this and see what his advice is.
+        an_object.accept(self)
