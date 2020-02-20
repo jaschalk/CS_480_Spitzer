@@ -7,15 +7,15 @@ class CallRules:
                             (8,1<<26), #remember to ~ the hand first
                             (16,1<<14 + 1<<20 + 1<<26)]
 
-    def validate(self, a_hand): #should the hand store it's numerical representation, or should it be calculated here?
+    def validate_calls(self, a_hand): #should the hand store it's numerical representation, or should it be calculated here?
         valid_call_state = 225 #this is the decimal value representing that any player can make NC, Z, ZS, ZSS calls
-        hand_numerical_state = a_hand.get_numerical_state()
+        hand_binary_representation = a_hand.binary_representation()
         for call, value in self._call_filter:
             if call == 4:
-                if hand_numerical_state & value == value:
+                if hand_binary_representation & value == value:
                     valid_call_state += call
             else:
-                if ~hand_numerical_state & value == value:
+                if ~hand_binary_representation & value == value:
                     valid_call_state += call
 
         return [int(d) for d in bin(valid_call_state)[2:]][::-1]

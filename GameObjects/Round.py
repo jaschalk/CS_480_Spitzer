@@ -95,3 +95,9 @@ class Round:
         if not os.path.isfile(file_name):
             with open(file_name, 'wb') as data_file:
                 pickle.dump(self.__file_out_data, data_file)
+
+    #Need to add a method to update the call state based on info passed in from the player.
+    def update_call(self, player_id, call_index):
+        for index in range(8):
+            self._call_matrix[player_id][index] = 0
+        self._call_matrix[player_id][call_index] = 1
