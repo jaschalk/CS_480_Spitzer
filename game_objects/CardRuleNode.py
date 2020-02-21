@@ -1,5 +1,4 @@
-#from GameObjects import Card
-from GameObjects import CardRuleNodeTrue
+from game_objects import CardRuleNodeTrue
 class CardRuleNode: #this might be generic enough to handle the nodes for both trees?
 
     _description = "" #is this needed/desired?

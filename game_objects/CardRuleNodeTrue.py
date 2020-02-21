@@ -1,4 +1,4 @@
-from . import CardRuleNode
+from game_objects import CardRuleNode
 
 class CardRuleNodeTrue(CardRuleNode.CardRuleNode):
     '''
