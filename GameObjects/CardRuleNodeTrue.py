@@ -2,11 +2,14 @@ from . import CardRuleNode
 
 class CardRuleNodeTrue(CardRuleNode.CardRuleNode):
     '''
-    This singleton node should always return True.
+    This singleton node should always return True, while following the existing node behavior.
     '''
     class __TrueNode:
         def __init__(self):
-            self._condition = True
+            def eval():
+                return True
+            self._description = "This node will return True."
+            self._evaluator_function = eval
             self._left = True
             self._right = True
     instance = None
