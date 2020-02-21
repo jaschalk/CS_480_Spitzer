@@ -5,6 +5,8 @@ import os
 
 class Round:
 
+    #Might want to add a get game state method to the round for use in the agent.
+
     _current_trick = None
     _parent_game = None
     _leading_player = None
