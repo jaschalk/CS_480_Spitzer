@@ -55,6 +55,7 @@ class Card(ABC):
             else:
                 return self.accept_fail(self, a_card)
         '''
+        pass
 
     def visit(self, an_object):
         #Not 100% on this right now, will talk about at some point.
