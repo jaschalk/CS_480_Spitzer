@@ -30,9 +30,9 @@ class Trick:
         return self._played_cards_list
 
     def __init__(self, a_round, a_player):
-        self.__parent_round = a_round
+        self._parent_round = a_round
         self._leading_player = a_player
-        self._winning_card = NullCard.NullCard(0,"")
+        self._winning_card = Card.Card(-1,"null")
 
     def accept(self, a_card):
        if self._suit_lead is None:
@@ -45,4 +45,7 @@ class Trick:
        self._played_cards_list[a_card.get_owning_player()] = a_card #don't append the cards, replace at the player index to preserve the owner of the card
        self._points_on_trick += a_card.get_point_value()
        if len(self._played_cards_list) == 4: #the trick is now done, process accordingly
-           self.__parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)
+           self.on_trick_fill()
+
+    def on_trick_fill(self):
+        self._parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)

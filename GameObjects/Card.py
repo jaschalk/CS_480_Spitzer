@@ -22,7 +22,7 @@ class Card(ABC):
             self._point_value = 3
         elif self._card_rank in range(5, 9):
             self._point_value = 2
-        elif: self._card_rank == 9:
+        elif self._card_rank == 9:
             self._point_value = 11
         elif self._card_rank == 10:
             self._point_value = 10
