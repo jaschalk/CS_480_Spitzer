@@ -1,5 +1,5 @@
 #from GameObjects import Card
-from GameObjects import CardRuleNodeTrue
+from . import CardRuleNodeTrue
 class CardRuleNode:
 
     _left = None
@@ -22,5 +22,8 @@ class CardRuleNode:
 if __name__ == "__main__":
     true_node = CardRuleNodeTrue.CardRuleNodeTrue()
     false_node = CardRuleNodeTrue.CardRuleNodeTrue()
-    test = CardRuleNode(None, true_node, false_node, lambda a: a is False)
+    def sample(a, b):
+        if a < b:
+            return True
+    test = CardRuleNode(None, true_node, false_node, sample)
     print(test.validate(True))

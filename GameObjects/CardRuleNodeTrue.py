@@ -1,9 +1,9 @@
-from GameObjects import CardRuleNode
-'''
-This singleton node should always return True.
-'''
+from . import CardRuleNode
+
 class CardRuleNodeTrue(CardRuleNode.CardRuleNode):
-    
+    '''
+    This singleton node should always return True.
+    '''
     class __TrueNode:
         def __init__(self):
             self._condition = True
