@@ -18,9 +18,9 @@ class Card(ABC):
             self._card_id = (self._card_rank + 17)
         else:
             self._card_id = self._card_rank
-        if self.card_rank == 0 or self.card_rank in range(2, 5):
+        if self._card_rank == 0 or self._card_rank in range(2, 5):
             self._point_value = 3
-        elif self.card_rank in range(5, 9):
+        elif self._card_rank in range(5, 9):
             self._point_value = 2
         elif: self._card_rank == 9:
             self._point_value = 11
@@ -55,6 +55,7 @@ class Card(ABC):
             else:
                 return self.accept_fail(self, a_card)
         '''
+        pass
 
     def visit(self, an_object):
         #Not 100% on this right now, will talk about at some point.
