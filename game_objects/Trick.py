@@ -1,6 +1,5 @@
-from GameObjects import Player
-from GameObjects import Card
-from GameObjects import NullCard
+from game_objects import Player
+from game_objects import Card
 class Trick:
 
     _parent_round = None

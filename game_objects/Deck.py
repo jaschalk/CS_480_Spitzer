@@ -1,4 +1,4 @@
-from GameObjects import Card
+from game_objects import Card
 from random import shuffle
 
 class Deck:
