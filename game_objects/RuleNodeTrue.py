@@ -14,4 +14,6 @@ class RuleNodeTrue:
         if not RuleNodeTrue.instance:
             RuleNodeTrue.instance = RuleNodeTrue.__TrueNode()
         return RuleNodeTrue.instance
-        
+    
+    def validate(self, *args):
+        self.instance.validate(*args)

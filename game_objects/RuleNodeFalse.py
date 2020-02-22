@@ -14,3 +14,5 @@ class RuleNodeFalse:
             RuleNodeFalse.instance = RuleNodeFalse.__FalseNode()
         return RuleNodeFalse.instance
         
+    def validate(self, *args):
+        self.instance.validate(*args)
