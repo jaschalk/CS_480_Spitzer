@@ -22,18 +22,18 @@ class CardRuleTree:
             # the ace will be card # 14 + 6*(call_index - 1)
             return 14 + 6*(which_call - 1)
 
-        def get_suit_binary_representation(suit_lead):
-            suit_lead_binary_representation = 0
-            if suit_lead == "trump":
-                suit_lead_binary_representation = 0b00000000000000000011111111111111
-            elif suit_lead == "clubs":
-                suit_lead_binary_representation = 0b00000000000011111100000000000000
-            elif suit_lead == "spades":
-                suit_lead_binary_representation = 0b00000011111100000000000000000000
-            elif suit_lead == "hearts":
-                suit_lead_binary_representation = 0b11111100000000000000000000000000
-                                                #will need to double check these numbers, reasonablely confident they're correct though
-            return suit_lead_binary_representation
+        def get_suit_binary_representation(suit):
+            suit_binary_representation = 0
+            if suit == "trump":
+                suit_binary_representation = 0b00000000000000000011111111111111
+            elif suit == "clubs":
+                suit_binary_representation = 0b00000000000011111100000000000000
+            elif suit == "spades":
+                suit_binary_representation = 0b00000011111100000000000000000000
+            elif suit == "hearts":
+                suit_binary_representation = 0b11111100000000000000000000000000
+
+            return suit_binary_representation
 
         def is_player_leading(*args):
             return args[2].get_leading_player() == args[1]
@@ -53,7 +53,7 @@ class CardRuleTree:
             # might want to add a method to the player to avoid this Law of Demeter violation
 
         def has_suit_lead(*args):
-            suit_lead = args[2].get_current_trick().get_suit_lead() # might want to add a method to the round to avoid this Law of Demeter violation
+            suit_lead = args[2].get_suit_lead()
             suit_lead_binary_representation = get_suit_binary_representation(suit_lead)
             return (args[1].get_hand().get_binary_representation() & suit_lead_binary_representation) != 0
             # might want to add a method to the player to avoid this Law of Demeter violation
@@ -63,7 +63,7 @@ class CardRuleTree:
             return args[0].get_card_id() == ace_id
 
         def does_card_follow_suit(*args):
-            suit_lead = args[2].get_current_trick().get_suit_lead() # might want to add a method to the round to avoid this Law of Demeter violation
+            suit_lead = args[2].get_suit_lead()
             suit_lead_binary_representation = get_suit_binary_representation(suit_lead)
             return suit_lead_binary_representation & 1<<args[0].get_card_id() != 0
 
@@ -73,7 +73,7 @@ class CardRuleTree:
 
         def was_called_ace_suit_lead(*args):
             called_ace_id = get_ace_called_id(args)
-            suit_lead = args[2].get_current_trick().get_suit_lead() # might want to add a method to the round to avoid this Law of Demeter violation
+            suit_lead = args[2].get_suit_lead()
             suit_lead_binary_representation = get_suit_binary_representation(suit_lead)
             return (suit_lead_binary_representation & called_ace_id) != 0
 

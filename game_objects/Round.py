@@ -67,6 +67,9 @@ class Round:
     def set_leading_player(self, player):
         self._leading_player = player
 
+    def get_suit_lead(self):
+        return self._current_trick.get_suit_lead()
+
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         for card in card_list:
             player_number = card.get_owning_player().get_player_number() #this should be changed?

@@ -5,7 +5,7 @@ class RuleNode: #this might be generic enough to handle the nodes for both trees
     _left = None
     _right = None
     _evaluator_function = None
-    _parent_tree = None
+    _parent_tree = None #this might be redundant
 
     def __init__(self, parent, description, code_block):
         # it might make more sense to have the left default to true and the right false
