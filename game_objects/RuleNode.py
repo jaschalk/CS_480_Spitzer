@@ -23,12 +23,27 @@ class RuleNode: #this might be generic enough to handle the nodes for both trees
 if __name__ == "__main__":
     true_node = RuleNodeTrue.RuleNodeTrue()
     false_node = RuleNodeFalse.RuleNodeFalse()
+    print(false_node)
+    test_node = RuleNodeFalse.RuleNodeFalse()
+    print(test_node)
     def sample(*args):
+        print("is first less than second?")
         if args[0] < args[1]:
+            return True
+        else:
+            return False
+    def is_less_than_7(*args):
+        print("is less than 7?")
+        if args[0] < 7 and args[1] < 7:
             return True
         else:
             return False
     test = RuleNode(None, "This node compares two numbers and returns true if the first is less than the second",
                          true_node, false_node, sample)
-    print(test.validate(1,2)) #since the "sample" function takes 2 parameters a tuple containing those parameters
+    first_node = RuleNode(None, "This node checks if both inputs are less than 7",
+                        test, false_node, is_less_than_7)
+    print(test.validate(1,2)) #since the "sample" function takes 2 parameters, then bundles those into a tuple which
                                 #must be passed into the validate method
+    print(first_node.validate(3,2))
+    print(first_node.validate(9,8))
+    print(first_node.validate(2,3)) #IT WORKS!!
