@@ -48,7 +48,6 @@ class CardRuleTree:
 
         def has_called_ace(*args):
             ace_id = get_ace_called_id(*args)
-            # then go through this players hand to see if they have that ace
             return (args[1].get_hand().get_binary_representation() & 1<<ace_id) == 1<<ace_id
             # might want to add a method to the player to avoid this Law of Demeter violation
 
