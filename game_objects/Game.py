@@ -1,4 +1,4 @@
-from GameObjects import *
+from game_objects import *
 
 class Game:
 
@@ -15,10 +15,13 @@ class Game:
       self._deck = Deck.Deck()
       self._round = Round.Round(self)
       for index in range(4):
-        self._players_list[index] = Player.Player(index)
-      self._card_rules = CardRuleTree.CardRuleTree(self)
+        self._players_list[index] = Player.Player(self, index) #need to pass in an agent?
+      self._card_rules = CardRuleTree.CardRuleTree()
       self._partner_rules = PartnerRuleTree.PartnerRuleTree(self)
       self._call_rules = CallRules.CallRules(self)
+
+   def get_round(self):
+      return self._round
 
    def begin_round():
       self._round._begin_play()

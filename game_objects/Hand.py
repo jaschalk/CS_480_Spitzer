@@ -1,5 +1,5 @@
-from GameObjects import Card
-from GameObjects import Trick
+from game_objects import Card
+from game_objects import Trick
 import numpy as np
 
 class Hand:
