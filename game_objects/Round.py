@@ -7,9 +7,11 @@ class Round:
 
     #Might want to add a get game state method to the round for use in the agent.
 
+    #A new 
     _current_trick = None
     _parent_game = None
     _leading_player = None
+    _winner_of_first_trick = None
     _players_list = [None, None, None, None]
     #using numpy's arrays rather than standard python lists since this is the data that will be interfacing with the ML process
     _trick_history = np.zeros((4,8,32),dtype=np.int8)
@@ -71,6 +73,8 @@ class Round:
         return self._current_trick.get_suit_lead()
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
+        if self._winner_of_first_trick is None:
+            self._winner_of_first_trick = winning_player
         for card in card_list:
             player_number = card.get_owning_player().get_player_number() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_index()] = 1
