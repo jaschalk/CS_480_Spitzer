@@ -1,8 +1,8 @@
 import unittest
-from GameObjects import Trick
-from GameObjects import Player
-from GameObjects import Card
-from GameObjects import Round
+from game_objects import Trick
+from game_objects import Player
+from game_objects import Card
+from game_objects import Round
 
 class TrickTest(unittest.TestCase):
 

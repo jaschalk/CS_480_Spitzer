@@ -21,7 +21,7 @@ class Player:
         self._player_id = player_id
         self._parent_game = a_game
         self._controlling_agent = an_agent 
-        self._trick = Trick.Trick(a_game.get_round(), self)
+        self._trick = Trick.Trick(a_game.get_round(), self) 
         self._potential_partners_list[self._player_id] = 1
         for index in range(4):
             if index != self._player_id:

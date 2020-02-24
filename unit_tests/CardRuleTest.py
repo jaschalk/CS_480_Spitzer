@@ -1,9 +1,9 @@
 import unittest
-from GameObjects import CardRuleTree as CRT
-from GameObjects import Player
-from GameObjects import Round
-from GameObjects import Trick
-from GameObjects import Card
+from game_objects import CardRuleTree as CRT
+from game_objects import Player
+from game_objects import Round
+from game_objects import Trick
+from game_objects import Card
 
 class CardRuleTest(unittest.TestCase):
 

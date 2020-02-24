@@ -1,9 +1,9 @@
 import unittest
-from GameObjects import PartnerRuleTree as PRT
-from GameObjects import Player
-from GameObjects import Round
-from GameObjects import Trick
-from GameObjects import Card
+from game_objects import PartnerRuleTree as PRT
+from game_objects import Player
+from game_objects import Round
+from game_objects import Trick
+from game_objects import Card
 
 class PartnerRuleTest(unittest.TestCase):
 

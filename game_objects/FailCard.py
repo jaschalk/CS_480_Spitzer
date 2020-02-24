@@ -1,4 +1,4 @@
-from GameObjets import Card
+from game_objects import Card
 
 class FailCard(Card.Card):
 

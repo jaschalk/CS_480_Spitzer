@@ -1,4 +1,4 @@
-from GameObjects import PartnerRuleNode
+from game_objects import RuleNode
 
 class PartnerRuleTree:
 

@@ -1,8 +1,8 @@
 import unittest
-from GameObjects import CallRules as CR
-from GameObjects import Card
-from GameObjects import Hand
-from GameObjects import Player
+from game_objects import CallRules as CR
+from game_objects import Card
+from game_objects import Hand
+from game_objects import Player
 
 class CallRuleTest(unittest.TestCase):
 

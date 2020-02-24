@@ -1,4 +1,4 @@
-from GameObjects import Card
+from game_objects import Card
 
 class NullCard(Card.Card):
 

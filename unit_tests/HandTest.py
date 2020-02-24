@@ -1,5 +1,5 @@
 import unittest
-from GameObjects import *
+from game_objects import *
 
 class HandTest(unittest.TestCase):
 

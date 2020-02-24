@@ -1,7 +1,7 @@
 import unittest
 import copy
 import pickle
-from GameObjects import *
+from game_objects import *
 
 class RoundTest(unittest.TestCase):
 

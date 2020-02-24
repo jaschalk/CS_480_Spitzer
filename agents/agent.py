@@ -1,4 +1,4 @@
-from GameObjects import *
+from game_objects import *
 import tensorflow as tf
 from abc import ABC, abstractmethod
 class Agent(ABC): #currently unsure what other information an agent should have?
