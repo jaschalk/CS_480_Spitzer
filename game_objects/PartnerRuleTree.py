@@ -8,4 +8,11 @@ class PartnerRuleTree:
         return self._root
 
     def __init__(self):
-        self.root = PartnerRuleNode
+        
+        def get_call_made(*args):
+
+        def get_ace_called_id(*args):
+
+        def get_player_took_first_trick(*args):
+
+        
