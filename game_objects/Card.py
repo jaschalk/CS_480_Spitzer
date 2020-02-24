@@ -7,17 +7,28 @@ class Card(ABC):
     _card_rank = None
     _point_value = 0
 
-    def __init__(self, a_rank, a_suit): #Constructor. Set suit and rank to be the values passed in, calculate index based on suit offset and rank.
-        self._card_suit = a_suit
-        self._card_rank = a_rank
-        if self._card_suit == "clubs":
-            self._card_id = (self._card_rank + 5)
-        elif self._card_suit == "spades":
-            self._card_id = (self._card_rank + 11)
-        elif self._card_suit == "hearts":
-            self._card_id = (self._card_rank + 17)
+    def __init__(self, a_rank, a_suit):
+        #Take another look at this.
+        pass
+
+    def __new__(cls, a_rank, a_suit):
+        if a_suit == "trump":
+            return TrumpCard.TrumpCard(a_rank, a_suit)
+        elif a_suit == "null":
+            return NullCard.NullCard()
         else:
-            self._card_id = self._card_rank
+            return FailCard.FailCard(a_rank, a_suit)
+
+    def get_card_id(self): #Getters. Shouldn't ever need to set the id, suit, or rank of a card.
+        return self._card_id
+    
+    def get_card_suit(self):
+        return self._card_suit
+
+    def get_card_rank(self):
+        return self._card_rank
+
+    def set_point_value(self, a_rank):
         if self._card_rank == 0 or self._card_rank in range(2, 5):
             self._point_value = 3
         elif self._card_rank in range(5, 9):
@@ -30,16 +41,6 @@ class Card(ABC):
             self._point_value = 4
         else:
             self._point_value = 0
-
-
-    def get_card_id(self): #Getters. Shouldn't ever need to set the id, suit, or rank of a card.
-        return self._card_id
-    
-    def get_card_suit(self):
-        return self._card_suit
-
-    def get_card_rank(self):
-        return self._card_rank
 
     @abstractmethod
     def accept(self, a_card):

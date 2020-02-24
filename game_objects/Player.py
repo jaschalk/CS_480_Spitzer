@@ -11,7 +11,6 @@ class Player:
     _potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
     _hand = None
     _is_leading = False
-    _took_first_trick = False
     _player_id = None
     _parent_game = None
     _controlling_agent = None

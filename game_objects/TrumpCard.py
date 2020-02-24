@@ -2,9 +2,11 @@ from game_objects import Card
 
 class TrumpCard(Card.Card):
 
-    def __init__(self):
-        #Probably change this. unsure how to structure as of yet.
-        Card.Card.__init__(self, self._card_rank, "trump")
+    def __init__(self, a_rank):
+        self._card_suit = "trump"
+        self._card_rank = a_rank
+        self._card_id = a_rank
+        self.set_point_value(a_rank)
 
     def accept(self, a_card): #A trump card accepts a card.
         if a_card._card_suit == "trump":
