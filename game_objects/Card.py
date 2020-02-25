@@ -1,3 +1,6 @@
+from game_objects import TrumpCard
+from game_objects import NullCard
+from game_objects import FailCard
 class Card():
     
     _card_id = None
