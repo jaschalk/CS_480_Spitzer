@@ -7,7 +7,6 @@ class Round:
 
     #Might want to add a get game state method to the round for use in the agent.
 
-    #A new 
     _current_trick = None
     _parent_game = None
     _leading_player = None
@@ -109,3 +108,18 @@ class Round:
         for index in range(8):
             self._call_matrix[player_id][index] = 0
         self._call_matrix[player_id][call_index] = 1
+
+    def begin_play(self): #this method should start asking players to play cards to the active trick while they can do so
+        while self._leading_player.does_play_continue():
+            for player in self._players_list:
+                player.play_card_to(self._current_trick)
+        #TODO call push data out
+
+    def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective
+        a_game_state = {}
+        a_game_state["trick history"] = self._trick_history
+        a_game_state["trick_point_history"] = self.__trick_point_history
+        a_game_state["call_matrix"] = self._call_matrix
+        a_game_state["current_trick"] = self._current_trick
+        a_game_state["current_player"] = self._players_list[a_player_index]
+        #TODO finish this method!

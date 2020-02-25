@@ -11,6 +11,7 @@ class CardRuleTree:
                         #is there a way to avoid doing so?
 
         def get_ace_called_id(*args):
+            # this assumes that an ace has been called
             # need to go through the call matrix to see what ace was called
             call_state = args[2].get_call_matrix()
             which_call = -1
