@@ -11,6 +11,7 @@ class CardRuleTree:
                         #is there a way to avoid doing so?
 
         def get_ace_called_id(*args):
+            # this assumes that an ace has been called
             # need to go through the call matrix to see what ace was called
             call_state = args[2].get_call_matrix()
             which_call = -1
@@ -23,17 +24,17 @@ class CardRuleTree:
             return 14 + 6*(which_call - 1)
 
         def get_suit_binary_representation(suit):
-            suit_binary_representation = 0
             if suit == "trump":
-                suit_binary_representation = 0b00000000000000000011111111111111
+                return 0b00000000000000000011111111111111
             elif suit == "clubs":
-                suit_binary_representation = 0b00000000000011111100000000000000
+                return 0b00000000000011111100000000000000
             elif suit == "spades":
-                suit_binary_representation = 0b00000011111100000000000000000000
+                return 0b00000011111100000000000000000000
             elif suit == "hearts":
-                suit_binary_representation = 0b11111100000000000000000000000000
-
-            return suit_binary_representation
+                return 0b11111100000000000000000000000000
+            else:
+                # raise an error if the suit requested isn't in the valid set, to prevent silent errors
+                raise RuntimeError("Get suit binary representation received a request for an invalid suit.")
 
         def is_player_leading(*args):
             return args[2].get_leading_player() == args[1]
@@ -48,7 +49,6 @@ class CardRuleTree:
 
         def has_called_ace(*args):
             ace_id = get_ace_called_id(*args)
-            # then go through this players hand to see if they have that ace
             return (args[1].get_hand().get_binary_representation() & 1<<ace_id) == 1<<ace_id
             # might want to add a method to the player to avoid this Law of Demeter violation
 
