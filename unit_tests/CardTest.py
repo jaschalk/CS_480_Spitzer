@@ -1,14 +1,14 @@
 import unittest
-from game_objects import *
+from game_objects import Card
 
 class CardTest(unittest.TestCase):
 
     def setUp(self):
-        self.testCardTrumpOne = Card(0, "trump")
-        self.testCardTrumpTwo = Card(1, "trump")
-        self.testCardFailOne = Card(11, "clubs")
-        self.testCardFailTwo = Card(12, "clubs")
-        self.testCardFailThree = Card(12, "hearts")
+        self.testCardTrumpOne = Card.Card(0, "trump")
+        self.testCardTrumpTwo = Card.Card(1, "trump")
+        self.testCardFailOne = Card.Card(11, "clubs")
+        self.testCardFailTwo = Card.Card(12, "clubs")
+        self.testCardFailThree = Card.Card(12, "hearts")
 
     def test_fail_receives_trump(self):
         self.assertFalse(self.testCardFailOne.accept(self.testCardTrumpOne))
