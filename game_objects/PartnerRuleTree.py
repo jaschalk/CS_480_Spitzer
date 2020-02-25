@@ -24,8 +24,10 @@ class PartnerRuleTree:
             return 14 + 6*(which_call - 1)
 
         def get_player_took_first_trick(*args):
+            pass
 
         def did_asking_player_make_call(*args):
+            pass
 
         def was_first_trick_called(*args):
             call_state = args[2].get_call_matrix()
@@ -52,7 +54,10 @@ class PartnerRuleTree:
             return solo_called
 
         def does_asking_player_have_a_queen(*args):
+            pass
 
         def does_target_player_have_a_queen(*args):
+            pass
 
-        def have_both_black_queens_been_played(*args):  
+        def have_both_black_queens_been_played(*args): 
+            pass 
