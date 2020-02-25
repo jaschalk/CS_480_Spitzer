@@ -105,3 +105,15 @@ class Round:
         for index in range(8):
             self._call_matrix[player_id][index] = 0
         self._call_matrix[player_id][call_index] = 1
+
+    def start_play(self):
+        while(self._leading_player.does_play_continue()):
+            for player in self._players_list:
+                player.play_card_to(self._current_trick)
+
+    def get_game_state_for_player(self, a_player_index): #TODO make sure this is packing all the data that we want
+        current_game_state = {"trick_history":self._trick_history,
+                     "trick_point_history":self.__trick_point_history,
+                     "player":self._players_list[a_player_index],
+                     "call_matrix":self._call_matrix}
+        return current_game_state
