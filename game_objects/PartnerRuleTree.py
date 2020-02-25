@@ -28,6 +28,12 @@ class PartnerRuleTree:
         def did_asking_player_make_call(*args):
 
         def was_first_trick_called(*args):
+            call_state = args[2].get_call_matrix()
+            first_trick_called = False
+            for i in range(4): #query each players index in the call matrix to see if they called an ace
+                if(call_state[i][4] == 1):
+                    first_trick_called = True
+            return first_trick_called
 
         def was_ace_called(*args):
             call_state = args[2].get_call_matrix()
@@ -38,11 +44,15 @@ class PartnerRuleTree:
             return ace_called
 
         def was_solo_called(*args):
+            call_state = args[2].get_call_matrix()
+            solo_called = False
+            for i in range(4): #query each players index in the call matrix to see if they called an ace
+                if(call_state[i][5] == 1 or call_state[i][6] == 1 or call_state[i][7] == 1):
+                    solo_called = True
+            return solo_called
 
         def does_asking_player_have_a_queen(*args):
 
         def does_target_player_have_a_queen(*args):
 
-        def have_both_black_queens_been_played(*args):
-
-        
+        def have_both_black_queens_been_played(*args):  
