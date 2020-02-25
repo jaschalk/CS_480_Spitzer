@@ -1,15 +1,15 @@
-from abc import ABC, abstractmethod
-
-class Card(ABC):
+class Card():
     
     _card_id = None
     _card_suit = None
     _card_rank = None
     _point_value = 0
 
-    def __init__(self, a_rank, a_suit):
-        #Take another look at this.
-        pass
+    #def __init__(self, a_rank, a_suit):
+        #Take another look at this. Might not need this at all.
+        #self._card_suit = a_suit
+        #self._card_rank = a_rank
+    
 
     def __new__(cls, a_rank, a_suit):
         if a_suit == "trump":
@@ -42,7 +42,6 @@ class Card(ABC):
         else:
             self._point_value = 0
 
-    @abstractmethod
     def accept(self, a_card):
         '''
         if self.get_card_suit() == "trump":

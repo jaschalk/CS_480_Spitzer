@@ -13,6 +13,10 @@ class FailCard(Card.Card):
             self._card_id = (self._card_rank + 17)
         self.set_point_value(a_rank)
 
+    def __new__(cls, a_rank, a_suit):
+        #know we need to do this, unsure of what goes here. 
+        object.__new__(cls)
+
     def accept(self, a_card):
         if a_card._card_suit == "fail":
             if self.get_card_suit == a_card.get_card_suit():

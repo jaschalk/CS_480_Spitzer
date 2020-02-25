@@ -6,7 +6,6 @@ class Player:
     _trick_score = 0
     _round_score = 0
     _total_score = 0
-    _trick = None #might want to double check if we need this.
     _valid_call_list = [1, 0, 0, 0, 1, 1, 1, 1]
     _potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
     _hand = None
@@ -20,7 +19,6 @@ class Player:
         self._player_id = player_id
         self._parent_game = a_game
         self._controlling_agent = an_agent 
-        self._trick = Trick.Trick(a_game.get_round(), self) 
         self._potential_partners_list[self._player_id] = 1
         for index in range(4):
             if index != self._player_id:
@@ -67,13 +65,11 @@ class Player:
         #This method should send the card to the hand when a player is dealt a card
         self._hand.accept(a_card)
 
-    def ask_for_card_choice(self):
-        self._controlling_agent.play_card(self, self._parent_game) #need to better define what goes into the game state.
+    def play_card_to(self, a_trick):
+        #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the inex returned to the trick.
+        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game)
+        self._hand.play_card_at_index(a_trick, card_to_play_index)
     
-    def relay_card_choice(self, a_card_index): 
-        #Ask the hand to play a card specified by the agent.
-        self._hand.play_card_at_index(self._trick, a_card_index) #might want to consider relaying to the round instead of the trick.
-
     def validate_card(self, a_card):
         #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
         return self._parent_game.validate_card(a_card, self)
@@ -92,11 +88,9 @@ class Player:
                       self._potential_partners_list[i] = 1/2 #This number might need to be modified later.
 
     def ask_for_call(self):
-        self._controlling_agent.make_call(self)
-    
-    def relay_call_choice(self, a_call_index):
-        #the player has to relay the call being made to the round -- might want to take another look at this.
-        self._round.update_call(self._player_id, a_call_index)
+        #Player asks agent to make a call. The value returned from the agent is then used to update the round based on the index of the call made.
+        index_of_call_made = self._controlling_agent.make_call(self)
+        self._round.update_call(self._player_id, index_of_call_made)
 
     def determine_valid_calls(self):
         #Asks the parent game to return the legal calls based on the information in the hand.
