@@ -2,7 +2,7 @@ from game_objects.Card import Card
 
 class TrumpCard(Card):
 
-    def __init__(self, a_rank):
+    def __init__(self, a_rank, a_suit):
         self._card_suit = "trump"
         self._card_rank = a_rank
         self._card_id = a_rank

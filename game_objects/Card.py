@@ -17,7 +17,7 @@ class Card():
             return TrumpCard.TrumpCard(a_rank, a_suit)
         elif a_suit == "null":
             from game_objects import NullCard
-            return NullCard.NullCard()
+            return NullCard.NullCard(a_rank, a_suit)
         else:
             from game_objects import FailCard
             return FailCard.FailCard(a_rank, a_suit)

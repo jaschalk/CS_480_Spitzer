@@ -18,7 +18,7 @@ class FailCard(Card):
         return object.__new__(cls)
 
     def accept(self, a_card):
-        if a_card._card_suit == "fail":
+        if a_card._card_suit != "trump":
             if self.get_card_suit == a_card.get_card_suit():
                 if self.get_card_rank() < a_card.get_card_rank():
                     return True
