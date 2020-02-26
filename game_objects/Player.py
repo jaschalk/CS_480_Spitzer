@@ -25,6 +25,9 @@ class Player:
                 self._potential_partners_list[index] = (1/3)
         self._hand = Hand.Hand(self)
 
+    def get_player_id(self):
+        return self._player_id
+    
     def get_trick_score(self):
         return self._trick_score
 
