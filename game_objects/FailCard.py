@@ -15,7 +15,7 @@ class FailCard(Card.Card):
 
     def __new__(cls, a_rank, a_suit):
         #know we need to do this, unsure of what goes here. 
-        object.__new__(cls)
+        return object.__new__(cls)
 
     def accept(self, a_card):
         if a_card._card_suit == "fail":
