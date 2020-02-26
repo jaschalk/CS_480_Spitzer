@@ -1,6 +1,6 @@
-#from game_objects import Card
+from game_objects.Card import Card
 
-class FailCard(Card.Card):
+class FailCard(Card):
 
     def __init__(self, a_rank, a_suit):
         self._card_suit = a_suit
