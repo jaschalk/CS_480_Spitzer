@@ -25,22 +25,14 @@ class PartnerRuleTree:
 
         def get_player_took_first_trick(*args):
             #where are we keeping track of this info? Are we keeping track of this info?
-<<<<<<< HEAD
-            # TODO in the Round, don't know if there's a getter yet
-=======
             #In the round. There isn't a getter yet.
->>>>>>> dev
             pass
 
         def has_call_been_made(*args):
             call_has_been_made = False
             call_matrix = args[2].get_call_matrix()
             for index in range(4):
-<<<<<<< HEAD
-                for i in range(8): # TODO in range(1,8) need to not check the no call "call"
-=======
                 for i in range(1, 8):
->>>>>>> dev
                     if(call_matrix[index][i] == 1):
                         call_has_been_made = True
             return call_has_been_made
@@ -49,11 +41,7 @@ class PartnerRuleTree:
             asking_player_id = args[0].get_player_id
             call_matrix = args[2].get_call_matrix()
             asking_player_made_call = False
-<<<<<<< HEAD
-            for index in range(8): # TODO in range(1,8) need to not check the no call "call"
-=======
             for index in range(1, 8):
->>>>>>> dev
                 if (call_matrix[index][asking_player_id] == 1):
                     asking_player_made_call = True
             return asking_player_made_call
@@ -67,27 +55,10 @@ class PartnerRuleTree:
             return first_trick_called
 
         def did_target_take_first_trick(*args):
-<<<<<<< HEAD
-            took_first_trick = get_player_took_first_trick(*args)
-            target_player_id = args[1].get_player_id()
-            if(took_first_trick == target_player_id): # TODO return took_first_trick == args[1].get_player_id()
-                return True
-            else:
-                return False
-
-        def did_asking_take_first_trick(*args): #Repeated code. Is this what we want here?
-            took_first_trick = get_player_took_first_trick(*args)
-            asking_player_id = args[0].get_player_id()
-            if(took_first_trick == asking_player_id): # TODO return took_first_trick == args[0].get_player_id()
-                return True
-            else:
-                return False
-=======
             return get_player_took_first_trick(*args) == args[1].get_player_id()
 
         def did_asking_take_first_trick(*args): #Repeated code. Is this what we want here?
             return get_player_took_first_trick(*args) == args[0].get_player_id()
->>>>>>> dev
 
         def was_ace_called(*args):
             call_state = args[2].get_call_matrix()
@@ -98,11 +69,7 @@ class PartnerRuleTree:
             return ace_was_called
 
         def does_target_player_have_ace(*args):
-<<<<<<< HEAD
-            # TODO I think we'll need to check played cards here as well
-=======
             #This needs to be modified to look at the cards played instead of the cards in the hand.
->>>>>>> dev
             ace_called = get_ace_called_id(*args)
             cards_in_player_hand = args[1].get_hand().get_cards_in_hand()
             target_player_has_ace = False
@@ -112,11 +79,7 @@ class PartnerRuleTree:
             return target_player_has_ace
 
         def does_asking_player_have_ace(*args): #repeated code. Is this what we want here?
-<<<<<<< HEAD
-        # TODO I think we'll need to check played cards here as well
-=======
             #This needs to be modified to look at the cards played instead and the cards in the hand.
->>>>>>> dev
             ace_called = get_ace_called_id(*args)
             cards_in_player_hand = args[0].get_hand().get_cards_in_hand()
             asking_player_has_ace = False
@@ -126,13 +89,8 @@ class PartnerRuleTree:
             return asking_player_has_ace
 
         def has_ace_been_played(*args):
-<<<<<<< HEAD
-            trick_history = args[2].get_trick_history
-            ace_called = get_ace_called_id(*args) #I don't think this number is what I want it to be. Need some clarification. TODO
-=======
             trick_history = args[2].get_trick_history()
             ace_called = get_ace_called_id(*args)
->>>>>>> dev
             ace_has_been_played = False
             for index in range(4):
                 for i in range(8):
@@ -141,33 +99,6 @@ class PartnerRuleTree:
             return ace_has_been_played
 
         def does_asking_player_have_a_queen(*args):
-<<<<<<< HEAD
-            cards_in_player_hand = args[0].get_hand().get_cards_in_hand()
-            asking_player_queen = False
-            for index in range(8): # TODO return (hand_binary & 0b1 == 0b1) || (hand_binary & 0b100 == 0b100)
-                if(cards_in_player_hand[index].get_card_id() == 0 or cards_in_player_hand[index].get_card_id() == 2):
-                    asking_player_queen = True
-            return asking_player_queen
-
-        def does_asking_player_have_both_queens(*args):
-            # TODO Do we want to use a binary representation to answer these questions?
-            cards_in_player_hand = args[0].get_hand().get_cards_in_hand() # LoD violation
-            asking_player_first_queen = False
-            asking_player_second_queen = False
-            for index in range(8): # TODO return hand_binary & 0b101 == 0b101
-                if(cards_in_player_hand[index].get_card_id() == 0):
-                    asking_player_first_queen = True
-                elif(cards_in_player_hand[index].get_card_id() == 2):
-                    asking_player_second_queen = True
-            if(asking_player_first_queen and asking_player_second_queen):
-                return True
-            else:
-                return False
-
-        def does_target_player_have_a_queen(*args): #repeated code here. Can we simplify? Also still getting confused on have vs play. Is this what we want here?
-            # TODO since this is about target player I think we'd want to use played cards here
-            cards_in_player_hand = args[1].get_hand().get_cards_in_hand() # LoD violation
-=======
             #Need to also consider the cards that this player has played.
             player_hand_binary_representation = args[0].get_hand().get_binary_representation()
             return (player_hand_binary_representation & 0b1 == 0b1) or (player_hand_binary_representation & 0b100 == 0b100)
@@ -180,7 +111,6 @@ class PartnerRuleTree:
         def does_target_player_have_a_queen(*args): #repeated code here. Can we simplify? Also still getting confused on have vs play. Is this what we want here?
             #Use the played cards here instead of the cards in the hand.
             cards_in_player_hand = args[1].get_hand().get_cards_in_hand()
->>>>>>> dev
             target_player_queen = False
             for index in range(8): 
                 if(cards_in_player_hand[index].get_card_id() == 0 or cards_in_player_hand[index].get_card_id() == 2):
@@ -188,18 +118,8 @@ class PartnerRuleTree:
             return target_player_queen
 
         def have_both_queens_been_played(*args): 
-<<<<<<< HEAD
-            trick_history = args[2].get_trick_history()
-            both_queens_played = False # TODO Do we want to store this info somewhere? 
-            for index in range(8): #in each trick...
-                for i in range(4): #for every player...
-                    if(trick_history[i][index][0] == 1 or trick_history[i][index][2] == 1):
-                        both_queens_played = True
-            return both_queens_played
-=======
             cards_played = args[2].get_cards_played()
             return (cards_played & 0b101 == 0b101)
->>>>>>> dev
 
         self._root = RuleNode.RuleNode(self, "Returns true if a call has been made.", has_call_been_made)
         __root_R = RuleNode.RuleNode(self, "Returns true if the asking player has a queen.", does_asking_player_have_a_queen)
@@ -208,10 +128,6 @@ class PartnerRuleTree:
         __root_RLRR = RuleNode.RuleNode(self, "Returns true if both queens have been played.", have_both_queens_been_played)
         __root_RR = RuleNode.RuleNode(self, "Returns true if the target player has a queen", does_target_player_have_a_queen)
         __root_RRR = RuleNode.RuleNode(self, "Returns true if both queens have been played", have_both_queens_been_played)
-<<<<<<< HEAD
-#        __root_RRR = RuleNode.RuleNode(self, "Returns true if the asking player has trump cards.", does_player_have_trump) # TODO repeated node?
-=======
->>>>>>> dev
         __root_L = RuleNode.RuleNode(self, "Returns true if the asking player made the call.", did_asking_player_make_call)
         __root_LL = RuleNode.RuleNode(self, "Returns true if the call made was for first trick.", was_first_trick_called)
         __root_LLL = RuleNode.RuleNode(self, "Returns true if the target player took the first trick.", did_target_take_first_trick)
@@ -230,18 +146,6 @@ class PartnerRuleTree:
         __root_RR.set_right(__root_RRR)
         __root_RL.set_right(__root_RLR)
         __root_RLR.set_right(__root_RLRR)
-<<<<<<< HEAD
-        __root_L.set_right(__root._LR) #TODO lots of extra .'s here
-        __root._LR.set_right(__root._LRR)
-        __root._LR.set_left(__root._LRL)
-        __root._LRR.set_left(__root._LRRL)
-        __root._LRRL.set_right(__root._LRRLR)
-        __root_L.set_left(__root._LL)
-        __root._LL.set_left(__root._LLL)
-        __root._LL.set_right(__root.LLR)
-        __root._LLR.set_left(__root._LLRL)
-        __root.LLRL.set_right(__root._LLRLR) 
-=======
         __root_L.set_right(__root_LR)
         __root_LR.set_right(__root_LRR)
         __root_LR.set_left(__root_LRL)
@@ -252,7 +156,6 @@ class PartnerRuleTree:
         __root_LL.set_right(__root_LLR)
         __root_LLR.set_left(__root_LLRL)
         __root_LLRL.set_right(__root_LLRLR) 
->>>>>>> dev
 
         def validate_partners(self, asking_player, target_player, a_round):
             self._root.validate(asking_player, target_player, a_round)     
