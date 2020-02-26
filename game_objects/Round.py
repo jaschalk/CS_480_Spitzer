@@ -10,6 +10,7 @@ class Round:
     _current_trick = None
     _parent_game = None
     _leading_player = None
+    _winner_of_first_trick = None
     _players_list = [None, None, None, None]
     #using numpy's arrays rather than standard python lists since this is the data that will be interfacing with the ML process
     _trick_history = np.zeros((4,8,32),dtype=np.int8)
@@ -71,6 +72,8 @@ class Round:
         return self._current_trick.get_suit_lead()
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
+        if self._winner_of_first_trick is None:
+            self._winner_of_first_trick = winning_player
         for card in card_list:
             player_number = card.get_owning_player().get_player_number() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_index()] = 1
@@ -105,3 +108,18 @@ class Round:
         for index in range(8):
             self._call_matrix[player_id][index] = 0
         self._call_matrix[player_id][call_index] = 1
+
+    def begin_play(self): #this method should start asking players to play cards to the active trick while they can do so
+        while self._leading_player.does_play_continue():
+            for player in self._players_list:
+                player.play_card_to(self._current_trick)
+        #TODO call push data out
+
+    def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective
+        a_game_state = {}
+        a_game_state["trick history"] = self._trick_history
+        a_game_state["trick_point_history"] = self.__trick_point_history
+        a_game_state["call_matrix"] = self._call_matrix
+        a_game_state["current_trick"] = self._current_trick
+        a_game_state["current_player"] = self._players_list[a_player_index]
+        #TODO finish this method!
