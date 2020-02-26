@@ -1,19 +1,20 @@
 import unittest
-from game_objects import *
+from game_objects.Deck  import Deck
+from game_objects.Player import Player
 
 class TestDeck(unittest.TestCase):
     
     def setUp(self):
-        self.testDeck = Deck.Deck()
+        self.testDeck = Deck()
 
     def test_default_deck(self):
-        self.assertEqual(self.testDeck.cardList.size(), 32)
+        self.assertEqual(len(self.testDeck.get_card_list()), 32)
     
     def test_deck_dealing(self):
-        self.tempPlayer = Player.Player()
-        startSize = self.testDeck.cardList.size()
+        self.tempPlayer = Player(None, 0, None)
+        startSize = len(self.testDeck.get_card_list())
         self.testDeck.deal_cards_to(self.tempPlayer)
-        self.assertEqual(startSize, self.testDeck.cardList.size() + 8)
+        self.assertEqual(startSize, len(self.testDeck.get_card_list()) + 8)
         del self.tempPlayer
 
     def tearDown(self):

@@ -1,4 +1,4 @@
-from game_objects import *
+from game_objects.Hand import Hand
 from agents import agent
 
 class Player:
@@ -23,7 +23,7 @@ class Player:
         for index in range(4):
             if index != self._player_id:
                 self._potential_partners_list[index] = (1/3)
-        self._hand = Hand.Hand(self)
+        self._hand = Hand(self)
 
     def get_player_id(self):
         return self._player_id
@@ -93,7 +93,7 @@ class Player:
     def ask_for_call(self):
         #Player asks agent to make a call. The value returned from the agent is then used to update the round based on the index of the call made.
         index_of_call_made = self._controlling_agent.make_call(self)
-        self._round.update_call(self._player_id, index_of_call_made)
+        self._parent_game.update_call(self._player_id, index_of_call_made)
 
     def determine_valid_calls(self):
         #Asks the parent game to return the legal calls based on the information in the hand.
