@@ -1,4 +1,9 @@
-from game_objects import *
+from game_objects.Deck import Deck
+from game_objects.Round import Round
+from game_objects.Player import Player
+from game_objects.CardRuleTree import CardRuleTree
+from game_objects.CallRules import CallRules
+from game_objects.PartnerRuleTree import PartnerRuleTree
 
 class Game:
 
@@ -12,21 +17,28 @@ class Game:
 
    def __init__(self, a_game_id, list_of_agents): #initializes the deck, round, players list, and all three sets of rules.
       self._game_id = a_game_id
-      self._deck = Deck.Deck()
-      self._round = Round.Round(self)
+      self._deck = Deck()
+      self._round = Round(self)
       for index in range(4):
-        self._players_list[index] = Player.Player(self, index, list_of_agents[index])
-      self._card_rules = CardRuleTree.CardRuleTree()
-      self._partner_rules = PartnerRuleTree.PartnerRuleTree(self)
-      self._call_rules = CallRules.CallRules(self)
+        self._players_list[index] = Player(self, index, list_of_agents[index])
+      self._card_rules = CardRuleTree()
+      self._partner_rules = PartnerRuleTree()
+      self._call_rules = CallRules()
 
    def get_round(self):
       return self._round
 
-   def begin_round():
+   def begin_round(self):
       self._round.begin_play()
 
+   def get_players_list(self):
+      return self._players_list
+
    def validate_card(self, a_card, a_player):
+      print("In Game: ")
+      print(a_card)
+      print("Games Round:")
+      print(self._round)
       #Accesses the card rules and returns whether or not the card passed in is valid to the player.
       return self._card_rules.validate_card(a_card, a_player, self._round)
 

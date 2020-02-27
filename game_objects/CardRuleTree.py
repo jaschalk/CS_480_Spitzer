@@ -24,6 +24,9 @@ class CardRuleTree:
             return 14 + 6*(which_call - 1)
 
         def get_suit_binary_representation(suit):
+            print(suit)
+            if suit is None:
+                return 
             if suit == "trump":
                 return 0b00000000000000000011111111111111
             elif suit == "clubs":
@@ -34,9 +37,13 @@ class CardRuleTree:
                 return 0b11111100000000000000000000000000
             else:
                 # raise an error if the suit requested isn't in the valid set, to prevent silent errors
-                raise RuntimeError("Get suit binary representation received a request for an invalid suit.")
+                raise RuntimeError("Get suit binary representation received a request for an invalid suit. " + suit)
 
         def is_player_leading(*args):
+            print("Leading player of the round: ")
+            print(args[2].get_leading_player())
+            print("Player is: ")
+            print(args[1])
             return args[2].get_leading_player() == args[1]
 
         def was_ace_called(*args):

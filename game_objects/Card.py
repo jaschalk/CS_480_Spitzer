@@ -5,6 +5,7 @@ class Card():
     _card_suit = None
     _card_rank = None
     _point_value = 0
+    _owning_player_index = -1
 
     #def __init__(self, a_rank, a_suit):
         #Take another look at this. Might not need this at all.
@@ -30,6 +31,15 @@ class Card():
 
     def get_card_rank(self):
         return self._card_rank
+
+    def get_owning_player(self):
+        return self._owning_player_index
+
+    def set_owning_player(self, a_player_index):
+        self._owning_player_index = a_player_index
+
+    def get_point_value(self):
+        return self._point_value
 
     def set_point_value(self, a_rank):
         if self._card_rank == 0 or self._card_rank in range(2, 5):
