@@ -27,6 +27,7 @@ class Round:
                      "player_score_history":_player_score_history,
                      "player_partner_prediction_history":__player_partner_prediction_history}
     __file_out_data = []
+    _file_out_name = ""
     _trick_count = 0
 
     def __init__(self, a_game):
@@ -34,6 +35,18 @@ class Round:
         self._players_list = a_game.get_players_list()
         for i in range(4):
             self._call_matrix[i][0] = 1
+
+    def _get_player_partners(self):
+        return self.__player_partners
+
+    def _get_potential_partners_history(self):
+        return self.__player_partner_prediction_history
+
+    def _get_point_history(self):
+        return self.__trick_point_history
+
+    def _get_file_out_data(self):
+        return self.__file_out_data
 
     def get_current_trick(self):
         return self._current_trick
@@ -70,6 +83,12 @@ class Round:
 
     def get_suit_lead(self):
         return self._current_trick.get_suit_lead()
+
+    def get_file_out_name(self):
+        return self._file_out_name
+
+    def set_file_out_name(self, file_name):
+        self._file_out_name = file_name
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         if self._winner_of_first_trick is None:
