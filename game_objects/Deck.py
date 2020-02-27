@@ -14,8 +14,6 @@ class Deck:
         '''
         Populating the deck will clear the contents of the cardlist and refill it with the proper collection of cards to play the game with.
         '''
-        self._card_list.clear() # Unsure why I need to clear the list here for the test to pass?
-        # it seems like the method is being called more than once?
         for i in range(15):
             if i < 14:
                 self._card_list.append(Card.Card(i, "trump"))
