@@ -112,7 +112,7 @@ class PartnerRuleTree:
             #Use the played cards here instead of the cards in the hand.
             cards_in_player_hand = args[1].get_hand().get_cards_in_hand()
             target_player_queen = False
-            for index in range(8):
+            for index in range(8): 
                 if(cards_in_player_hand[index].get_card_id() == 0 or cards_in_player_hand[index].get_card_id() == 2):
                     target_player_queen = True
             return target_player_queen
