@@ -9,7 +9,7 @@ class CallRules:
 
     def validate_calls(self, a_hand): #should the hand store it's numerical representation, or should it be calculated here?
         valid_call_state = 225 #this is the decimal value representing that any player can make NC, Z, ZS, ZSS calls
-        hand_binary_representation = a_hand.binary_representation()
+        hand_binary_representation = a_hand.get_binary_representation()
         for call, value in self._call_filter:
             if call == 4:
                 if hand_binary_representation & value == value:
