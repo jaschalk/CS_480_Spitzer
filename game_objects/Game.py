@@ -28,11 +28,25 @@ class Game:
    def get_round(self):
       return self._round
 
+   def get_deck(self):
+      return self._deck
+
    def begin_round(self):
+      for player in self._players_list:
+         self._deck.deal_cards_to(player)
       self._round.begin_play()
 
    def get_players_list(self):
       return self._players_list
+
+   def get_call_rules(self):
+      return self._call_rules
+
+   def get_card_rules(self):
+      return self._card_rules
+
+   def get_partner_rules(self):
+      return self._partner_rules
 
    def validate_card(self, a_card, a_player):
       print("In Game: ")
