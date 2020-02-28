@@ -1,27 +1,20 @@
 import unittest
-from game_objects.Hand import Hand
-from game_objects.Deck import Deck
-from game_objects.Trick import Trick
-from game_objects.Player import Player
-from game_objects.Round import Round
-from game_objects.Game import Game
-import agents
+from unit_tests.Setup import general_setup
 
 class HandTest(unittest.TestCase):
 
     def setUp(self):
-        self.temp_agents = [0, 0, 0, 0]
-        self.temp_game = Game(0, self.temp_agents)
-        self.temp_deck = Deck()
-        self.temp_player = Player(self.temp_game, 0, None)
-        self.temp_round = Round(self.temp_game) #Can't pass in None here.
-        self.temp_game._round = self.temp_round
-        self.test_hand = Hand(self.temp_player)
+        setup_results = general_setup()
+        self.temp_game = setup_results["active_game"]
+        self.temp_deck = setup_results["game_deck"]
+        self.temp_player = setup_results["list_of_players"][0]
+        self.temp_round = setup_results["current_round"]
+        self.test_hand = setup_results["player_zero_hand"]
+        self.temp_trick = setup_results["current_trick"]
 
     def test_on_init(self):
         self.assertEqual(len(self.test_hand.get_cards_in_hand()), 0)
-        for entry in self.test_hand._valid_play_list:
-            self.assertTrue(entry)
+        self.assertEqual(len(self.test_hand.get_valid_play_list()), 0)
 
     def test_on_deal(self):
         self.temp_player.hand = self.test_hand
@@ -31,21 +24,19 @@ class HandTest(unittest.TestCase):
     def test_card_played(self):
         self.temp_round.set_leading_player(self.temp_player)
         self.temp_deck.deal_cards_to(self.temp_player)
-        self.temp_trick = Trick(self.temp_round)
-        #self.temp_round.set_current_trick(self.temp_trick)
-        startHandSize = len(self.test_hand.get_cards_in_hand())
-
-        startValidListSize = len(self.test_hand.get_valid_play_list())
+        start_hand_size = len(self.test_hand.get_cards_in_hand())
+        self.test_hand.determine_valid_play_list()
+        start_valid_list_size = len(self.test_hand.get_valid_play_list())
         self.test_hand.play_card_at_index(self.temp_trick, 0)
-        self.assertEqual(len(self.test_hand.get_cards_in_hand()), startHandSize - 1)
+        self.assertEqual(len(self.test_hand.get_cards_in_hand()), start_hand_size - 1)
         for card in self.test_hand.get_cards_in_hand():
             print(card)
         self.test_hand.determine_valid_play_list()
-        self.assertEqual(len(self.test_hand.get_valid_play_list()), startValidListSize - 1)
-
+        self.assertEqual(len(self.test_hand.get_valid_play_list()), start_valid_list_size - 1)
 
     def tearDown(self):
         self.test_hand.get_cards_in_hand().clear()
+        self.test_hand.get_valid_play_list().clear()
         del self.test_hand
 
 if __name__ == "__main__":
