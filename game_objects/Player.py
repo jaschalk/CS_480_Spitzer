@@ -66,6 +66,7 @@ class Player:
 
     def accept(self, a_card):
         #This method should send the card to the hand when a player is dealt a card
+        a_card.set_owning_player(self.get_player_id())
         self._hand.accept(a_card)
 
     def play_card_to(self, a_trick):
@@ -74,6 +75,8 @@ class Player:
         self._hand.play_card_at_index(a_trick, card_to_play_index)
     
     def validate_card(self, a_card):
+        print("In Player: ")
+        print(a_card)
         #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
         return self._parent_game.validate_card(a_card, self)
 

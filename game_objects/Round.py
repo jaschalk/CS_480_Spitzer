@@ -2,6 +2,7 @@ import pickle
 import numpy as np
 import copy
 import os
+from game_objects.Trick import Trick
 
 class Round:
 
@@ -33,6 +34,7 @@ class Round:
     def __init__(self, a_game):
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
+        self._current_trick = Trick(self)
         for i in range(4):
             self._call_matrix[i][0] = 1
 
@@ -79,7 +81,11 @@ class Round:
         return self._leading_player
 
     def set_leading_player(self, player):
+        print("Incoming player is:")
+        print(player)
         self._leading_player = player
+        print("New leading Player is:")
+        print(self._leading_player)
 
     def get_suit_lead(self):
         return self._current_trick.get_suit_lead()
@@ -94,8 +100,8 @@ class Round:
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
         for card in card_list:
-            player_number = card.get_owning_player().get_player_number() #this should be changed?
-            self._trick_history[player_number][self._trick_count][card.get_index()] = 1
+            player_number = card.get_owning_player() #this should be changed?
+            self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
         self.__trick_point_history[winning_player][self._trick_count] = points_on_trick
         self.update_player_partner_prediction_history() #I don't remember how was supposed to work?
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick

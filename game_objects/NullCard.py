@@ -3,12 +3,12 @@ from game_objects import Card
 class NullCard(Card.Card):
 
     class __NullCard:
-        def __init__(self):
+        def __init__(self, a_rank, a_suit):
             pass
         def accept(self, a_card):
             return False
     instance = None
-    def __new__(cls):
+    def __new__(cls, a_rank, a_suit):
         if not NullCard.instance:
-            NullCard.instance = NullCard.__NullCard()
+            NullCard.instance = NullCard.__NullCard(a_rank, a_suit)
         return NullCard.instance

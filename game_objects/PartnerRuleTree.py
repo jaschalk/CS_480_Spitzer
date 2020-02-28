@@ -24,9 +24,7 @@ class PartnerRuleTree:
             return 14 + 6*(which_call - 1)
 
         def get_player_took_first_trick(*args):
-            #where are we keeping track of this info? Are we keeping track of this info?
-            #In the round. There isn't a getter yet.
-            pass
+            return args[2].get_first_trick_winner().get_player_id()
 
         def has_call_been_made(*args):
             call_has_been_made = False
@@ -49,7 +47,7 @@ class PartnerRuleTree:
         def was_first_trick_called(*args):
             call_state = args[2].get_call_matrix()
             first_trick_called = False
-            for i in range(4): #query each players index in the call matrix to see if they called an ace
+            for i in range(4): #query each players index in the call matrix to see if they called first trick
                 if(call_state[i][4] == 1):
                     first_trick_called = True
             return first_trick_called
@@ -57,7 +55,7 @@ class PartnerRuleTree:
         def did_target_take_first_trick(*args):
             return get_player_took_first_trick(*args) == args[1].get_player_id()
 
-        def did_asking_take_first_trick(*args): #Repeated code. Is this what we want here?
+        def did_asking_take_first_trick(*args):
             return get_player_took_first_trick(*args) == args[0].get_player_id()
 
         def was_ace_called(*args):
@@ -69,24 +67,15 @@ class PartnerRuleTree:
             return ace_was_called
 
         def does_target_player_have_ace(*args):
-            #This needs to be modified to look at the cards played instead of the cards in the hand.
             ace_called = get_ace_called_id(*args)
-            cards_in_player_hand = args[1].get_hand().get_cards_in_hand()
-            target_player_has_ace = False
-            for index in range(cards_in_player_hand.size):
-                if(cards_in_player_hand[index] == ace_called):
-                    target_player_has_ace = True
-            return target_player_has_ace
+            cards_target_has_played = args[2].get_player_binary_card_state(args[1].get_player_id())
+            return (cards_target_has_played & 1<<ace_called == 1<<ace_called)
 
-        def does_asking_player_have_ace(*args): #repeated code. Is this what we want here?
-            #This needs to be modified to look at the cards played instead and the cards in the hand.
+        def does_asking_player_have_ace(*args):
             ace_called = get_ace_called_id(*args)
-            cards_in_player_hand = args[0].get_hand().get_cards_in_hand()
-            asking_player_has_ace = False
-            for index in range(cards_in_player_hand.size):
-                if(cards_in_player_hand[index] == ace_called):
-                    asking_player_has_ace = True
-            return asking_player_has_ace
+            cards_in_player_hand_binary_state = args[0].get_hand().get_binary_representation()
+            cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
+            return ((cards_asking_has_played + cards_in_player_hand_binary_state) & 1<<ace_called == 1<<ace_called)
 
         def has_ace_been_played(*args):
             trick_history = args[2].get_trick_history()
@@ -99,23 +88,19 @@ class PartnerRuleTree:
             return ace_has_been_played
 
         def does_asking_player_have_a_queen(*args):
-            #Need to also consider the cards that this player has played.
             player_hand_binary_representation = args[0].get_hand().get_binary_representation()
-            return (player_hand_binary_representation & 0b1 == 0b1) or (player_hand_binary_representation & 0b100 == 0b100)
+            cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
+            return ((player_hand_binary_representation + cards_asking_has_played) & 0b1 == 0b1) or ((player_hand_binary_representation + cards_asking_has_played) & 0b100 == 0b100)
 
         def does_asking_player_have_both_queens(*args):
-            #Need to also consider the cards that this player has played.
+            #Maybe make a method to take care of the first two lines and return the number.
             player_hand_binary_representation = args[0].get_hand().get_binary_representation()
-            return (player_hand_binary_representation & 0b101 == 0b101)
+            cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
+            return ((player_hand_binary_representation + cards_asking_has_played) & 0b101 == 0b101)
 
-        def does_target_player_have_a_queen(*args): #repeated code here. Can we simplify? Also still getting confused on have vs play. Is this what we want here?
-            #Use the played cards here instead of the cards in the hand.
-            cards_in_player_hand = args[1].get_hand().get_cards_in_hand()
-            target_player_queen = False
-            for index in range(8): 
-                if(cards_in_player_hand[index].get_card_id() == 0 or cards_in_player_hand[index].get_card_id() == 2):
-                    target_player_queen = True
-            return target_player_queen
+        def does_target_player_have_a_queen(*args):
+            cards_target_has_played = args[2].get_player_binary_card_state(args[1].get_player_id())
+            return ((cards_target_has_played & 0b1 == 0b1) or (cards_target_has_played & 0b100 == 0b100))
 
         def have_both_queens_been_played(*args): 
             cards_played = args[2].get_cards_played()
@@ -157,5 +142,5 @@ class PartnerRuleTree:
         __root_LLR.set_left(__root_LLRL)
         __root_LLRL.set_right(__root_LLRLR) 
 
-        def validate_partners(self, asking_player, target_player, a_round):
-            self._root.validate(asking_player, target_player, a_round)     
+    def validate_partners(self, asking_player, target_player, a_round):
+        self._root.validate(asking_player, target_player, a_round)     

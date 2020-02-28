@@ -12,6 +12,7 @@ class Hand:
     def __init__(self, a_player):
         self._my_player = a_player
         self._binary_representation = np.zeros((32), dtype=np.int8)
+        #Currently treating as an array. might want to treat as just a number
 
     def get_cards_in_hand(self):
         return self._cards_in_hand
@@ -31,13 +32,15 @@ class Hand:
 
     def determine_valid_play_list(self):
         #Asks the player to use its validate card method on every card in the hand and set the return value to the valid play list.
-        self._valid_play_list = map(self._my_player.validate_card, self._cards_in_hand)
-        #for index in range(8):
-            #self._valid_play_list[index] = self._my_player.validate_card(self._cards_in_hand[index])
+        #self._valid_play_list = list(map(self._my_player.validate_card, self._cards_in_hand))
+        self._valid_play_list.clear()
+        for index in range(len(self._cards_in_hand)):
+            print(self._cards_in_hand[index])
+            self._valid_play_list.append(self._my_player.validate_card(self._cards_in_hand[index]))
 
     def play_card_at_index(self, a_trick, a_card_index):
         #Tell the trick to accept the card specified by the agent.
-        a_trick.accept(self._cards_in_hand[a_card_index])
+        a_trick.accept(self._cards_in_hand.pop(a_card_index))
 
     def determine_valid_calls(self):
         #Ask the player to determine what valid calls it can make based on the hand.
