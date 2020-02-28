@@ -9,6 +9,9 @@ class Trick:
     _points_on_trick = 0
     _played_cards_list = [None, None, None, None]
 
+    def get_parent_round(self):
+        return self._parent_round
+
     def get_suit_lead(self): # suit lead should only be set by the trick accepting a card
         return self._suit_lead
 

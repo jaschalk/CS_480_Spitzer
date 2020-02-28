@@ -18,6 +18,7 @@ class TestDeck(unittest.TestCase):
         del self.tempPlayer
 
     def tearDown(self):
+        self.testDeck._card_list.clear() # need to clear the list on tear down, not sure exactly why though
         del self.testDeck
 
 if __name__ == "__main__":
