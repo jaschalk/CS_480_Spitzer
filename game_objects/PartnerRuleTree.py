@@ -1,5 +1,9 @@
 from game_objects import RuleNode
 
+#IMPORTANT: I don't think I am returning any strings at all. Meaning, when I try to see if the
+#           string returned is "target is my partner", "target is not my partner", and "unknown"
+#           I'm not actually returning any strings to check against. Where would I do this??
+
 class PartnerRuleTree:
 
     _root = None

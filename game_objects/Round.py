@@ -38,6 +38,15 @@ class Round:
         for i in range(4):
             self._call_matrix[i][0] = 1
 
+    def get_player_binary_card_state(self, a_player_id):
+        #This method should return the binary card state of the cards the player 
+        #with the matching player id has played
+        return self.get_players_list()[a_player_id].get_cards_played() #This is a binary number representing the cards a player has played
+
+    def get_cards_played(self):
+        #This method should return a binary number representing the cards played in the round.
+        pass
+
     def _get_player_partners(self):
         return self.__player_partners
 
@@ -112,7 +121,7 @@ class Round:
         #this could stand to be rewritten to be more readable
         for player_number in range(4):
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
-                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_partners_list()[target_player]
+                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
 
     def on_round_end(self):
         points_taken_list = []

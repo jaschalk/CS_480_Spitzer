@@ -42,7 +42,9 @@ class Hand:
 
     def play_card_at_index(self, a_trick, a_card_index):
         #Tell the trick to accept the card specified by the agent.
-        self._binary_representation -= 1<<(self._cards_in_hand[a_card_index].get_card_id())
+        card_index_to_be_played = self._cards_in_hand[a_card_index].get_card_id()
+        self._my_player._cards_played += 1<<(card_index_to_be_played)
+        self._binary_representation -= 1<<(card_index_to_be_played)
         a_trick.accept(self._cards_in_hand.pop(a_card_index))
 
     def determine_valid_calls(self):
