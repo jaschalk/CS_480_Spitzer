@@ -11,6 +11,11 @@ from game_objects.PartnerRuleTree import PartnerRuleTree
 import agents
 
 def general_setup():
+    '''
+    Returns a dictonary that contains all the necessary objects for testing purposes linked together in the proper ways.
+    
+    Valid keys are: active_game, game_deck, list_of_players, current_round, player_zero_hand, current_trick, call_rules, card_rules, partner_rules
+    '''
     list_of_agents = [None, None, None, None]
     active_game = Game(0, list_of_agents)
     game_deck = active_game.get_deck()

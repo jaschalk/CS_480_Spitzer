@@ -34,21 +34,29 @@ class Trick:
         self._parent_round = a_round
 #        self._leading_player = a_player
         self._winning_card = Card.Card(-1,"null")
+        self._suit_lead = None
+        self._winning_player = None
+        self._played_cards_list = [None, None, None, None]
+        print(self._winning_card)
 
     def accept(self, a_card):
-       if self._suit_lead is None:
-           self._suit_lead = a_card.get_card_suit()
-           self._winning_card = a_card
-       else:
-           if self._winning_card.accept(a_card) is False:
-               self._winning_player = a_card.get_owning_player()
-               self._winning_card = a_card
-       self._played_cards_list[a_card.get_owning_player()] = a_card #don't append the cards, replace at the player index to preserve the owner of the card
-       self._points_on_trick += a_card.get_point_value()
-       for card in self._played_cards_list:
-           if card is None:
-               return
-       self.on_trick_fill()
+        print("Winning card:")
+        print(self._winning_card)
+        print("Incoming card:")
+        print(a_card)
+        print("Suit lead:")
+        print(self._suit_lead)
+        if self._winning_card.accept(a_card) is False:
+            self._winning_player = a_card.get_owning_player()
+            self._winning_card = a_card
+            print("Won card:")
+            print(self._winning_card)
+        self._played_cards_list[a_card.get_owning_player()] = a_card #don't append the cards, replace at the player index to preserve the owner of the card
+        self._points_on_trick += a_card.get_point_value()
+        for card in self._played_cards_list:
+            if card is None:
+                return
+        self.on_trick_fill()
 
     def on_trick_fill(self):
         self._parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)

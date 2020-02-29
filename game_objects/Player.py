@@ -6,7 +6,7 @@ class Player:
     _trick_score = 0
     _round_score = 0
     _total_score = 0
-    _valid_call_list = [1, 0, 0, 0, 1, 1, 1, 1]
+    _valid_call_list = [1, 0, 0, 0, 0, 1, 1, 1]
     _potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
     _hand = None
     _is_leading = False

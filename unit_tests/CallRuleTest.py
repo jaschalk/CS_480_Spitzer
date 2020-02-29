@@ -16,7 +16,7 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card(9, "hearts")) #give the player the AH
         self.temp_player.accept(Card(9, "spades")) #give the player the AS
         self.temp_player.accept(Card(9, "clubs")) #give the player the AC
-        self.test_call_rule_tree.validate_calls(self.temp_player.get_hand()) #can validate even check one call at a time? do we care?
+        self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand()) #can validate even check one call at a time? do we care?
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,0,0,1,1,1,1])
 
     def test_can_call_ace_of_clubs(self):
@@ -24,7 +24,7 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card(2, "trump")) #give the player the QS
         self.temp_player.accept(Card(9, "hearts")) #give the player the AH
         self.temp_player.accept(Card(9, "spades")) #give the player the AS
-        self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
+        self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,1,0,0,0,1,1,1])
 
     def test_can_call_ace_of_spades(self):
@@ -32,7 +32,7 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card(2, "trump")) #give the player the QS
         self.temp_player.accept(Card(9, "hearts")) #give the player the AH
         self.temp_player.accept(Card(9, "clubs")) #give the player the AS
-        self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
+        self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,1,0,0,1,1,1])
 
     def test_can_call_ace_of_hearts(self):
@@ -40,11 +40,11 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card(2, "trump")) #give the player the QS
         self.temp_player.accept(Card(9, "clubs")) #give the player the AH
         self.temp_player.accept(Card(9, "spades")) #give the player the AS
-        self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
+        self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,0,1,0,1,1,1])
 
     def test_base_calls(self):
-        self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
+        self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,0,0,0,1,1,1]) #even if the player has no cards they can make no call or any solo call
 
     def tearDown(self):
