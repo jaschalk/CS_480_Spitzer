@@ -12,8 +12,6 @@ class TrickTest(unittest.TestCase):
         self.testTrick = setup_results["current_trick"]
         self.tempPlayers = setup_results["list_of_players"]
         for i in range(4):
-            print(self.tempPlayers[i] == setup_results["list_of_players"][i])
-        for i in range(4):
             self.tempPlayers[i].accept(Card(9+i, "hearts"))
         del setup_results
 
