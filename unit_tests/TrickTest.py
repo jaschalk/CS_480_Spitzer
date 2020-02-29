@@ -45,7 +45,7 @@ class TrickTest(unittest.TestCase):
     def test_on_fill(self):
         for i in range(4):
             self.tempPlayers[i].get_hand().play_card_at_index(self.testTrick, 0)
-        self.assertIsNone(self.testTrick)
+        self.assertEqual(self.testTrick.get_winning_card(), Card(-1, "null"))
 
     def tearDown(self):
         self.testTrick._winning_card = Card(-1, "null")

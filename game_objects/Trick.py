@@ -1,4 +1,4 @@
-from game_objects import Card
+from game_objects.Card import Card
 class Trick:
 
     _parent_round = None
@@ -34,7 +34,7 @@ class Trick:
     def __init__(self, a_round):
         self._parent_round = a_round
 #        self._leading_player = a_player
-        self._winning_card = Card.Card(-1,"null")
+        self._winning_card = Card(-1,"null")
         self._suit_lead = None
         self._winning_player = None
         self._played_cards_list = [None, None, None, None]
@@ -58,3 +58,4 @@ class Trick:
 
     def on_trick_fill(self):
         self._parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)
+        self._winning_card = Card(-1, "null")
