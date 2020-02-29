@@ -38,6 +38,15 @@ class Round:
         for i in range(4):
             self._call_matrix[i][0] = 1
 
+    def get_player_binary_card_state(self, a_player_id):
+        #This method should return the binary card state of the cards the player 
+        #with the matching player id has played
+        return self.get_players_list()[a_player_id].get_cards_played() #This is a binary number representing the cards a player has played
+
+    def get_cards_played(self):
+        #This method should return a binary number representing the cards played in the round.
+        pass
+
     def _get_player_partners(self):
         return self.__player_partners
 

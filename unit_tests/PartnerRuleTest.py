@@ -1,131 +1,142 @@
 import unittest
-from game_objects import PartnerRuleTree as PRT
-from game_objects import Player
-from game_objects import Round
-from game_objects import Trick
-from game_objects import Card
+from game_objects.Card import Card
+from unit_tests.Setup import general_setup
+
+#IMPORTANT: I think right now, when we play a card to the trick, we are expecting
+#           the method play_card_at_index to take the trick it is being played to
 
 class PartnerRuleTest(unittest.TestCase):
 
     def setUp(self):
-        self.testTree = PRT.PartnerRuleTree()
-        self.tempRound = Round.Round(0)
-        self.tempTrick = Trick.Trick(self.tempRound, None)
-        self.tempRound.currentTrick = self.tempTrick
-        self.tempPlayerList = []
-        for index in range(4):
-            self.tempPlayerList.append(Player.Player(index))
-        self.cardList = []
+        setup_results = general_setup()
+        self.temp_game = setup_results["active_game"]
+        self.temp_deck = setup_results["game_deck"]
+        self.temp_player_list = setup_results["list_of_players"]
+        self.temp_round = setup_results["current_round"]
+        self.test_hand = setup_results["player_zero_hand"]
+        self.current_trick = setup_results["current_trick"]
+        self.card_list = []
         for index in range(14):
-            self.cardList.append(Card.Card(index, "trump"))
+            self.card_list.append(Card(index, "trump"))
         for index in range(9,15):
-            self.cardList.append(Card.Card(index, "clubs"))
+            self.card_list.append(Card(index, "clubs"))
         for index in range(9,15):
-            self.cardList.append(Card.Card(index, "spades"))
+            self.card_list.append(Card(index, "spades"))
         for index in range(9,15):
-            self.cardList.append(Card.Card(index, "hearts"))
+            self.card_list.append(Card(index, "hearts"))
     
     def test_first_trick_called(self):
         for index in range(5):
-            self.tempPlayerList[0].accept(self.cardList[index]) #give the first player the first 5 trump cards (includes both queens)
-        self.tempPlayerList[0].accept(self.cardList[14]) #give the first player all 3 fail aces
-        self.tempPlayerList[0].accept(self.cardList[20])
-        self.tempPlayerList[0].accept(self.cardList[26])
+            self.temp_player_list[0].accept(self.card_list[index]) #give the first player the first 5 trump cards (includes both queens)
+        self.temp_player_list[0].accept(self.card_list[14]) #give the first player all 3 fail aces
+        self.temp_player_list[0].accept(self.card_list[20])
+        self.temp_player_list[0].accept(self.card_list[26])
         for index in range(5, 13):
-            self.tempPlayerList[1].accept(self.cardList[index]) #give the second player the next 8 trump cards
+            self.temp_player_list[1].accept(self.card_list[index]) #give the second player the next 8 trump cards
         for index in range(13, 23):
             if index != 14:
                 if index != 20:
-                    self.tempPlayerList[2].accept(self.cardList[index]) #give the third player the next 8 cards, skipping any aces
+                    self.temp_player_list[2].accept(self.card_list[index]) #give the third player the next 8 cards, skipping any aces
                 else:
                     continue
         for index in range(23, 32):
             if index != 26:
-                self.tempPlayerList[3].accept(self.cardList[index]) #give the fourth player the last 8 cards, skipping any aces
+                self.temp_player_list[3].accept(self.card_list[index]) #give the fourth player the last 8 cards, skipping any aces
             else:
                 continue
-        self.tempPlayerList[0].makeCall(4)
-        self.tempPlayerList[0].hand.playCard(20, self.tempTrick) #AS
-        self.tempPlayerList[1].hand.playCard(13, self.tempTrick) #8D player 2 wins the trick
-        self.tempPlayerList[2].hand.playCard(22, self.tempTrick) #KS
-        self.tempPlayerList[3].hand.playCard(23, self.tempTrick) #9S
-        self.assertEqual(self.tempPlayerList[0].potentialPartnersList, [1,1,0,0])
-        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [1,1,0,0])
-        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [0,0,1,1])
+        #self.temp_player_list[0].ask_for_call() #this method has the game update which call was made. Needs to ask the agent.
+        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 6) #AS -- index = 20
+        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 7) #9D -- index 12 player 2 wins the trick
+        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 7) #KS -- index 22
+        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 7) #9S -- index 23
+        for index in range(4):
+            self.temp_player_list[index].determine_potential_partners()
+        self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,1,0,0])
+        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0])
+        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [0,0,1,1])
         
     def test_ace_called(self):
-        self.tempPlayerList[0].accept(self.cardList[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
-        self.tempPlayerList[0].accept(self.cardList[2])
+        self.temp_player_list[0].accept(self.card_list[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
+        self.temp_player_list[0].accept(self.card_list[2])
         for index in range(12, 15):
-            self.tempPlayerList[0].accept(Card.Card(index, "spades"))
-            self.tempPlayerList[0].accept(Card.Card(index, "hearts"))
+            self.temp_player_list[0].accept(Card(index, "spades"))
+            self.temp_player_list[0].accept(Card(index, "hearts"))
         for index in range(9, 11):
-            self.tempPlayerList[1].accept(Card.Card(index, "trump")) #give player 2 all aces and 10s
-            self.tempPlayerList[1].accept(Card.Card(index, "clubs"))
-            self.tempPlayerList[1].accept(Card.Card(index, "spades"))
-            self.tempPlayerList[1].accept(Card.Card(index, "hearts"))
+            self.temp_player_list[1].accept(Card(index, "trump")) #give player 2 all aces and 10s
+            self.temp_player_list[1].accept(Card(index, "clubs"))
+            self.temp_player_list[1].accept(Card(index, "spades"))
+            self.temp_player_list[1].accept(Card(index, "hearts"))
         for index in range(3, 9):
-            self.tempPlayerList[2].accept(Card.Card(index, "trump")) #give player 3 a bunch of random trump cards
-        self.tempPlayerList[2].accept(self.cardList[1]) #spitzer
-        self.tempPlayerList[2].accept(self.cardList[11]) #KD
-        self.tempPlayerList[0].makeCall(3)
-        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [1,1,0,0]) #Only update the potential partners list of the player with the ace matching the one called.
-        self.assertEqual(self.tempPlayerList[0].potentialPartnersList[0], 1)
+            self.temp_player_list[2].accept(Card(index, "trump")) #give player 3 a bunch of random trump cards
+        self.temp_player_list[2].accept(self.card_list[1]) #spitzer
+        self.temp_player_list[2].accept(self.card_list[11]) #KD
+        #self.temp_player_list[0].ask_for_call() #this method has the game update which call was made. Needs to ask the agent.
+        for index in range(4):
+            self.temp_player_list[index].determine_potential_partners()
+        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0]) #Only update the potential partners list of the player with the ace matching the one called.
+        self.assertEqual(self.temp_player_list[0].get_potential_partners_list()[0], 1)
         for index in range(1,4):
-            self.assertAlmostEqual(self.tempPlayerList[0].potentialPartnersList[index], 1/3)
+            self.assertAlmostEqual(self.temp_player_list[0].get_potential_partners_list()[index], 1/3)
 
     def test_solo_called(self):
-        self.tempPlayerList[0].makeCall(5)
-        self.assertEqual(self.tempPlayerList[0].potentialPartnersList, [1,0,0,0])
-        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [0,1,1,1])
-        self.assertEqual(self.tempPlayerList[2].potentialPartnersList, [0,1,1,1])
-        self.assertEqual(self.tempPlayerList[3].potentialPartnersList, [0,1,1,1])
+        #self.temp_player_list[0].ask_for_call()#this method has the game update which call was made. Needs to ask the agent.
+        for index in range(4):
+            self.temp_player_list[index].determine_potential_partners()
+        self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
+        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [0,1,1,1])
+        self.assertEqual(self.temp_player_list[2].get_potential_partners_list(), [0,1,1,1])
+        self.assertEqual(self.temp_player_list[3].get_potential_partners_list(), [0,1,1,1])
 
     def test_no_call_both_queens(self):
         for index in range(8):
-            self.tempPlayerList[0].accept(self.cardList[index]) #Give player 1 the first 8 cards
-        self.assertEqual(self.tempPlayerList[0].potentialPartnersList, [1,0,0,0])
+            self.temp_player_list[0].accept(self.card_list[index]) #Give player 1 the first 8 cards
+        self.temp_player_list[0].determine_potential_partners()
+        self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
 
     def test_no_call_one_queen_played(self):
-        self.tempPlayerList[0].accept(self.cardList[0])
-        self.tempPlayerList[1].accept(self.cardList[2])
-        self.tempPlayerList[1].accept(self.cardList[1])
-        self.tempPlayerList[2].accept(self.cardList[30])
-        self.tempPlayerList[3].accept(self.cardList[31])
-        self.tempPlayerList[0].hand.playCard(0, self.tempTrick) 
-        self.tempPlayerList[1].hand.playCard(1, self.tempTrick)
-        self.tempPlayerList[2].hand.playCard(30, self.tempTrick)
-        self.tempPlayerList[3].hand.playCard(31, self.tempTrick)
-        self.assertEqual(self.tempPlayerList[0].potentialPartnersList[0], 1)
+        self.temp_player_list[0].accept(self.card_list[0])
+        self.temp_player_list[1].accept(self.card_list[2])
+        self.temp_player_list[1].accept(self.card_list[1])
+        self.temp_player_list[2].accept(self.card_list[30])
+        self.temp_player_list[3].accept(self.card_list[31])
+        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 0) #QC -- index 0
+        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
+        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
+        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
+        for index in range(4):
+            self.temp_player_list[index].determine_potential_partners()
+        self.assertEqual(self.temp_player_list[0].get_potential_partners_list()[0], 1)
         for index in range(1,4):
-            self.assertAlmostEqual(self.tempPlayerList[0].potentialPartnersList[index], 1/3)
-        self.assertEqual(self.tempPlayerList[1].potentialPartnersList, [1,1,0,0])
-        self.assertEqual(self.tempPlayerList[2].potentialPartnersList[0], 0)
-        self.assertAlmostEqual(self.tempPlayerList[2].potentialPartnersList[1], 1/2)
-        self.assertEqual(self.tempPlayerList[2].potentialPartnersList[2], 1)
-        self.assertAlmostEqual(self.tempPlayerList[2].potentialPartnersList[3], 1/2)
-        self.assertEqual(self.tempPlayerList[3].potentialPartnersList[0], 0)
-        self.assertAlmostEqual(self.tempPlayerList[3].potentialPartnersList[1], 1/2)
-        self.assertAlmostEqual(self.tempPlayerList[3].potentialPartnersList[2], 1/2)
-        self.assertEqual(self.tempPlayerList[3].potentialPartnersList[3], 1)
+            self.assertAlmostEqual(self.temp_player_list[0].get_potential_partners_list()[index], 1/3)
+        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0])
+        self.assertEqual(self.temp_player_list[2].get_potential_partners_list()[0], 0)
+        self.assertAlmostEqual(self.temp_player_list[2].get_potential_partners_list()[1], 1/2)
+        self.assertEqual(self.temp_player_list[2].get_potential_partners_list()[2], 1)
+        self.assertAlmostEqual(self.temp_player_list[2].get_potential_partners_list()[3], 1/2)
+        self.assertEqual(self.temp_player_list[3].get_potential_partners_list()[0], 0)
+        self.assertAlmostEqual(self.temp_player_list[3].get_potential_partners_list()[1], 1/2)
+        self.assertAlmostEqual(self.temp_player_list[3].get_potential_partners_list()[2], 1/2)
+        self.assertEqual(self.temp_player_list[3].get_potential_partners_list()[3], 1)
         
     def test_no_call_no_queen_played(self):
-        self.tempPlayerList[0].accept(self.cardList[0])
-        self.tempPlayerList[0].accept(self.cardList[3])
-        self.tempPlayerList[1].accept(self.cardList[2])
-        self.tempPlayerList[1].accept(self.cardList[1])
-        self.tempPlayerList[2].accept(self.cardList[30])
-        self.tempPlayerList[2].accept(self.cardList[29])
-        self.tempPlayerList[3].accept(self.cardList[31])
-        self.tempPlayerList[3].accept(self.cardList[28])
-        self.tempPlayerList[0].hand.playCard(3, self.tempTrick) 
-        self.tempPlayerList[1].hand.playCard(1, self.tempTrick)
-        self.tempPlayerList[2].hand.playCard(30, self.tempTrick)
-        self.tempPlayerList[3].hand.playCard(31, self.tempTrick)
+        self.temp_player_list[0].accept(self.card_list[0])
+        self.temp_player_list[0].accept(self.card_list[3])
+        self.temp_player_list[1].accept(self.card_list[2])
+        self.temp_player_list[1].accept(self.card_list[1])
+        self.temp_player_list[2].accept(self.card_list[30])
+        self.temp_player_list[2].accept(self.card_list[29])
+        self.temp_player_list[3].accept(self.card_list[31])
+        self.temp_player_list[3].accept(self.card_list[28])
+        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 1) #QH -- index 3
+        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
+        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
+        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
         for index in range(4):
-            self.assertEqual(self.tempPlayerList[index].potentialPartnersList[index], 1)
+            self.temp_player_list[index].determine_potential_partners()
+        for index in range(4):
+            self.assertEqual(self.temp_player_list[index].get_potential_partners_list()[index], 1)
             for i in range(4):
-                self.assertAlmostEqual(self.tempPlayerList[index].potentialPartnersList[i], 1/3)
+                self.assertAlmostEqual(self.temp_player_list[index].get_potential_partners_list()[i], 1/3)
 
 if __name__ == "__main__":
     unittest.main()

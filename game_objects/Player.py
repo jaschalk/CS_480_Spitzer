@@ -1,4 +1,5 @@
 from game_objects.Hand import Hand
+import numpy as np
 from agents import agent
 
 class Player:
@@ -13,6 +14,7 @@ class Player:
     _player_id = None
     _parent_game = None
     _controlling_agent = None
+    _cards_played = 0
 
     def __init__(self, a_game, player_id, an_agent): 
         #initializes the hand object and sets the potential partners list to correct values.
@@ -64,6 +66,9 @@ class Player:
     def set_hand(self, a_hand):
         self._hand = a_hand
 
+    def get_cards_played(self):
+        return self._cards_played
+
     def accept(self, a_card):
         #This method should send the card to the hand when a player is dealt a card
         a_card.set_owning_player(self.get_player_id())
@@ -71,7 +76,7 @@ class Player:
 
     def play_card_to(self, a_trick):
         #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the inex returned to the trick.
-        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game)
+        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand
         self._hand.play_card_at_index(a_trick, card_to_play_index)
     
     def validate_card(self, a_card):
@@ -82,6 +87,7 @@ class Player:
 
     def determine_potential_partners(self):
         #Asks the parent game to use its validate partners method to modify the potential partners list based on the returned string.
+        _result = ""
         for index in range(4):
             if index != self._player_id:
                 _result = self._parent_game.validate_partners(self, index)
