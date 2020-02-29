@@ -12,7 +12,10 @@ class TrickTest(unittest.TestCase):
         self.testTrick = setup_results["current_trick"]
         self.tempPlayers = setup_results["list_of_players"]
         for i in range(4):
+            print(self.tempPlayers[i] == setup_results["list_of_players"][i])
+        for i in range(4):
             self.tempPlayers[i].accept(Card(9+i, "hearts"))
+        del setup_results
 
     def test_on_init(self):
         for card in self.testTrick.get_played_cards_list():
@@ -24,23 +27,24 @@ class TrickTest(unittest.TestCase):
         self.assertEqual(self.testTrick.get_points_on_trick(), 0)
 
     def test_on_accept_card(self):
-        self.testTrick.accept(self.tempPlayers[0].get_hand().play_card_at_index(self.testTrick, 0))
-        self.assertEqual(len(self.testTrick.get_played_cards_list()), 1)
+        self.tempPlayers[0].get_hand().play_card_at_index(self.testTrick, 0)
+        print("Done with line 27")
+        self.assertIsNotNone(self.testTrick.get_played_cards_list()[0])
         self.assertEqual(self.testTrick.get_suit_lead(), "hearts")
-        self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0])
+        self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0]) # for reasons unknown these are different player objects that have the same id#
         print("Player hand:")
         print(self.tempPlayers[1].get_hand().get_cards_in_hand())
-        self.testTrick.accept(self.tempPlayers[1].get_hand().play_card_at_index(self.testTrick, 0))
+        self.tempPlayers[1].get_hand().play_card_at_index(self.testTrick, 0)
         self.assertEqual(len(self.testTrick.get_played_cards_list()), 2)
         self.assertEqual(self.testTrick.get_suit_lead(), "hearts")
         self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0])
         self.tempPlayers[2].accept(Card(0, "trump"))
-        self.testTrick.accept(self.tempPlayers[2].get_hand().play_card_at_index(self.testTrick, 0))
+        self.tempPlayers[2].get_hand().play_card_at_index(self.testTrick, 0)
         self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[2])
 
     def test_on_fill(self):
         for i in range(4):
-            self.testTrick.accept(self.tempPlayers[i].get_hand().play_card_at_index(self.testTrick, 0))
+            self.tempPlayers[i].get_hand().play_card_at_index(self.testTrick, 0)
         self.assertIsNone(self.testTrick)
 
     def tearDown(self):

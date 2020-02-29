@@ -8,6 +8,7 @@ class Trick:
 #    _leading_player = None
     _points_on_trick = 0
     _played_cards_list = [None, None, None, None]
+    _accept_call_count = 0
 
     def get_parent_round(self):
         return self._parent_round
@@ -40,21 +41,18 @@ class Trick:
         print(self._winning_card)
 
     def accept(self, a_card):
-        print("Winning card:")
-        print(self._winning_card)
-        print("Incoming card:")
-        print(a_card)
+
         print("Suit lead:")
         print(self._suit_lead)
-        if self._winning_card.accept(a_card) is False:
-            self._winning_player = a_card.get_owning_player()
+        if self._winning_card.accept(a_card) is False: # the current winning card looses to the incoming card
+            self._winning_player = self._parent_round.get_players_list()[a_card.get_owning_player()]
             self._winning_card = a_card
-            print("Won card:")
-            print(self._winning_card)
+            self._suit_lead = a_card.get_card_suit()
         self._played_cards_list[a_card.get_owning_player()] = a_card #don't append the cards, replace at the player index to preserve the owner of the card
         self._points_on_trick += a_card.get_point_value()
         for card in self._played_cards_list:
             if card is None:
+                print("Done accepting")
                 return
         self.on_trick_fill()
 

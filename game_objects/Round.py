@@ -102,7 +102,7 @@ class Round:
         for card in card_list:
             player_number = card.get_owning_player() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
-        self.__trick_point_history[winning_player][self._trick_count] = points_on_trick
+        self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick
         self.update_player_partner_prediction_history() #I don't remember how was supposed to work?
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick
                                                                     # using deep copy here to actually duplicate the data and not just link to it's location in memory
@@ -112,7 +112,7 @@ class Round:
         #this could stand to be rewritten to be more readable
         for player_number in range(4):
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
-                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_partners_list()[target_player]
+                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
 
     def on_round_end(self):
         points_taken_list = []
