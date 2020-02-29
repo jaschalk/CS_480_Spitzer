@@ -26,12 +26,14 @@ class TrickTest(unittest.TestCase):
         self.assertIsNone(self.testTrick.get_winning_player())
         self.assertEqual(self.testTrick.get_points_on_trick(), 0)
 
+    #TODO consider writing more tests to break the on accept behaivor into smaller tests
+
     def test_on_accept_card(self):
         self.tempPlayers[0].get_hand().play_card_at_index(self.testTrick, 0)
         print("Done with line 27")
         self.assertIsNotNone(self.testTrick.get_played_cards_list()[0])
         self.assertEqual(self.testTrick.get_suit_lead(), "hearts")
-        self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0]) # for reasons unknown these are different player objects that have the same id#
+        self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0]) # for reasons unknown these are different player objects that have the same id# setup/tear down behavior is suspected
         print("Player hand:")
         print(self.tempPlayers[1].get_hand().get_cards_in_hand())
         self.tempPlayers[1].get_hand().play_card_at_index(self.testTrick, 0)
@@ -40,12 +42,15 @@ class TrickTest(unittest.TestCase):
         self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0])
         self.tempPlayers[2].accept(Card(0, "trump"))
         self.tempPlayers[2].get_hand().play_card_at_index(self.testTrick, 0)
+        self.assertEqual(self.testTrick.get_suit_lead(), "hearts")
         self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[2])
 
     def test_on_fill(self):
         for i in range(4):
             self.tempPlayers[i].get_hand().play_card_at_index(self.testTrick, 0)
         self.assertEqual(self.testTrick.get_winning_card(), Card(-1, "null"))
+        for i in range(4):
+            self.assertIsNone(self.testTrick.get_played_cards_list()[i])
 
     def tearDown(self):
         self.testTrick._winning_card = Card(-1, "null")
