@@ -90,11 +90,7 @@ class Round:
         return self._leading_player
 
     def set_leading_player(self, player):
-        print("Incoming player is:")
-        print(player)
         self._leading_player = player
-        print("New leading Player is:")
-        print(self._leading_player)
 
     def get_suit_lead(self):
         return self._current_trick.get_suit_lead()

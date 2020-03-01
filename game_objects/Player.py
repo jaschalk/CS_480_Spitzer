@@ -80,8 +80,6 @@ class Player:
         self._hand.play_card_at_index(a_trick, card_to_play_index)
     
     def validate_card(self, a_card):
-        print("In Player: ")
-        print(a_card)
         #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
         return self._parent_game.validate_card(a_card, self)
 

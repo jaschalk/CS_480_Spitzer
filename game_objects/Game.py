@@ -49,10 +49,6 @@ class Game:
       return self._partner_rules
 
    def validate_card(self, a_card, a_player):
-      print("In Game: ")
-      print(a_card)
-      print("Games Round:")
-      print(self._round)
       #Accesses the card rules and returns whether or not the card passed in is valid to the player.
       return self._card_rules.validate_card(a_card, a_player, self._round)
 

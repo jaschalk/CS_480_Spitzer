@@ -37,7 +37,6 @@ class Hand:
         #self._valid_play_list = list(map(self._my_player.validate_card, self._cards_in_hand))
         self._valid_play_list.clear()
         for index in range(len(self._cards_in_hand)):
-            print(self._cards_in_hand[index])
             self._valid_play_list.append(self._my_player.validate_card(self._cards_in_hand[index]))
 
     def play_card_at_index(self, a_trick, a_card_index):
