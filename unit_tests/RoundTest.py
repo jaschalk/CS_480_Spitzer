@@ -44,12 +44,12 @@ class RoundTest(unittest.TestCase):
         initial_card_count = 0
         for i in range(4):
             self.temp_players[i].accept(Card(12-i, "clubs"))
-            initial_card_count += len(self.temp_players[i].get_hand().get_card_list())
+            initial_card_count += len(self.temp_players[i].get_hand().get_cards_in_hand())
         for i in range(4):
             self.temp_players[i].play_card_to(self.temp_trick)
         post_trick_card_count = 0
         for i in range(4):
-            post_trick_card_count += len(self.temp_players[i].get_hand().get_card_list())
+            post_trick_card_count += len(self.temp_players[i].get_hand().get_cards_in_hand())
         self.assertEqual(initial_card_count, post_trick_card_count+4)
         #Now the trick should be finished and we can test accordingly
         temp_PlayerTrickScore = copy.copy(self.temp_players[3].trickScore) # don't remember what this was for?

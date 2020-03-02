@@ -108,7 +108,7 @@ class Player:
 
     def does_play_continue(self):
         #If there are no more cards in the hand, play should not continue.
-        if self._hand.get_cards_in_hand().size() == 0:
+        if len(self._hand.get_cards_in_hand()) == 0:
             return False
         else:
             return True

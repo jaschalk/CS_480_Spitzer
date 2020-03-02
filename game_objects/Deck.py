@@ -29,7 +29,7 @@ class Deck:
         This method will cause 8 cards to visit the targetPlayer. 
         '''
         for i in range(8):
-            targetPlayer.accept(self._card_list.pop())
+            self._card_list.pop().visit(targetPlayer)
 
     def get_card_list(self):
         return self._card_list

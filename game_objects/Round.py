@@ -34,6 +34,7 @@ class Round:
     def __init__(self, a_game):
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
+        self._leading_player = a_game.get_leading_player()
         self._current_trick = Trick(self)
         for i in range(4):
             self._call_matrix[i][0] = 1
@@ -112,6 +113,8 @@ class Round:
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick
                                                                     # using deep copy here to actually duplicate the data and not just link to it's location in memory
         self._trick_count += 1
+        if self._trick_count == 8:
+            self.on_round_end()
 
     def update_player_partner_prediction_history(self):
         #this could stand to be rewritten to be more readable
@@ -124,9 +127,8 @@ class Round:
         for i in range(4):
             points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
         has_ended = self._parent_game.update_scores(points_taken_list) #this feels like it should cause the game to check if the game should end?
-        if has_ended:
-            self.push_data_to_file("dynamicfilename") #need to come up with a system for knowing what to name the files
-        else:
+        self.push_data_to_file("dynamicfilename") #need to come up with a system for knowing what to name the files
+        if not has_ended:
             self._parent_game.start_round()
 
     def push_data_to_file(self, file_name): #need to think about this more to know what info will be needed by the learned agent
@@ -143,7 +145,6 @@ class Round:
         while self._leading_player.does_play_continue():
             for player in self._players_list:
                 player.play_card_to(self._current_trick)
-        #TODO call push data out
 
     def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective
         a_game_state = {}
@@ -152,4 +153,5 @@ class Round:
         a_game_state["call_matrix"] = self._call_matrix
         a_game_state["current_trick"] = self._current_trick
         a_game_state["current_player"] = self._players_list[a_player_index]
+        return a_game_state
         #TODO finish this method!
