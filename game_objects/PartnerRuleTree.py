@@ -135,8 +135,10 @@ class PartnerRuleTree:
         __root_R.set_right(__root_RR)
         __root_R.set_left(__root_RL)
         __root_RR.set_right(__root_RRR)
+        __root_RRR.set_right(RuleNodeUnknown())
         __root_RL.set_right(__root_RLR)
         __root_RLR.set_right(__root_RLRR)
+        __root_RLRR.set_right(RuleNodeUnknown())
         __root_L.set_right(__root_LR)
         __root_LR.set_right(__root_LRR)
         __root_LR.set_left(__root_LRL)
@@ -146,7 +148,8 @@ class PartnerRuleTree:
         __root_LL.set_left(__root_LLL)
         __root_LL.set_right(__root_LLR)
         __root_LLR.set_left(__root_LLRL)
-        __root_LLRL.set_right(__root_LLRLR) 
+        __root_LLRL.set_right(__root_LLRLR)
+        __root_LLRLR.set_right(RuleNodeUnknown()) 
 
     def validate_partners(self, asking_player, target_player, a_round):
         _result = self._root.validate(asking_player, target_player, a_round)
