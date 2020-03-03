@@ -109,7 +109,7 @@ class Player:
             else:
                 # I think we'll need a check in here somewhere for if the owners of both black queens are known to this player
                 # or we might need to modify the rule tree some.
-                print(_results)
+                #print(_results)
                 self._potential_partners_list[index] = 1/_unknowns
 
 #        _result = ""

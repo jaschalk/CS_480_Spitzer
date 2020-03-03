@@ -41,20 +41,21 @@ class RoundTest(unittest.TestCase):
                     self.assertEqual(self.test_round.get_call_matrix()[row][col], 0)
 
     def test_on_trick_finish(self):
+        self.test_round.set_leading_player(self.temp_players[3])
         initial_card_count = 0
         for i in range(4):
             self.temp_players[i].accept(Card(12-i, "clubs"))
             initial_card_count += len(self.temp_players[i].get_hand().get_cards_in_hand())
         for i in range(4):
-            self.temp_players[i].play_card_to(self.temp_trick)
+            self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         post_trick_card_count = 0
         for i in range(4):
             post_trick_card_count += len(self.temp_players[i].get_hand().get_cards_in_hand())
         self.assertEqual(initial_card_count, post_trick_card_count+4)
         #Now the trick should be finished and we can test accordingly
-        temp_PlayerTrickScore = copy.copy(self.temp_players[3].trickScore) # don't remember what this was for?
+#        temp_PlayerTrickScore = copy.copy(self.temp_players[3].trickScore) # don't remember what this was for?
         for i in range(4):
-            self.assertEqual(self.test_round.get_trick_history()[i][0][12-i], 1)
+            self.assertEqual(self.test_round.get_trick_history()[i][0][Card(12-i, "clubs").get_card_id()], 1) # this is testing the wrong location
             #The 3rd player will have played the Ace of Clubs, the 2nd player the 10 of Clubs, the 1st the King of Clubs, the 0th the 9 of Clubs
         self.assertEqual(self.test_round.get_leading_player(), self.temp_players[3])
         self.assertEqual(self.test_round._get_point_history()[3][0], 25)#Check if the Trick Point history has updated properly
@@ -62,7 +63,7 @@ class RoundTest(unittest.TestCase):
     def test_potential_partners_history(self): #Check if the Potential Partners history has been updated properly
         for i in range(4):
             self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
-            self.temp_players[i].play_card_to(self.temp_trick)
+            self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         #               self.test_round.potential_partners_history[player_num][potential_partner_num][trick_depth]
         self.assertEqual(self.test_round._get_potential_partners_history()[0][2][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[1][3][0], 1)
@@ -71,10 +72,10 @@ class RoundTest(unittest.TestCase):
         
     def test_on_round_finish(self):
 
-        initial_player_scores = []
+        initial_player_points = []
         for player in self.temp_players:
             self.temp_deck.deal_cards_to(player)
-            initial_player_scores.append(player.get_round_score())
+            initial_player_points.append(player.get_round_points())
         #On Round finish:
         #tell players to update total scores, tell the game to repopulate the deck, if the game has not ended (make a new deck)
         self.test_round.begin_play() #Need to use a method to run a round to completion here, not manually step through
