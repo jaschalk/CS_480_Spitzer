@@ -147,4 +147,10 @@ class PartnerRuleTree:
         __root_LLRL.set_right(__root_LLRLR) 
 
     def validate_partners(self, asking_player, target_player, a_round):
-        self._root.validate(asking_player, target_player, a_round)     
+        _result = self._root.validate(asking_player, target_player, a_round)
+        if _result == True:
+            return "target is my partner"
+        elif _result == False:
+            return "target is not my partner"
+        else:
+            return "unknown"     
