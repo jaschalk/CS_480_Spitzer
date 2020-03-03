@@ -28,7 +28,7 @@ class PlayerTest(unittest.TestCase):
         current_round_score = self.temp_player_zero.get_round_score()
         for index in range(4):
             self.temp_player_list[index].accept(Card(index, "trump"))
-            self.temp_player_list[index].play_card_to(self.current_trick)
+            self.temp_player_list[index].get_hand().play_card_at_index(self.current_trick, index)
         self.assertEqual(self.temp_player_zero.get_round_score(), 9)
         self.assertEqual(self.temp_player_zero.get_round_score(), (current_round_score + self.temp_player_zero.get_trick_score()))
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,1,0])
