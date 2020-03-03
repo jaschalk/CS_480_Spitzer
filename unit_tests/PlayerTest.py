@@ -18,8 +18,8 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(self.temp_player_zero.get_total_score(), 0)
         self.assertFalse(self.temp_player_zero.get_is_leading())
         self.assertIsInstance(self.temp_player_zero.get_hand(), Hand)
-        self.assertIsInstance(self.temp_player_zero.get_valid_call_list().size(), 8)
-        self.assertEqual(self.temp_player_zero.get_potential_partners_list().size(), 4)
+        self.assertEqual(len(self.temp_player_zero.get_valid_call_list()), 8)
+        self.assertEqual(len(self.temp_player_zero.get_potential_partners_list()), 4)
         self.assertEqual(self.temp_player_zero.get_potential_partners_list()[0], 1)
         for index in range(1,4):
             self.assertAlmostEqual(self.temp_player_zero.get_potential_partners_list()[index], 1/3)
@@ -50,8 +50,8 @@ class PlayerTest(unittest.TestCase):
             self.assertAlmostEqual(self.temp_player_zero.get_potential_list()[index], 1/3)
 
     def tearDown(self):
-        for index in range(4): #for some reason, this is saying that the list index is out of range.
-            del self.temp_player_list[index]
+        #for index in range(4): #for some reason, this is saying that the list index is out of range.
+            #del self.temp_player_list[index]
         del self.temp_player_list
 
 if __name__ == "__main__":
