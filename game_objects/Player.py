@@ -89,18 +89,41 @@ class Player:
 
     def determine_potential_partners(self):
         #Asks the parent game to use its validate partners method to modify the potential partners list based on the returned string.
-        _result = ""
+        _results = [None, None, None, None]
+        # The goal here is to store all the return strings so we know the full partner state before we update anything
+        _unknowns = 0
         for index in range(4):
             if index != self._player_id:
                 _result = self._parent_game.validate_partners(self, index)
-            if _result == "target is my partner":
+                if _result == "unknown":
+                    _unknowns += 1
+                _results[index] = _result
+            else:
+                _results[index] = "target is my partner"
+        
+        for index in range(4):
+            if _results[index] == "target is my partner":
                 self._potential_partners_list[index] = 1
-            elif _result == "target is not my partner":
+            elif _results[index] == "target is not my partner":
                 self._potential_partners_list[index] = 0
-                for i in range(4):
-                    if i != self._player_id or i != index:
-                        if self._potential_partners_list[i] == 1/3:
-                            self._potential_partners_list[i] = 1/2 #This number might need to be modified later.
+            else:
+                # I think we'll need a check in here somewhere for if the owners of both black queens are known to this player
+                # or we might need to modify the rule tree some.
+                print(_results)
+                self._potential_partners_list[index] = 1/_unknowns
+
+#        _result = ""
+#        for index in range(4):
+#            if index != self._player_id:
+#                _result = self._parent_game.validate_partners(self, index)
+#                if _result == "target is my partner":
+#                    self._potential_partners_list[index] = 1
+#                elif _result == "target is not my partner":
+#                    self._potential_partners_list[index] = 0
+#                    for i in range(4):
+#                        if not (i == self._player_id or i == index):
+#                            if self._potential_partners_list[i] == 1/3:
+#                                self._potential_partners_list[i] = 1/2 #This number might need to be modified later.
 
     def ask_for_call(self):
         #Player asks agent to make a call. The value returned from the agent is then used to update the round based on the index of the call made.
