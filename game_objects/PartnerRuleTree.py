@@ -1,5 +1,6 @@
 from game_objects import RuleNode
 from game_objects.RuleNodeUnknown import RuleNodeUnknown
+from game_objects.RuleNodeFalse import RuleNodeFalse
 
 #IMPORTANT: I don't think I am returning any strings at all. Meaning, when I try to see if the
 #           string returned is "target is my partner", "target is not my partner", and "unknown"
@@ -136,10 +137,13 @@ class PartnerRuleTree:
         __root_R.set_right(__root_RR)
         __root_R.set_left(__root_RL)
         __root_RR.set_right(__root_RRR)
+        __root_RR.set_left(RuleNodeFalse())
         __root_RRR.set_right(RuleNodeUnknown())
         __root_RL.set_right(__root_RLR)
+        __root_RL.set_left(RuleNodeFalse())
         __root_RLR.set_right(__root_RLRR)
         __root_RLRR.set_right(RuleNodeUnknown())
+        __root_RLRR.set_left(RuleNodeFalse())
         __root_L.set_right(__root_LR)
         __root_LR.set_right(__root_LRR)
         __root_LR.set_left(__root_LRL)
