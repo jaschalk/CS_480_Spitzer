@@ -46,6 +46,7 @@ class Round:
 
     def get_cards_played(self):
         #This method should return a binary number representing the cards played in the round.
+        #Can I use the trick history to somehow do this?
         pass
 
     def _get_player_partners(self):

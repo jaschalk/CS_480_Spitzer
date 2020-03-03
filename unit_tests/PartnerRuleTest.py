@@ -2,9 +2,6 @@ import unittest
 from game_objects.Card import Card
 from unit_tests.Setup import general_setup
 
-#IMPORTANT: I think right now, when we play a card to the trick, we are expecting
-#           the method play_card_at_index to take the trick it is being played to
-
 class PartnerRuleTest(unittest.TestCase):
 
     def setUp(self):
