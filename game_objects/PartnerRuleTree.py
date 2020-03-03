@@ -82,6 +82,7 @@ class PartnerRuleTree:
             return ((cards_asking_has_played + cards_in_player_hand_binary_state) & 1<<ace_called == 1<<ace_called)
 
         def has_ace_been_played(*args):
+            #Two options can be returned here: target is not my partner or unknown
             trick_history = args[2].get_trick_history()
             ace_called = get_ace_called_id(*args)
             ace_has_been_played = False
@@ -106,7 +107,8 @@ class PartnerRuleTree:
             cards_target_has_played = args[2].get_player_binary_card_state(args[1].get_player_id())
             return ((cards_target_has_played & 0b1 == 0b1) or (cards_target_has_played & 0b100 == 0b100))
 
-        def have_both_queens_been_played(*args): 
+        def have_both_queens_been_played(*args):
+            #All 3 options can be returned here. 
             cards_played = args[2].get_cards_played()
             return (cards_played & 0b101 == 0b101)
 
