@@ -98,8 +98,9 @@ class Player:
             elif _result == "target is not my partner":
                 self._potential_partners_list[index] = 0
                 for i in range(4):
-                    if i != self._player_id or index:
-                      self._potential_partners_list[i] = 1/2 #This number might need to be modified later.
+                    if i != self._player_id or i != index:
+                        if self._potential_partners_list[i] == 1/3:
+                            self._potential_partners_list[i] = 1/2 #This number might need to be modified later.
 
     def ask_for_call(self):
         #Player asks agent to make a call. The value returned from the agent is then used to update the round based on the index of the call made.
