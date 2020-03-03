@@ -4,8 +4,8 @@ from agents import agent
 
 class Player:
     
-    _trick_score = 0
-    _round_score = 0
+    _trick_points = 0
+    _round_points = 0
     _total_score = 0
     _valid_call_list = [1, 0, 0, 0, 0, 1, 1, 1]
     _potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
@@ -20,7 +20,8 @@ class Player:
         #initializes the hand object and sets the potential partners list to correct values.
         self._player_id = player_id
         self._parent_game = a_game
-        self._controlling_agent = an_agent 
+        self._controlling_agent = an_agent
+        self._potential_partners_list = [0, 0, 0, 0] 
         self._potential_partners_list[self._player_id] = 1
         for index in range(4):
             if index != self._player_id:
@@ -30,11 +31,11 @@ class Player:
     def get_player_id(self):
         return self._player_id
     
-    def get_trick_score(self):
-        return self._trick_score
+    def get_trick_points(self):
+        return self._trick_points
 
-    def set_trick_score(self, a_trick_score):
-        self._trick_score = a_trick_score
+    def set_trick_points(self, a_trick_points):
+        self._trick_points = a_trick_points
 
     def get_total_score(self):
         return self._total_score
@@ -42,11 +43,11 @@ class Player:
     def set_total_score(self, a_total_score):
         self._total_score = a_total_score
 
-    def get_round_score(self):
-        return self._round_score
+    def get_round_points(self):
+        return self._round_points
     
-    def set_round_score(self, a_round_score):
-        self._round_score = a_round_score
+    def set_round_points(self, a_round_points):
+        self._round_points = a_round_points
 
     def get_valid_call_list(self):
         return self._valid_call_list

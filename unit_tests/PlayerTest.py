@@ -14,7 +14,7 @@ class PlayerTest(unittest.TestCase):
         self.current_trick = setup_results["current_trick"]
 
     def test_on_init(self):
-        self.assertEqual(self.temp_player_zero.get_round_score(), 0)
+        self.assertEqual(self.temp_player_zero.get_round_points(), 0)
         self.assertEqual(self.temp_player_zero.get_total_score(), 0)
         self.assertFalse(self.temp_player_zero.get_is_leading())
         self.assertIsInstance(self.temp_player_zero.get_hand(), Hand)
@@ -25,29 +25,32 @@ class PlayerTest(unittest.TestCase):
             self.assertAlmostEqual(self.temp_player_zero.get_potential_partners_list()[index], 1/3)
 
     def test_trick_complete(self):
-        current_round_score = self.temp_player_zero.get_round_score()
+        current_round_points = self.temp_player_zero.get_round_points()
         for index in range(4):
             self.temp_player_list[index].accept(Card(index, "trump"))
-            self.temp_player_list[index].get_hand().play_card_at_index(self.current_trick, index)
-        self.assertEqual(self.temp_player_zero.get_round_score(), 9)
-        self.assertEqual(self.temp_player_zero.get_round_score(), (current_round_score + self.temp_player_zero.get_trick_score()))
+            self.temp_player_list[index].get_hand().play_card_at_index(self.current_trick, 0)
+        #Tell the player to update the round points before we assert that it has changed.
+        self.assertEqual(self.temp_player_zero.get_round_points(), 9)
+        self.assertEqual(self.temp_player_zero.get_round_points(), (current_round_points + self.temp_player_zero.get_trick_points()))
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,1,0])
         self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [0,1,0,1])
         self.assertEqual(self.temp_player_list[2].get_potential_partners_list(), [1,0,1,0])
         self.assertEqual(self.temp_player_list[3].get_potential_partners_list(), [0,1,0,1])
 
     def test_card_acceptance(self):
+        temp_card = None
         for index in range(5):
-            self.temp_player_zero.accept(Card(index, "trump"))
+            temp_card = Card(index, "trump")
+            self.temp_player_zero.accept(temp_card)
         #This trump card is not what we are expecting it to be.
-        self.assertEqual(self.temp_player_zero.get_hand().get_cards_in_hand()[4], Card(4, "trump")) 
+        self.assertEqual(self.temp_player_zero.get_hand().get_cards_in_hand()[4], temp_card)
     
     #Create a test to test a method calling upon the tree to modify the Players' potential partners lists.
     def test_no_call_is_made(self):
         #self.temp_player_zero.ask_for_call(0)
         self.assertEqual(self.temp_player_zero.get_potential_partners_list()[0], 1)
         for index in range(1,4):
-            self.assertAlmostEqual(self.temp_player_zero.get_potential_list()[index], 1/3)
+            self.assertAlmostEqual(self.temp_player_zero.get_potential_partners_list()[index], 1/3)
 
     def tearDown(self):
         #for index in range(4): #for some reason, this is saying that the list index is out of range.
