@@ -112,6 +112,8 @@ class Round:
         winning_player.set_trick_points(points_on_trick)
         winning_player.set_round_points(winning_player.get_round_points() + points_on_trick)
         self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick
+        for player in self._players_list:
+            player.determine_potential_partners()
         self.update_player_partner_prediction_history() #I don't remember how was supposed to work?
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick
                                                                     # using deep copy here to actually duplicate the data and not just link to it's location in memory
