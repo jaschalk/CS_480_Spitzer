@@ -30,6 +30,7 @@ class Round:
     __file_out_data = []
     _file_out_name = ""
     _trick_count = 0
+    _cards_played_binary = 0
 
     def __init__(self, a_game):
         self._parent_game = a_game
@@ -47,7 +48,7 @@ class Round:
     def get_cards_played(self):
         #This method should return a binary number representing the cards played in the round.
         #Can I use the trick history to somehow do this?
-        pass
+        return self._cards_played_binary
 
     def _get_player_partners(self):
         return self.__player_partners
@@ -107,6 +108,7 @@ class Round:
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
         for card in card_list:
+            self._cards_played_binary += 1<<card.get_card_id()
             player_number = card.get_owning_player() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
         winning_player.set_trick_points(points_on_trick)
