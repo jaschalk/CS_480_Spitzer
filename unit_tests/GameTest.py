@@ -52,7 +52,7 @@ class GameTest(unittest.TestCase):
         for index in range(4):
             self.assertFalse(self.temp_player_list[index].wins())
 
-    def testDown(self):
+    def tearDown(self):
         del self.temp_game
         del self.temp_deck
         del self.temp_player_list
