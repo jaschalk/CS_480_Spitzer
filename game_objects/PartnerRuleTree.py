@@ -42,11 +42,11 @@ class PartnerRuleTree:
             return call_has_been_made
         
         def did_asking_player_make_call(*args):
-            asking_player_id = args[0].get_player_id
+            asking_player_id = args[0].get_player_id()
             call_matrix = args[2].get_call_matrix()
             asking_player_made_call = False
             for index in range(1, 8):
-                if (call_matrix[index][asking_player_id] == 1):
+                if (call_matrix[asking_player_id][index] == 1):
                     asking_player_made_call = True
             return asking_player_made_call
 
