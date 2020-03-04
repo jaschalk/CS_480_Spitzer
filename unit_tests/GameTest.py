@@ -59,5 +59,5 @@ class GameTest(unittest.TestCase):
         del self.temp_round
 
 
-    if __name__ == "__main__":
-        unittest.main()
+if __name__ == "__main__":
+    unittest.main()
