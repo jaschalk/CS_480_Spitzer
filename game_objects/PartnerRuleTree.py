@@ -3,10 +3,6 @@ from game_objects.RuleNodeUnknown import RuleNodeUnknown
 from game_objects.RuleNodeFalse import RuleNodeFalse
 from game_objects.RuleNodeTrue import RuleNodeTrue
 
-#IMPORTANT: I don't think I am returning any strings at all. Meaning, when I try to see if the
-#           string returned is "target is my partner", "target is not my partner", and "unknown"
-#           I'm not actually returning any strings to check against. Where would I do this??
-
 class PartnerRuleTree:
 
     _root = None
@@ -125,15 +121,20 @@ class PartnerRuleTree:
             return ((cards_target_has_played & 0b1 == 0b1) or (cards_target_has_played & 0b100 == 0b100))
 
         def have_both_queens_been_played(*args):
-            #All 3 options can be returned here. 
             cards_played = args[2].get_cards_played()
             return (cards_played & 0b101 == 0b101)
+
+        def has_one_queen_been_played(*args):
+            cards_played = args[2].get_cards_played()
+            return (cards_played & 0b1 == 0b1 or cards_played & 0b100 == 0b100)
 
         self._root = RuleNode.RuleNode(self, "Returns true if a call has been made.", has_call_been_made)
         __root_R = RuleNode.RuleNode(self, "Returns true if the asking player has a queen.", does_asking_player_have_a_queen)
         __root_RL = RuleNode.RuleNode(self, "Returns true if the asking player has both queens.", does_asking_player_have_both_queens)
         __root_RLR = RuleNode.RuleNode(self, "Returns true if the target player has a queen.", does_target_player_have_a_queen)
         __root_RLRR = RuleNode.RuleNode(self, "Returns true if both queens have been played.", have_both_queens_been_played)
+        __root_RLRRR = RuleNode.RuleNode(self, "Returns true one queen has been played.", has_one_queen_been_played)
+        __root_RLRRRL = RuleNode.RuleNode(self, "Returns true if the target player has played a queen.", does_target_player_have_a_queen)
         __root_RR = RuleNode.RuleNode(self, "Returns true if the target player has a queen", does_target_player_have_a_queen)
         __root_RRR = RuleNode.RuleNode(self, "Returns true if both queens have been played", have_both_queens_been_played)
         __root_L = RuleNode.RuleNode(self, "Returns true if the asking player made the call.", did_asking_player_make_call)
@@ -165,8 +166,10 @@ class PartnerRuleTree:
         __root_RL.set_right(__root_RLR)
         __root_RL.set_left(RuleNodeFalse())
         __root_RLR.set_right(__root_RLRR)
-        __root_RLRR.set_right(RuleNodeUnknown())
         __root_RLRR.set_left(RuleNodeFalse())
+        __root_RLRR.set_right(__root_RLRRR)
+        __root_RLRRR.set_left(__root_RLRRRL)
+        __root_RLRRR.set_right(RuleNodeUnknown())
         __root_L.set_right(__root_LR)
         __root_LR.set_right(__root_LRR)
         __root_LRR.set_left(__root_LRRL)
@@ -183,7 +186,6 @@ class PartnerRuleTree:
         __root_LRRRLR.set_right(RuleNodeUnknown())
         __root_LRRRLRL.set_left(RuleNodeFalse())
         __root_LRRRLRL.set_right(RuleNodeTrue())
-        #HERE
         __root_LR.set_left(__root_LRL)
         __root_LRL.set_left(__root_LRLL)
         __root_LRL.set_right(__root_LRLR)

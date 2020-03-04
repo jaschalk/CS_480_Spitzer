@@ -94,11 +94,11 @@ class PartnerRuleTest(unittest.TestCase):
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
 
     def test_no_call_one_queen_played(self):
-        self.temp_player_list[0].accept(self.card_list[0])
-        self.temp_player_list[1].accept(self.card_list[2])
-        self.temp_player_list[1].accept(self.card_list[1])
-        self.temp_player_list[2].accept(self.card_list[30])
-        self.temp_player_list[3].accept(self.card_list[31])
+        self.temp_player_list[0].accept(self.card_list[0]) #QC
+        self.temp_player_list[1].accept(self.card_list[2]) #QS
+        self.temp_player_list[1].accept(self.card_list[1]) #7D
+        self.temp_player_list[2].accept(self.card_list[30]) #8H
+        self.temp_player_list[3].accept(self.card_list[31]) #7H
         self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 0) #QC -- index 0
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
