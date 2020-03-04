@@ -1,6 +1,7 @@
 from game_objects import RuleNode
 from game_objects.RuleNodeUnknown import RuleNodeUnknown
 from game_objects.RuleNodeFalse import RuleNodeFalse
+from game_objects.RuleNodeTrue import RuleNodeTrue
 
 #IMPORTANT: I don't think I am returning any strings at all. Meaning, when I try to see if the
 #           string returned is "target is my partner", "target is not my partner", and "unknown"
@@ -50,6 +51,15 @@ class PartnerRuleTree:
                     asking_player_made_call = True
             return asking_player_made_call
 
+        def did_target_player_make_call(*args):
+            target_player_id = args[1].get_player_id()
+            call_matrix = args[2].get_call_matrix()
+            target_player_made_call = False
+            for index in range(1, 8):
+                if(call_matrix[target_player_id][index] == 1):
+                    target_player_made_call = True
+            return target_player_made_call
+
         def was_first_trick_called(*args):
             call_state = args[2].get_call_matrix()
             first_trick_called = False
@@ -94,6 +104,11 @@ class PartnerRuleTree:
                         ace_has_been_played = True
             return ace_has_been_played
 
+        def did_target_play_ace(*args):
+            target_cards_played = args[1].get_cards_played()
+            ace_called = get_ace_called_id(*args)
+            return target_cards_played & 1<<ace_called
+
         def does_asking_player_have_a_queen(*args):
             player_hand_binary_representation = args[0].get_hand().get_binary_representation()
             cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
@@ -127,11 +142,19 @@ class PartnerRuleTree:
         __root_LLR = RuleNode.RuleNode(self, "Returns true if the call made was for an ace.", was_ace_called)
         __root_LLRL = RuleNode.RuleNode(self, "Returns true if the target player has the ace called", does_target_player_have_ace)
         __root_LLRLR = RuleNode.RuleNode(self, "Returns true if the ace called has been played.", has_ace_been_played)
-        __root_LR = RuleNode.RuleNode(self, "Returns true if the call made was for first trick.", was_first_trick_called)
-        __root_LRL = RuleNode.RuleNode(self, "Returns true if the asking player took the first trick.", did_asking_take_first_trick)
-        __root_LRR = RuleNode.RuleNode(self, "Returns true if the call made was for an ace.", was_ace_called)
-        __root_LRRL = RuleNode.RuleNode(self, "Returns true if the asking player has the ace called.", does_asking_player_have_ace)
-        __root_LRRLR = RuleNode.RuleNode(self, "Returns true if the ace called has been played.", has_ace_been_played)
+        __root_LR = RuleNode.RuleNode(self, "Returns true if the target player made the call.", did_target_player_make_call)
+        __root_LRL = RuleNode.RuleNode(self, "Returns true if the call made was for first trick.", was_first_trick_called)
+        __root_LRLL = RuleNode.RuleNode(self, "Returns true if the asking player took the first trick.", did_asking_take_first_trick)
+        __root_LRLR = RuleNode.RuleNode(self, "Returns true if the call made was for an ace.", was_ace_called)
+        __root_LRLRL = RuleNode.RuleNode(self, "Returns true if the asking player has the ace called.", does_asking_player_have_ace)
+        __root_LRLRLR = RuleNode.RuleNode(self, "Returns true if the ace called has been played.", has_ace_been_played)
+        __root_LRR = RuleNode.RuleNode(self, "Returns true if the call made was for first trick.", was_first_trick_called)
+        __root_LRRL = RuleNode.RuleNode(self, "Returns true if the asking player took the first trick.", did_asking_take_first_trick)
+        __root_LRRLR = RuleNode.RuleNode(self, "Returns true if the target player took the first trick.", did_target_take_first_trick)
+        __root_LRRR = RuleNode.RuleNode(self, "Returns true if the call made was for an ace.", was_ace_called)
+        __root_LRRRL = RuleNode.RuleNode(self, "Returns true if the asking player has the ace called.", does_asking_player_have_ace)
+        __root_LRRRLR = RuleNode.RuleNode(self, "Returns true if the ace called has been played.", has_ace_been_played)
+        __root_LRRRLRL = RuleNode.RuleNode(self, "Returns true if the target player played the ace called.", did_target_play_ace)
         self._root.set_right(__root_R)
         self._root.set_left(__root_L)
         __root_R.set_right(__root_RR)
@@ -146,9 +169,28 @@ class PartnerRuleTree:
         __root_RLRR.set_left(RuleNodeFalse())
         __root_L.set_right(__root_LR)
         __root_LR.set_right(__root_LRR)
-        __root_LR.set_left(__root_LRL)
         __root_LRR.set_left(__root_LRRL)
+        __root_LRR.set_right(__root_LRRR)
+        __root_LRRL.set_left(RuleNodeFalse())
         __root_LRRL.set_right(__root_LRRLR)
+        __root_LRRLR.set_left(RuleNodeFalse())
+        __root_LRRLR.set_right(RuleNodeTrue())
+        __root_LRRR.set_left(__root_LRRRL)
+        __root_LRRR.set_right(RuleNodeTrue())
+        __root_LRRRL.set_left(RuleNodeFalse())
+        __root_LRRRL.set_right(__root_LRRRLR)
+        __root_LRRRLR.set_left(__root_LRRRLRL)
+        __root_LRRRLR.set_right(RuleNodeUnknown())
+        __root_LRRRLRL.set_left(RuleNodeFalse())
+        __root_LRRRLRL.set_right(RuleNodeTrue())
+        #HERE
+        __root_LR.set_left(__root_LRL)
+        __root_LRL.set_left(__root_LRLL)
+        __root_LRL.set_right(__root_LRLR)
+        __root_LRLR.set_left(__root_LRLRL)
+        __root_LRLRL.set_right(__root_LRLRLR)
+        __root_LRLRLR.set_right(RuleNodeUnknown())
+        __root_LRLRLR.set_left(RuleNodeFalse())
         __root_L.set_left(__root_LL)
         __root_LL.set_left(__root_LLL)
         __root_LL.set_right(__root_LLR)
