@@ -104,6 +104,9 @@ class Round:
     def set_file_out_name(self, file_name):
         self._file_out_name = file_name
 
+    def get_first_trick_winner(self):
+        return self._winner_of_first_trick
+
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
