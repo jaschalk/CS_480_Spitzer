@@ -120,6 +120,10 @@ class PartnerRuleTree:
             cards_target_has_played = args[2].get_player_binary_card_state(args[1].get_player_id())
             return ((cards_target_has_played & 0b1 == 0b1) or (cards_target_has_played & 0b100 == 0b100))
 
+        def did_asking_player_play_a_queen(*args):
+            cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
+            return ((cards_asking_has_played & 0b1 == 0b1) or (cards_asking_has_played & 0b100 == 0b100))
+
         def have_both_queens_been_played(*args):
             cards_played = args[2].get_cards_played()
             return (cards_played & 0b101 == 0b101)
@@ -135,6 +139,7 @@ class PartnerRuleTree:
         __root_RLRR = RuleNode.RuleNode(self, "Returns true if both queens have been played.", have_both_queens_been_played)
         __root_RLRRR = RuleNode.RuleNode(self, "Returns true one queen has been played.", has_one_queen_been_played)
         __root_RLRRRL = RuleNode.RuleNode(self, "Returns true if the target player has played a queen.", does_target_player_have_a_queen)
+        __root_RLRRRLR = RuleNode.RuleNode(self, "Returns true if the asking player has played a queen.", did_asking_player_play_a_queen)
         __root_RR = RuleNode.RuleNode(self, "Returns true if the target player has a queen", does_target_player_have_a_queen)
         __root_RRR = RuleNode.RuleNode(self, "Returns true if both queens have been played", have_both_queens_been_played)
         __root_L = RuleNode.RuleNode(self, "Returns true if the asking player made the call.", did_asking_player_make_call)
@@ -170,6 +175,8 @@ class PartnerRuleTree:
         __root_RLRR.set_right(__root_RLRRR)
         __root_RLRRR.set_left(__root_RLRRRL)
         __root_RLRRR.set_right(RuleNodeUnknown())
+        __root_RLRRRL.set_right(__root_RLRRRLR)
+        __root_RLRRRLR.set_left(RuleNodeUnknown())
         __root_L.set_right(__root_LR)
         __root_LR.set_right(__root_LRR)
         __root_LRR.set_left(__root_LRRL)
