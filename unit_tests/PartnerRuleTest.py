@@ -51,7 +51,8 @@ class PartnerRuleTest(unittest.TestCase):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,1,0,0])
         self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0])
-        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [0,0,1,1])
+        self.assertEqual(self.temp_player_list[2].get_potential_partners_list(), [0,0,1,1])
+        self.assertEqual(self.temp_player_list[3].get_potential_partners_list(), [0,0,1,1])
         
     def test_ace_called(self):
         self.temp_player_list[0].accept(self.card_list[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
@@ -137,7 +138,8 @@ class PartnerRuleTest(unittest.TestCase):
         for index in range(4):
             self.assertEqual(self.temp_player_list[index].get_potential_partners_list()[index], 1)
             for i in range(4):
-                self.assertAlmostEqual(self.temp_player_list[index].get_potential_partners_list()[i], 1/3)
+                if (i != index):
+                    self.assertAlmostEqual(self.temp_player_list[index].get_potential_partners_list()[i], 1/3)
 
     def tearDown(self):
         del self.temp_game
