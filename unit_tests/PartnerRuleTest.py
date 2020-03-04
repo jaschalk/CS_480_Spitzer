@@ -21,6 +21,7 @@ class PartnerRuleTest(unittest.TestCase):
             self.card_list.append(Card(index, "spades"))
         for index in range(9,15):
             self.card_list.append(Card(index, "hearts"))
+        del setup_results
     
     def test_first_trick_called(self):
         for index in range(5):
@@ -87,6 +88,7 @@ class PartnerRuleTest(unittest.TestCase):
     def test_no_call_both_queens(self):
         for index in range(8):
             self.temp_player_list[0].accept(self.card_list[index]) #Give player 1 the first 8 cards
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         self.temp_player_list[0].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
 
@@ -100,6 +102,7 @@ class PartnerRuleTest(unittest.TestCase):
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
         self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list()[0], 1)
@@ -128,12 +131,22 @@ class PartnerRuleTest(unittest.TestCase):
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
         self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         for index in range(4):
             self.assertEqual(self.temp_player_list[index].get_potential_partners_list()[index], 1)
             for i in range(4):
                 self.assertAlmostEqual(self.temp_player_list[index].get_potential_partners_list()[i], 1/3)
+
+    def tearDown(self):
+        del self.temp_game
+        del self.temp_deck
+        del self.temp_player_list
+        del self.temp_round
+        del self.test_hand
+        del self.current_trick
+        del self.card_list
 
 if __name__ == "__main__":
     unittest.main()
