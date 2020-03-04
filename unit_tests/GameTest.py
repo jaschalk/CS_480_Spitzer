@@ -21,7 +21,7 @@ class GameTest(unittest.TestCase):
         self.assertEqual(len(self.temp_player_list), 4)
         self.assertIsInstance(self.temp_deck, Deck)
         #self.assertEqual(self.testGame.listOfRounds.size(), 0) #The game no longer keeps track of a list of rounds
-        self.assertIsInstance(self.temp_game.get_card_rules(), CardRuleTree) #These will change when we create tree and tree node classes.
+        self.assertIsInstance(self.temp_game.get_card_rules(), CardRuleTree)
         self.assertIsInstance(self.temp_game.get_partner_rules(), PartnerRuleTree)
         self.assertIsInstance(self.temp_game.get_call_rules(), CallRules)
 
