@@ -2,9 +2,6 @@ import unittest
 from game_objects.Card import Card
 from unit_tests.Setup import general_setup
 
-#IMPORTANT: I think right now, when we play a card to the trick, we are expecting
-#           the method play_card_at_index to take the trick it is being played to
-
 class PartnerRuleTest(unittest.TestCase):
 
     def setUp(self):
@@ -24,6 +21,7 @@ class PartnerRuleTest(unittest.TestCase):
             self.card_list.append(Card(index, "spades"))
         for index in range(9,15):
             self.card_list.append(Card(index, "hearts"))
+        del setup_results
     
     def test_first_trick_called(self):
         for index in range(5):
@@ -44,7 +42,7 @@ class PartnerRuleTest(unittest.TestCase):
                 self.temp_player_list[3].accept(self.card_list[index]) #give the fourth player the last 8 cards, skipping any aces
             else:
                 continue
-        #self.temp_player_list[0].ask_for_call() #this method has the game update which call was made. Needs to ask the agent.
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 4) #this method asks the round to update the call made based on the player id and call index made
         self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 6) #AS -- index = 20
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 7) #9D -- index 12 player 2 wins the trick
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 7) #KS -- index 22
@@ -53,7 +51,8 @@ class PartnerRuleTest(unittest.TestCase):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,1,0,0])
         self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0])
-        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [0,0,1,1])
+        self.assertEqual(self.temp_player_list[2].get_potential_partners_list(), [0,0,1,1])
+        self.assertEqual(self.temp_player_list[3].get_potential_partners_list(), [0,0,1,1])
         
     def test_ace_called(self):
         self.temp_player_list[0].accept(self.card_list[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
@@ -70,7 +69,7 @@ class PartnerRuleTest(unittest.TestCase):
             self.temp_player_list[2].accept(Card(index, "trump")) #give player 3 a bunch of random trump cards
         self.temp_player_list[2].accept(self.card_list[1]) #spitzer
         self.temp_player_list[2].accept(self.card_list[11]) #KD
-        #self.temp_player_list[0].ask_for_call() #this method has the game update which call was made. Needs to ask the agent.
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 1) #this method has the round update the call based on the player id and call index passed in.
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0]) #Only update the potential partners list of the player with the ace matching the one called.
@@ -79,7 +78,7 @@ class PartnerRuleTest(unittest.TestCase):
             self.assertAlmostEqual(self.temp_player_list[0].get_potential_partners_list()[index], 1/3)
 
     def test_solo_called(self):
-        #self.temp_player_list[0].ask_for_call()#this method has the game update which call was made. Needs to ask the agent.
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 5) #this method tells the round to update the call made for t player and call index passed in.
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
@@ -90,19 +89,21 @@ class PartnerRuleTest(unittest.TestCase):
     def test_no_call_both_queens(self):
         for index in range(8):
             self.temp_player_list[0].accept(self.card_list[index]) #Give player 1 the first 8 cards
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         self.temp_player_list[0].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
 
     def test_no_call_one_queen_played(self):
-        self.temp_player_list[0].accept(self.card_list[0])
-        self.temp_player_list[1].accept(self.card_list[2])
-        self.temp_player_list[1].accept(self.card_list[1])
-        self.temp_player_list[2].accept(self.card_list[30])
-        self.temp_player_list[3].accept(self.card_list[31])
+        self.temp_player_list[0].accept(self.card_list[0]) #QC
+        self.temp_player_list[1].accept(self.card_list[2]) #QS
+        self.temp_player_list[1].accept(self.card_list[1]) #7D
+        self.temp_player_list[2].accept(self.card_list[30]) #8H
+        self.temp_player_list[3].accept(self.card_list[31]) #7H
         self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 0) #QC -- index 0
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
         self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list()[0], 1)
@@ -131,12 +132,23 @@ class PartnerRuleTest(unittest.TestCase):
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
         self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         for index in range(4):
             self.assertEqual(self.temp_player_list[index].get_potential_partners_list()[index], 1)
             for i in range(4):
-                self.assertAlmostEqual(self.temp_player_list[index].get_potential_partners_list()[i], 1/3)
+                if (i != index):
+                    self.assertAlmostEqual(self.temp_player_list[index].get_potential_partners_list()[i], 1/3)
+
+    def tearDown(self):
+        del self.temp_game
+        del self.temp_deck
+        del self.temp_player_list
+        del self.temp_round
+        del self.test_hand
+        del self.current_trick
+        del self.card_list
 
 if __name__ == "__main__":
     unittest.main()

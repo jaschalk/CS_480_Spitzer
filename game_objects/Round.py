@@ -31,6 +31,7 @@ class Round:
     __file_out_data = []
     _file_out_name = ""
     _trick_count = 0
+    _cards_played_binary = 0
 
     def __init__(self, a_game):
         self._parent_game = a_game
@@ -48,7 +49,8 @@ class Round:
 
     def get_cards_played(self):
         #This method should return a binary number representing the cards played in the round.
-        pass
+        #Can I use the trick history to somehow do this?
+        return self._cards_played_binary
 
     def _get_player_partners(self):
         return self.__player_partners
@@ -104,13 +106,21 @@ class Round:
     def set_file_out_name(self, file_name):
         self._file_out_name = file_name
 
+    def get_first_trick_winner(self):
+        return self._winner_of_first_trick
+
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
         for card in card_list:
+            self._cards_played_binary += 1<<card.get_card_id()
             player_number = card.get_owning_player() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
+        winning_player.set_trick_points(points_on_trick)
+        winning_player.set_round_points(winning_player.get_round_points() + points_on_trick)
         self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick
+        for player in self._players_list:
+            player.determine_potential_partners()
         self.update_player_partner_prediction_history() #I don't remember how was supposed to work?
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick
                                                                     # using deep copy here to actually duplicate the data and not just link to it's location in memory
