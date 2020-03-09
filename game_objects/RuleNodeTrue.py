@@ -16,4 +16,4 @@ class RuleNodeTrue:
         return RuleNodeTrue.instance
     
     def validate(self, *args):
-        self.instance.validate(*args)
+        return self.instance.validate(*args)

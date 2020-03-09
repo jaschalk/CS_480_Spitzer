@@ -14,6 +14,7 @@ class Round:
     _winner_of_first_trick = None
     _players_list = [None, None, None, None]
     #using numpy's arrays rather than standard python lists since this is the data that will be interfacing with the ML process
+    #also it's much easier to make 2D/3D arrays this way
     _trick_history = np.zeros((4,8,32),dtype=np.int8)
     _call_matrix = np.zeros((4,8),dtype=np.int8)
     _player_score_history = np.zeros((4,8),dtype=np.int8)
@@ -30,13 +31,26 @@ class Round:
     __file_out_data = []
     _file_out_name = ""
     _trick_count = 0
+    _cards_played_binary = 0
 
     def __init__(self, a_game):
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
+        self._leading_player = a_game.get_leading_player()
         self._current_trick = Trick(self)
         for i in range(4):
             self._call_matrix[i][0] = 1
+        # TODO the round should init the player_partners at some point
+
+    def get_player_binary_card_state(self, a_player_id):
+        #This method should return the binary card state of the cards the player 
+        #with the matching player id has played
+        return self.get_players_list()[a_player_id].get_cards_played() #This is a binary number representing the cards a player has played
+
+    def get_cards_played(self):
+        #This method should return a binary number representing the cards played in the round.
+        #Can I use the trick history to somehow do this?
+        return self._cards_played_binary
 
     def _get_player_partners(self):
         return self.__player_partners
@@ -81,11 +95,7 @@ class Round:
         return self._leading_player
 
     def set_leading_player(self, player):
-        print("Incoming player is:")
-        print(player)
         self._leading_player = player
-        print("New leading Player is:")
-        print(self._leading_player)
 
     def get_suit_lead(self):
         return self._current_trick.get_suit_lead()
@@ -96,32 +106,41 @@ class Round:
     def set_file_out_name(self, file_name):
         self._file_out_name = file_name
 
+    def get_first_trick_winner(self):
+        return self._winner_of_first_trick
+
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
         for card in card_list:
+            self._cards_played_binary += 1<<card.get_card_id()
             player_number = card.get_owning_player() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
-        self.__trick_point_history[winning_player][self._trick_count] = points_on_trick
+        winning_player.set_trick_points(points_on_trick)
+        winning_player.set_round_points(winning_player.get_round_points() + points_on_trick)
+        self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick
+        for player in self._players_list:
+            player.determine_potential_partners()
         self.update_player_partner_prediction_history() #I don't remember how was supposed to work?
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick
                                                                     # using deep copy here to actually duplicate the data and not just link to it's location in memory
         self._trick_count += 1
+        if self._trick_count == 8:
+            self.on_round_end()
 
     def update_player_partner_prediction_history(self):
         #this could stand to be rewritten to be more readable
         for player_number in range(4):
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
-                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_partners_list()[target_player]
+                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
 
     def on_round_end(self):
         points_taken_list = []
         for i in range(4):
             points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
         has_ended = self._parent_game.update_scores(points_taken_list) #this feels like it should cause the game to check if the game should end?
-        if has_ended:
-            self.push_data_to_file("dynamicfilename") #need to come up with a system for knowing what to name the files
-        else:
+        self.push_data_to_file("dynamicfilename") #need to come up with a system for knowing what to name the files
+        if not has_ended:
             self._parent_game.start_round()
 
     def push_data_to_file(self, file_name): #need to think about this more to know what info will be needed by the learned agent
@@ -138,7 +157,6 @@ class Round:
         while self._leading_player.does_play_continue():
             for player in self._players_list:
                 player.play_card_to(self._current_trick)
-        #TODO call push data out
 
     def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective
         a_game_state = {}
@@ -146,5 +164,6 @@ class Round:
         a_game_state["trick_point_history"] = self.__trick_point_history
         a_game_state["call_matrix"] = self._call_matrix
         a_game_state["current_trick"] = self._current_trick
-        a_game_state["current_player"] = self._players_list[a_player_index]
+        a_game_state["current_player"] = self._players_list[a_player_index] # used for getting info about the players cards from their hand
+        return a_game_state
         #TODO finish this method!
