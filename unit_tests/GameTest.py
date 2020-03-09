@@ -46,8 +46,7 @@ class GameTest(unittest.TestCase):
         self.temp_player_list[1].set_total_score(30)
         self.temp_player_list[2].set_total_score(28)
         self.temp_player_list[3].set_total_score(20)
-        for index in range(4):
-            self.assertEqual(self.temp_game.which_player_wins(), -1)
+        self.assertEqual(self.temp_game.which_player_wins(), -1)
 
     def tearDown(self):
         del self.temp_game
