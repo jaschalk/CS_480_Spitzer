@@ -26,14 +26,15 @@ class CustomAgent(Agent):
     
     def find_best_callable_ace_suit(self, a_player):
         fail_strengths =[self._clubs_strength, self._spades_strength, self._hearts_strength]
-        if a_player.get_valid_call_list()[3] == 1 and a_player.get_valid_call_list()[2] == 1 and a_player.get_valid_call_list()[1] == 1:
-            return fail_strengths.index(max(fail_strengths))
-        elif a_player.get_valid_call_list()[3] == 1 and a_player.get_valid_call_list()[2] == 1:
-            return fail_strengths.index(max(fail_strengths[:1]))
-        elif a_player.get_valid_call_list()[2] == 1 and a_player.get_valid_call_list()[1] == 1:
-            return fail_strengths.index(max(fail_strengths[1:2]))
+        callable_strengths = []
+        for i in range(3):
+            callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i])
+        
+        return 1 + callable_strengths.index(max(callable_strengths)) # I'm not sure how this will react to having no fail, I think it'll just call clubs? This should be very rare
+        
 
     def make_call(self, a_player):
+        # This might be too conserative with making hard calls
         self.gauge_hand_strength(a_player.get_hand()) #cutoffs ZSS 40K, ZS 10K, Z 4K, A >1600, FT >1800, else no call
         if self._total_strength > 40000:
             return 7 # should make these not "magic numbers"
@@ -48,5 +49,21 @@ class CustomAgent(Agent):
         else:
             return 0
 
-    def play_card(self, game_state):
-        pass
+    def play_card(self, a_player, a_game): 
+        # Should attempt to play cards to maximize it's potential point gain
+        # 
+        # Needs to know: This is starting to look like a rule tree...
+        #   How many points are on the trick
+        #   What cards have been played so far?
+        #       This might get too indepth and be better left to the ML agent
+        #   Valid cards to play in the hand
+        #       A ranking of these cards
+        #           How would this be done?
+        #   How many players play after I do/Likelyhood of the card I play winning the trick
+        #       Play order
+        #   
+        #   Make a tree that returns a rating that relates to how "good" of a play each card would be?
+        #       How would this even work?
+
+        current_trick = a_game.get_trick()
+

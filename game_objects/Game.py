@@ -31,6 +31,9 @@ class Game:
    def get_round(self):
       return self._round
 
+   def get_trick(self):
+      return self._round.get_current_trick()
+
    def get_deck(self):
       return self._deck
 

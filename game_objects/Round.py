@@ -14,6 +14,7 @@ class Round:
     _winner_of_first_trick = None
     _players_list = [None, None, None, None]
     #using numpy's arrays rather than standard python lists since this is the data that will be interfacing with the ML process
+    #also it's much easier to make 2D/3D arrays this way
     _trick_history = np.zeros((4,8,32),dtype=np.int8)
     _call_matrix = np.zeros((4,8),dtype=np.int8)
     _player_score_history = np.zeros((4,8),dtype=np.int8)
@@ -26,7 +27,7 @@ class Round:
                      "player_partners":__player_partners,
                      "call_matrix":_call_matrix,
                      "player_score_history":_player_score_history,
-                     "player_partner_prediction_history":__player_partner_prediction_history}
+                     "player_partner_prediction_history":__player_partner_prediction_history} # this should also include which player won
     __file_out_data = []
     _file_out_name = ""
     _trick_count = 0
@@ -39,6 +40,7 @@ class Round:
         self._current_trick = Trick(self)
         for i in range(4):
             self._call_matrix[i][0] = 1
+        # TODO the round should init the player_partners at some point
 
     def get_player_binary_card_state(self, a_player_id):
         #This method should return the binary card state of the cards the player 
@@ -162,6 +164,6 @@ class Round:
         a_game_state["trick_point_history"] = self.__trick_point_history
         a_game_state["call_matrix"] = self._call_matrix
         a_game_state["current_trick"] = self._current_trick
-        a_game_state["current_player"] = self._players_list[a_player_index]
+        a_game_state["current_player"] = self._players_list[a_player_index] # used for getting info about the players cards from their hand
         return a_game_state
         #TODO finish this method!
