@@ -43,6 +43,9 @@ class CardRuleTree:
         def is_player_leading(*args):
             return args[2].get_leading_player() == args[1]
 
+        def has_one_card(*args):
+            return len(args[1].get_hand().get_cards_in_hand()) == 1
+
         def was_ace_called(*args):
             call_state = args[2].get_call_matrix()
             ace_called = False
@@ -87,28 +90,30 @@ class CardRuleTree:
             return (trump_binary_representation & 1<<args[0].get_card_id()) != 0
 
         self._root = RuleNode(self, "Returns true if the asking player is leading.", is_player_leading)
-        __root_R = RuleNode(self, "Returns true if any ace was called.", was_ace_called)
-        __root_RL = RuleNode(self, "Returns true if the asking player has the called ace.", has_called_ace)
-        __root_RLL = RuleNode(self, "Returns true if the card in questions is the called ace.", is_card_called_ace)
-        __root_RLLR = RuleNode(self, "Returns true if the suit of the called ace was lead.", was_called_ace_suit_lead)
-        __root_RLLL = RuleNode(self, "Returns true if the suit of the called ace was lead.", was_called_ace_suit_lead)
-        __root_RR = RuleNode(self, "Returns true if the asking player has cards of the suit lead", has_suit_lead)
-        __root_RRL = RuleNode(self, "Returns true if the card in question is of the suit lead", does_card_follow_suit)
-        __root_RRR = RuleNode(self, "Returns true if the asking player has trump cards.", does_player_have_trump)
-        __root_RRRL = RuleNode(self, "Returns true if the card in question is trump.", is_card_trump)
+        __root_R = RuleNode(self, "Returns true if the player has only one card", has_one_card)
+        __root_RR = RuleNode(self, "Returns true if any ace was called.", was_ace_called)
+        __root_RRL = RuleNode(self, "Returns true if the asking player has the called ace.", has_called_ace)
+        __root_RRLL = RuleNode(self, "Returns true if the card in questions is the called ace.", is_card_called_ace)
+        __root_RRLLR = RuleNode(self, "Returns true if the suit of the called ace was lead.", was_called_ace_suit_lead)
+        __root_RRLLL = RuleNode(self, "Returns true if the suit of the called ace was lead.", was_called_ace_suit_lead)
+        __root_RRR = RuleNode(self, "Returns true if the asking player has cards of the suit lead", has_suit_lead)
+        __root_RRRL = RuleNode(self, "Returns true if the card in question is of the suit lead", does_card_follow_suit)
+        __root_RRRR = RuleNode(self, "Returns true if the asking player has trump cards.", does_player_have_trump)
+        __root_RRRRL = RuleNode(self, "Returns true if the card in question is trump.", is_card_trump)
         self._root.set_right(__root_R)
         __root_R.set_right(__root_RR)
-        __root_R.set_left(__root_RL)
         __root_RR.set_right(__root_RRR)
         __root_RR.set_left(__root_RRL)
-        __root_RL.set_right(__root_RR)
-        __root_RL.set_left(__root_RLL)
-        __root_RLL.set_right(__root_RLLR)
-        __root_RLLR.set_left(RuleNodeFalse())
-        __root_RLLR.set_right(__root_RR)
-        __root_RLL.set_left(__root_RLLL)
+        __root_RRR.set_right(__root_RRRR)
         __root_RRR.set_left(__root_RRRL)
-        __root_RRR.set_right(RuleNodeTrue())
+        __root_RRL.set_right(__root_RRR)
+        __root_RRL.set_left(__root_RRLL)
+        __root_RRLL.set_right(__root_RRLLR)
+        __root_RRLLR.set_left(RuleNodeFalse())
+        __root_RRLLR.set_right(__root_RRR)
+        __root_RRLL.set_left(__root_RRLLL)
+        __root_RRRR.set_left(__root_RRRRL)
+        __root_RRRR.set_right(RuleNodeTrue())
         #this is pretty confusing right now, maybe we can think of a way to clean it up.
         
     def validate_card(self, a_card, a_player, a_round):
