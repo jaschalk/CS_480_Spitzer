@@ -34,14 +34,14 @@ class GameTest(unittest.TestCase):
         self.temp_player_list[1].set_total_score(30)
         self.temp_player_list[2].set_total_score(28)
         self.temp_player_list[3].set_total_score(20)
-        self.assertEqual(self.temp_game.which_player_wins(), 0) #Have this method return a boolean on whether or not the asking player wins. Make a function of the game
+        self.assertEqual(self.temp_game.which_player_wins(), 0)
 
     def test_end_game_tie(self):
         self.temp_player_list[0].set_total_score(42)
         self.temp_player_list[1].set_total_score(42)
         self.temp_player_list[2].set_total_score(28)
         self.temp_player_list[3].set_total_score(20)
-        self.assertEqual(self.temp_game.which_player_wins(), -1) #Have this method return a boolean on whether or not the asking player ties with the argument player
+        self.assertEqual(self.temp_game.which_player_wins(), -1)
 
     def test_end_game_continues(self):
         self.temp_player_list[0].set_total_score(36)
