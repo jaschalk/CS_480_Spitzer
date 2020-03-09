@@ -5,8 +5,6 @@ from game_objects.CallRules import CallRules
 from game_objects.CardRuleTree import CardRuleTree
 from game_objects.PartnerRuleTree import PartnerRuleTree
 
-#Need to hash out the wins and tie methods before actually testing this. Or do we even need these methods anymore?
-
 class GameTest(unittest.TestCase):
 
     def setUp(self):
