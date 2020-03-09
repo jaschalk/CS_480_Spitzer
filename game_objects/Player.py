@@ -64,6 +64,9 @@ class Player:
     def get_hand(self):
         return self._hand
 
+    def get_cards_in_hand(self):
+        return self.get_hand().get_cards_in_hand()
+
     def set_hand(self, a_hand):
         self._hand = a_hand
 

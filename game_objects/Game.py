@@ -54,6 +54,11 @@ class Game:
    def get_leading_player(self):
       return self._leading_player
 
+   def which_player_wins(self):
+      #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
+      pass
+
+
    def validate_card(self, a_card, a_player):
       #Accesses the card rules and returns whether or not the card passed in is valid to the player.
       return self._card_rules.validate_card(a_card, a_player, self._round)
