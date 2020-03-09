@@ -59,7 +59,17 @@ class Game:
 
    def which_player_wins(self):
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
-      pass
+      num_of_winners = 0
+      winning_index = -1
+      for index in range(4):
+         if self.get_players_list()[index].get_total_score() >= 42:
+            num_of_winners += 1
+            winning_index = index
+      if num_of_winners != 1:
+         return -1
+      else:
+         return winning_index
+
 
 
    def validate_card(self, a_card, a_player):
