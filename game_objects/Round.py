@@ -27,7 +27,7 @@ class Round:
                      "player_partners":__player_partners,
                      "call_matrix":_call_matrix,
                      "player_score_history":_player_score_history,
-                     "player_partner_prediction_history":__player_partner_prediction_history}
+                     "player_partner_prediction_history":__player_partner_prediction_history} # this should also include which player won
     __file_out_data = []
     _file_out_name = ""
     _trick_count = 0

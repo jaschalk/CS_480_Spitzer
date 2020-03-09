@@ -35,7 +35,7 @@ class GameTest(unittest.TestCase):
         self.temp_player_list[1].set_total_score(30)
         self.temp_player_list[2].set_total_score(28)
         self.temp_player_list[3].set_total_score(20)
-        self.assertTrue(self.temp_player_list[0].wins()) #Have this method return a boolean on whether or not the asking player wins.
+        self.assertTrue(self.temp_player_list[0].wins()) #Have this method return a boolean on whether or not the asking player wins. Make a function of the game
 
     def test_end_game_tie(self):
         self.temp_player_list[0].set_total_score(42)
