@@ -53,7 +53,7 @@ if __name__ == "__main__":
         # Then the keys are pulled from the dict and turned into a list, this is now a list of all the valid indices
         # and we can freely pick any value from this list.
         # Still feels like there should be a cleaner way to do this.
-        valid_indices = [index for index, value in zip(range(len(a_list)), a_list) if value != 0]
+        valid_indices = [index for index in range(len(a_list)) if a_list[index] != 0]
         print(valid_indices)
         # There was a cleaner way, didn't need the dict at all.
         # This now builds a list containing only the indices where the value is not 0.
