@@ -76,6 +76,9 @@ class Player:
     def get_is_leading(self):
         return self._is_leading
 
+    def get_valid_play_list(self):
+        return self.get_hand().get_valid_play_list()
+
     def accept(self, a_card):
         #This method should send the card to the hand when a player is dealt a card
         a_card.set_owning_player(self.get_player_id())
