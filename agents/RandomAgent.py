@@ -12,6 +12,8 @@ class RandomAgent(Agent):
         #return -1 on error
         #See back of call rule paper for example.
         call_list_after_weight = a_player.get_valid_call_list() * self.call_weight_list
+        # I think this isn't quite going to work out the way we want it too
+        # potentially useful info? https://stackoverflow.com/questions/10271484/how-to-perform-element-wise-multiplication-of-two-lists
         total = 0
         for index in range(8):
             total += call_list_after_weight[index]
@@ -30,3 +32,6 @@ class RandomAgent(Agent):
         #Should return the index in the valid play list of the card the agent "chooses" to play.
         #In this case, the index returned is a random number between 0 and the length of the valid play list.
         return random.randint(0, len(a_player.get_hand().get_valid_play_list()))
+        # The valid play list and the cards in hand list are always the same length, right?
+        # It's just that the valid play list will just be 0 or 1 at each index. So we'll need to figure out
+        # how to find a random index in the valid play list where the value at that index is 1.
