@@ -12,7 +12,7 @@ class Hand:
     def __init__(self, a_player):
         self._my_player = a_player
         self._cards_in_hand = []
-        self._valid_play_list = []
+        self._valid_play_list = [1, 1, 1, 1, 1, 1, 1, 1]
         self._binary_representation = 0
 
     def get_cards_in_hand(self):
@@ -41,6 +41,7 @@ class Hand:
 
     def play_card_at_index(self, a_trick, a_card_index):
         #Tell the trick to accept the card specified by the agent.
+        print(str(len(self._cards_in_hand)) + " cards in hand")
         card_index_to_be_played = self._cards_in_hand[a_card_index].get_card_id()
         self._my_player._cards_played += 1<<(card_index_to_be_played)
         self._binary_representation -= 1<<(card_index_to_be_played)

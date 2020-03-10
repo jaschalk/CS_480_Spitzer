@@ -73,12 +73,12 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.test_round._get_potential_partners_history()[3][1][0], 1)
         
     def test_on_round_finish(self):
-
         initial_player_points = []
         for player in self.temp_players:
-            player._controlling_agent = RandomAgent()
+            player.set_controlling_agent(RandomAgent())
             self.temp_deck.deal_cards_to(player)
             initial_player_points.append(player.get_round_points())
+            #player.get_hand().determine_valid_play_list()
         #On Round finish:
         #tell players to update total scores, tell the game to repopulate the deck, if the game has not ended (make a new deck)
         self.test_round.begin_play() #Need to use a method to run a round to completion here, not manually step through
