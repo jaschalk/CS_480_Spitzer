@@ -79,6 +79,9 @@ class Player:
     def get_valid_play_list(self):
         return self.get_hand().get_valid_play_list()
 
+    def set_controlling_agent(self, an_agent):
+        self._controlling_agent = an_agent
+
     def accept(self, a_card):
         #This method should send the card to the hand when a player is dealt a card
         a_card.set_owning_player(self.get_player_id())
@@ -113,23 +116,7 @@ class Player:
             elif _results[index] == "target is not my partner":
                 self._potential_partners_list[index] = 0
             else:
-                # I think we'll need a check in here somewhere for if the owners of both black queens are known to this player
-                # or we might need to modify the rule tree some.
-                #print(_results)
                 self._potential_partners_list[index] = 1/_unknowns
-
-#        _result = ""
-#        for index in range(4):
-#            if index != self._player_id:
-#                _result = self._parent_game.validate_partners(self, index)
-#                if _result == "target is my partner":
-#                    self._potential_partners_list[index] = 1
-#                elif _result == "target is not my partner":
-#                    self._potential_partners_list[index] = 0
-#                    for i in range(4):
-#                        if not (i == self._player_id or i == index):
-#                            if self._potential_partners_list[i] == 1/3:
-#                                self._potential_partners_list[i] = 1/2 #This number might need to be modified later.
 
     def ask_for_call(self):
         #Player asks agent to make a call. The value returned from the agent is then used to update the round based on the index of the call made.
