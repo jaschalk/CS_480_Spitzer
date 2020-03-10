@@ -1,5 +1,6 @@
 from agents.agent import Agent
 import random
+import operator
 
 class RandomAgent(Agent):
 
@@ -11,7 +12,8 @@ class RandomAgent(Agent):
         #and choosing the call index that corresponds to the range the generated number falls in.
         #return -1 on error
         #See back of call rule paper for example.
-        call_list_after_weight = a_player.get_valid_call_list() * self.call_weight_list
+        call_list_after_weight = list(map(operator.mul, a_player.get_valid_call_list(), self.call_weight_list))
+            #This way is from the stack overflow article you linked below.
         # I think this isn't quite going to work out the way we want it too
         # potentially useful info? https://stackoverflow.com/questions/10271484/how-to-perform-element-wise-multiplication-of-two-lists
         total = 0
@@ -31,7 +33,17 @@ class RandomAgent(Agent):
     def play_card(self, a_player):
         #Should return the index in the valid play list of the card the agent "chooses" to play.
         #In this case, the index returned is a random number between 0 and the length of the valid play list.
-        return random.randint(0, len(a_player.get_hand().get_valid_play_list()))
+        index = random.randint(0, len(a_player.get_hand().get_valid_play_list()))
+        if a_player.get_hand().get_valid_play_list()[index] == 1:
+            return index
+        else:
+            self.play_card(a_player)
+            #Would it work to make this recursive? If the position of the valid play list at index is 1, return
+            #that index. If not, call the method again to generate a different random number?
+        
         # The valid play list and the cards in hand list are always the same length, right?
         # It's just that the valid play list will just be 0 or 1 at each index. So we'll need to figure out
         # how to find a random index in the valid play list where the value at that index is 1.
+            #Yeah, you're right. I think I forgot which way we were doing it because we either talked about
+            #or implemented something else the other way (where the list grows and shrinks depending on what is valid)
+            #and I never remember which way we settled on.
