@@ -2,6 +2,8 @@ import unittest
 import copy
 import numpy as np
 import pickle
+from agents.agent import Agent
+from agents.RandomAgent import RandomAgent
 from unit_tests.Setup import general_setup
 from game_objects.Round import Round
 from game_objects.Player import Player
@@ -74,6 +76,7 @@ class RoundTest(unittest.TestCase):
 
         initial_player_points = []
         for player in self.temp_players:
+            player._controlling_agent = RandomAgent()
             self.temp_deck.deal_cards_to(player)
             initial_player_points.append(player.get_round_points())
         #On Round finish:

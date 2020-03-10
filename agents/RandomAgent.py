@@ -1,8 +1,8 @@
-from agents.agent import Agent
+
 import random
 import operator
 
-class RandomAgent(Agent):
+class RandomAgent:
 
     call_weight_list = [700, 900, 900, 900, 1000, 150, 10, 1] #NC, AC, AS, AH, FT, Z, ZS, ZSS
     
