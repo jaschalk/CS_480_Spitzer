@@ -34,3 +34,26 @@ class RandomAgent(Agent):
         while a_player.get_hand().get_valid_play_list()[index] != 1:
             index = random.randint(0, len(a_player.get_hand().get_valid_play_list()))
         return index
+
+# Short code spike to test if using building a dictionary could be used to filter out invalid indices
+if __name__ == "__main__":
+    # loop to show that it does give different valid numbers when run multiple times
+    for i in range(10):
+        a_list = []
+        for i in range(8):
+            a_list.append(random.randint(0,1))
+        a_list.append(1) # just forcing there to always be at least one 1 in the list
+        # the above is just building a random list that will look something like the valid card list
+        print(a_list)
+        # Now to actually filter the list
+        valid_indices = list({k: v for k, v in zip(range(len(a_list)), a_list) if v != 0}.keys())
+        # This will create a temp dict where the keys are the indices of the input list and the values are the values in that list
+        # but the dict will be built in such a way that only if the value isn't 0 does the pair get added.
+        # Then the keys are pulled from the dict and turned into a list, this is now a list of all the valid indices
+        # and we can freely pick any value from this list.
+        # Still feels like there should be a cleaner way to do this.
+        print(valid_indices)
+        print(valid_indices[random.randint(0,len(valid_indices)-1)])
+    # The advantage of this method, despite being a bit longer and much more complicated and strange, is that
+    # it's deterministic, it will always work on the first pass through the code.
+    # Whereas if we re-randomize we can't be sure how many times it might take.
