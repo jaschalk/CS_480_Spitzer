@@ -47,11 +47,22 @@ if __name__ == "__main__":
         print(a_list)
         # Now to actually filter the list
         valid_indices = list({k: v for k, v in zip(range(len(a_list)), a_list) if v != 0}.keys())
+        print(valid_indices)
         # This will create a temp dict where the keys are the indices of the input list and the values are the values in that list
         # but the dict will be built in such a way that only if the value isn't 0 does the pair get added.
         # Then the keys are pulled from the dict and turned into a list, this is now a list of all the valid indices
         # and we can freely pick any value from this list.
         # Still feels like there should be a cleaner way to do this.
+        valid_indices = [index for index, value in zip(range(len(a_list)), a_list) if value != 0]
+        print(valid_indices)
+        # There was a cleaner way, didn't need the dict at all.
+        # This now builds a list containing only the indices where the value is not 0.
+        # This is just a more concise way of saying:
+        valid_indices = []
+        for index in range(len(a_list)):
+            if a_list[index] != 0:
+                valid_indices.append(index)
+
         print(valid_indices)
         print(valid_indices[random.randint(0,len(valid_indices)-1)])
     # The advantage of this method, despite being a bit longer and much more complicated and strange, is that
