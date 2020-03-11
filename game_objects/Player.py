@@ -96,6 +96,9 @@ class Player:
         #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
         return self._parent_game.validate_card(a_card, self)
 
+    def determine_valid_play_list(self):
+        self._hand.determine_valid_play_list()
+
     def determine_potential_partners(self):
         #Asks the parent game to use its validate partners method to modify the potential partners list based on the returned string.
         _results = [None, None, None, None]

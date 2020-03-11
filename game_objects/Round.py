@@ -109,6 +109,10 @@ class Round:
     def get_first_trick_winner(self):
         return self._winner_of_first_trick
 
+    def notify_players_of_played_card(self):
+        for player in self._players_list:
+            player.determine_valid_play_list()
+
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
