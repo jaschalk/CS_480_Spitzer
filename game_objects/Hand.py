@@ -33,7 +33,6 @@ class Hand:
         self._binary_representation += 1<<card_id
 
     def determine_valid_play_list(self):
-        print("Current valid play list" + str(self._valid_play_list))
         #Asks the player to use its validate card method on every card in the hand and set the return value to the valid play list.
         #self._valid_play_list = list(map(self._my_player.validate_card, self._cards_in_hand))
         self._valid_play_list.clear()
@@ -42,7 +41,6 @@ class Hand:
 
     def play_card_at_index(self, a_trick, a_card_index):
         #Tell the trick to accept the card specified by the agent.
-        print(str(len(self._cards_in_hand)) + " cards in hand")
         card_index_to_be_played = self._cards_in_hand[a_card_index].get_card_id()
         self._my_player._cards_played += 1<<(card_index_to_be_played)
         self._binary_representation -= 1<<(card_index_to_be_played)

@@ -88,6 +88,7 @@ class RoundTest(unittest.TestCase):
         
     def test_file_out_behavior(self):
         for player in self.temp_players:
+            player.set_controlling_agent(RandomAgent())
             self.temp_deck.deal_cards_to(player)
         self.test_round.begin_play()
         #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
