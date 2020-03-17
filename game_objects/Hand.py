@@ -33,6 +33,7 @@ class Hand:
         self._binary_representation += 1<<card_id
 
     def determine_valid_play_list(self):
+        print("Current valid play list" + str(self._valid_play_list))
         #Asks the player to use its validate card method on every card in the hand and set the return value to the valid play list.
         #self._valid_play_list = list(map(self._my_player.validate_card, self._cards_in_hand))
         self._valid_play_list.clear()
