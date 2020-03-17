@@ -2,6 +2,8 @@ import unittest
 import copy
 import numpy as np
 import pickle
+from agents.agent import Agent
+from agents.RandomAgent import RandomAgent
 from unit_tests.Setup import general_setup
 from game_objects.Round import Round
 from game_objects.Player import Player
@@ -71,11 +73,12 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.test_round._get_potential_partners_history()[3][1][0], 1)
         
     def test_on_round_finish(self):
-
         initial_player_points = []
         for player in self.temp_players:
+            player.set_controlling_agent(RandomAgent())
             self.temp_deck.deal_cards_to(player)
             initial_player_points.append(player.get_round_points())
+            #player.get_hand().determine_valid_play_list()
         #On Round finish:
         #tell players to update total scores, tell the game to repopulate the deck, if the game has not ended (make a new deck)
         self.test_round.begin_play() #Need to use a method to run a round to completion here, not manually step through

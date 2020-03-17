@@ -14,7 +14,7 @@ class HandTest(unittest.TestCase):
 
     def test_on_init(self):
         self.assertEqual(len(self.test_hand.get_cards_in_hand()), 0)
-        self.assertEqual(len(self.test_hand.get_valid_play_list()), 0)
+        self.assertEqual(len(self.test_hand.get_valid_play_list()), 8)
 
     def test_on_deal(self):
         self.temp_player.hand = self.test_hand

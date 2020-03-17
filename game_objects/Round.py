@@ -17,7 +17,8 @@ class Round:
     #also it's much easier to make 2D/3D arrays this way
     _trick_history = np.zeros((4,8,32),dtype=np.int8)
     _call_matrix = np.zeros((4,8),dtype=np.int8)
-    _player_score_history = np.zeros((4,8),dtype=np.int8)
+    _player_point_history = np.zeros((4,8),dtype=np.int8)
+    #Add in a trick winners list TODO
     __player_partners = np.zeros((4,4),dtype=np.int8) #this is __ to emphasize that the players should at no time have this information
     __player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64) # __ because it shouldn't be needed anywhere other than this class
     __trick_point_history = np.zeros((4,8),dtype=np.int8) # __ because it shouldn't be needed anywhere other than this class
@@ -26,7 +27,7 @@ class Round:
                      "trick_point_history":__trick_point_history,
                      "player_partners":__player_partners,
                      "call_matrix":_call_matrix,
-                     "player_score_history":_player_score_history,
+                     "player_point_history":_player_point_history,
                      "player_partner_prediction_history":__player_partner_prediction_history} # this should also include which player won
     __file_out_data = []
     _file_out_name = ""
@@ -108,6 +109,10 @@ class Round:
 
     def get_first_trick_winner(self):
         return self._winner_of_first_trick
+
+    def notify_players_of_played_card(self):
+        for player in self._players_list:
+            player.determine_valid_play_list()
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
         if self._winner_of_first_trick is None:

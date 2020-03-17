@@ -6,14 +6,12 @@ class RuleNode: #this might be generic enough to handle the nodes for both trees
     _left = None
     _right = None
     _evaluator_function = None
-    _parent_tree = None #this might be redundant
 
-    def __init__(self, parent, description, code_block):
+    def __init__(self, description, code_block):
         # it might make more sense to have the left default to true and the right false
         # then make setter methods to assign new left and right nodes
         # that way we wouldn't have to build the tree from the leaves up
         self._description = description
-        self._parent_tree = parent
         self._left = RuleNodeTrue.RuleNodeTrue()
         self._right = RuleNodeFalse.RuleNodeFalse()
         self._evaluator_function = code_block #this should always be a function that returns True/False
