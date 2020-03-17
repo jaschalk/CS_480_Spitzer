@@ -30,12 +30,8 @@ class RandomAgent:
     def play_card(self, a_player, a_game):
         #Should return the index in the valid play list of the card the agent "chooses" to play.
         #In this case, the index returned is a random number between 0 and the length of the valid play list.
-        print(a_player.get_valid_play_list())
         valid_indices = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != 0]
-        print(valid_indices)
         if len(valid_indices) == 1:
             return 0
         temp = valid_indices[random.randint(0,len(valid_indices)-1)]
-        print(temp)
         return temp
-        #hi
