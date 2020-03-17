@@ -2,6 +2,7 @@ import pickle
 import numpy as np
 import copy
 import os
+import datetime
 from game_objects.Trick import Trick
 
 class Round:
@@ -19,7 +20,6 @@ class Round:
     _call_matrix = np.zeros((4,8),dtype=np.int8)
     _player_point_history = np.zeros((4,8),dtype=np.int8)
     _trick_winners_list = [-1 for i in range(8)]
-    #Add in a trick winners list TODO
     __player_partners = np.zeros((4,4),dtype=np.int8) #this is __ to emphasize that the players should at no time have this information
     __player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64) # __ because it shouldn't be needed anywhere other than this class
     __trick_point_history = np.zeros((4,8),dtype=np.int8) # __ because it shouldn't be needed anywhere other than this class
@@ -29,7 +29,7 @@ class Round:
                      "player_partners":__player_partners,
                      "call_matrix":_call_matrix,
                      "player_point_history":_player_point_history,
-                     "player_partner_prediction_history":__player_partner_prediction_history} # this should also include which player won
+                     "player_partner_prediction_history":__player_partner_prediction_history} # TODO this should also include which player won
     __file_out_data = []
     _file_out_name = ""
     _trick_count = 0
@@ -42,7 +42,7 @@ class Round:
         self._current_trick = Trick(self)
         for i in range(4):
             self._call_matrix[i][0] = 1
-        # TODO the round should init the player_partners at some point
+        self.__player_partners = np.zeros((4,4),dtype=np.int8)
 
     def get_player_binary_card_state(self, a_player_id):
         #This method should return the binary card state of the cards the player 
@@ -118,12 +118,12 @@ class Round:
         for player in self._players_list:
             player.determine_valid_play_list()
 
-    def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object, or their index?
+    def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object<this>, or their index? TODO
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
         for card in card_list:
             self._cards_played_binary += 1<<card.get_card_id()
-            player_number = card.get_owning_player() #this should be changed?
+            player_number = card.get_owning_player() #this should be changed? TODO why?
             self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
         self._trick_winners_list[self._trick_count] = winning_player.get_player_id()
         winning_player.set_trick_points(points_on_trick)
@@ -131,15 +131,16 @@ class Round:
         self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick
         for player in self._players_list:
             player.determine_potential_partners()
-        self.update_player_partner_prediction_history() #I don't remember how was supposed to work?
-        self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance)) #by making a copy of the data we'll have a history of how it's changed with each trick
-                                                                    # using deep copy here to actually duplicate the data and not just link to it's location in memory
+        self.update_player_partner_prediction_history() #I don't remember how was supposed to work? TODO is this working correctly right now?
+        self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
+        # by making a copy of the data we'll have a history of how it's changed with each trick
+        # using deep copy here to actually duplicate the data and not just link to it's location in memory
         self._trick_count += 1
         if self._trick_count == 8:
             self.on_round_end()
 
     def update_player_partner_prediction_history(self):
-        #this could stand to be rewritten to be more readable
+        #this could stand to be rewritten to be more readable TODO
         for player_number in range(4):
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
                 self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
@@ -149,11 +150,12 @@ class Round:
         for i in range(4):
             points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
         has_ended = self._parent_game.update_scores(points_taken_list) #this feels like it should cause the game to check if the game should end?
-        self.push_data_to_file("dynamicfilename") #need to come up with a system for knowing what to name the files
+        file_name = str(datetime.datetime.now()) + " game_id " + str(self._parent_game.get_game_id()) # files will the named with the date and time of creation and the game id number
+        self.push_data_to_file(file_name)
         if not has_ended:
             self._parent_game.start_round()
 
-    def push_data_to_file(self, file_name): #need to think about this more to know what info will be needed by the learned agent
+    def push_data_to_file(self, file_name): #need to think about this more to know what info will be needed by the learned agent TODO
         if not os.path.isfile(file_name):
             with open(file_name, 'wb') as data_file:
                 pickle.dump(self.__file_out_data, data_file)
@@ -168,7 +170,7 @@ class Round:
             for player in self._players_list:
                 player.play_card_to(self._current_trick)
 
-    def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective
+    def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective for use in the ML agent
         a_game_state = {}
         a_game_state["trick history"] = self._trick_history
         a_game_state["trick_point_history"] = self.__trick_point_history
@@ -176,4 +178,4 @@ class Round:
         a_game_state["current_trick"] = self._current_trick
         a_game_state["current_player"] = self._players_list[a_player_index] # used for getting info about the players cards from their hand
         return a_game_state
-        #TODO finish this method!
+        #TODO finish this method! Consider what else need to go in here
