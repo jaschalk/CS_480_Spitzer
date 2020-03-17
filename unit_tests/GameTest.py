@@ -48,6 +48,10 @@ class GameTest(unittest.TestCase):
         self.temp_player_list[3].set_total_score(20)
         self.assertEqual(self.temp_game.which_player_wins(), -1)
 
+    def test_update_scores(self):
+        
+        self.assertNotEqual()
+
     def tearDown(self):
         del self.temp_game
         del self.temp_deck

@@ -3,8 +3,9 @@ from game_objects.Round import Round
 from game_objects.Player import Player
 from game_objects.CardRuleTree import CardRuleTree
 from game_objects.CallRules import CallRules
-from game_objects.PartnerRuleTree import PartnerRuleTree
+from game_objects.PartnerRuleTree import PartnerRuleTree 
 from random import randint
+
 class Game:
 
    _game_id = None
@@ -15,6 +16,9 @@ class Game:
    _card_rules = None
    _partner_rules = None
    _call_rules = None
+   _scoring_table = [[0, -9, -6, 3, 6, 9], [-18, -15, -12, -9, 9, 12],
+                     [0, -9, -6, 9, 12, 15], [-15, -12, -9, 18, 27, 36],
+                     [-42, -36, -24, -18, 36, 39], [-42, -42, -39, -33, -27, 42]]
 
    def __init__(self, a_game_id, list_of_agents): #initializes the deck, round, players list, and all three sets of rules.
       self._game_id = a_game_id
@@ -70,8 +74,6 @@ class Game:
       else:
          return winning_index
 
-
-
    def validate_card(self, a_card, a_player):
       #Accesses the card rules and returns whether or not the card passed in is valid to the player.
       return self._card_rules.validate_card(a_card, a_player, self._round)
@@ -86,3 +88,6 @@ class Game:
 
    def update_call(self, player_id, index_of_call_made):
       self._round.update_call(player_id, index_of_call_made)
+
+   def update_scores(self):
+      
