@@ -11,13 +11,14 @@ class Round:
     _current_trick = None
     _parent_game = None
     _leading_player = None
-    _winner_of_first_trick = None
+    _winner_of_first_trick = None # TODO this might be redundent with the introduction of the trick winners list
     _players_list = [None, None, None, None]
     #using numpy's arrays rather than standard python lists since this is the data that will be interfacing with the ML process
     #also it's much easier to make 2D/3D arrays this way
     _trick_history = np.zeros((4,8,32),dtype=np.int8)
     _call_matrix = np.zeros((4,8),dtype=np.int8)
     _player_point_history = np.zeros((4,8),dtype=np.int8)
+    _trick_winners_list = [-1 for i in range(8)]
     #Add in a trick winners list TODO
     __player_partners = np.zeros((4,4),dtype=np.int8) #this is __ to emphasize that the players should at no time have this information
     __player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64) # __ because it shouldn't be needed anywhere other than this class
@@ -61,6 +62,9 @@ class Round:
 
     def _get_point_history(self):
         return self.__trick_point_history
+
+    def get_trick_winners_list(self):
+        return self._trick_winners_list
 
     def _get_file_out_data(self):
         return self.__file_out_data
@@ -121,6 +125,7 @@ class Round:
             self._cards_played_binary += 1<<card.get_card_id()
             player_number = card.get_owning_player() #this should be changed?
             self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
+        self._trick_winners_list[self._trick_count] = winning_player.get_player_id()
         winning_player.set_trick_points(points_on_trick)
         winning_player.set_round_points(winning_player.get_round_points() + points_on_trick)
         self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick

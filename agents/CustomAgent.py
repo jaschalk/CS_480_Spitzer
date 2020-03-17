@@ -67,3 +67,16 @@ class CustomAgent(Agent):
 
         current_trick = a_game.get_trick()
 
+
+    class card_selection_tree:
+        _root = None
+
+        def get_root(self):
+            return self._root
+
+        def __init__(self):
+            pass
+
+        def evaluate(self, *args):
+            return self._root.validate(*args)
+

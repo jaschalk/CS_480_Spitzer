@@ -9,8 +9,7 @@ class CardRuleTree:
     def get_root(self):
         return self._root
 
-    def __init__(self): #this might need to be responsible for building the entire tree of conditions?
-                        #is there a way to avoid doing so?
+    def __init__(self): 
 
         def get_ace_called_id(*args):
             # this assumes that an ace has been called
@@ -26,8 +25,6 @@ class CardRuleTree:
             return 14 + 6*(which_call - 1)
 
         def get_suit_binary_representation(suit):
-#            if suit is None: # why did we need this, I remember we added it for a reason
-#                return 0b0
             if suit == "trump":
                 return 0b00000000000000000011111111111111
             elif suit == "clubs":
@@ -58,7 +55,7 @@ class CardRuleTree:
         def has_called_ace(*args):
             ace_id = get_ace_called_id(*args)
             return (args[1].get_hand().get_binary_representation() & 1<<ace_id) == 1<<ace_id
-            # might want to add a method to the player to avoid this Law of Demeter violation
+            # TODO might want to add a method to the player to avoid this Law of Demeter violation
 
         def has_suit_lead(*args):
             suit_lead = args[2].get_suit_lead()

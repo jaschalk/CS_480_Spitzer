@@ -85,7 +85,17 @@ class RoundTest(unittest.TestCase):
 # TODO  self.assertNotEqual(sum(self.test_round.scoreList), 0) #after a round has been played the sum of the scores cannot be 0
                     # the round currently isn't storing this, I think this got moved to the game. It might be best if the the test went as well
         self.assertEqual(len(self.temp_deck.get_card_list()), 32)
-        
+
+    def test_update_trick_winners_list(self):
+        for i in range(4):
+            self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+            self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
+        self.assertEqual(self.test_round.get_trick_winners_list()[0], 0) # the 1st player, zero indexed, should be the winner of the 1st, zero indexed, trick
+        for i in range(4):
+            self.temp_players[i].accept(Card(12-i, "hearts")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+            self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
+        self.assertEqual(self.test_round.get_trick_winners_list()[1], 3) # the 4th player, zero indexed, should be the winner of the 2nd, zero indexed, trick
+    
     def test_file_out_behavior(self):
         for player in self.temp_players:
             player.set_controlling_agent(RandomAgent())
