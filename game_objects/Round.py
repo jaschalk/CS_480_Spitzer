@@ -150,7 +150,7 @@ class Round:
         for i in range(4):
             points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
         has_ended = self._parent_game.update_scores() #this feels like it should cause the game to check if the game should end?
-        self._file_out_name = str(datetime.datetime.now()) + " game_id " + str(self._parent_game.get_game_id()) # files will the named with the date and time of creation and the game id number
+        self._file_out_name = str(datetime.datetime.now()) + "_game_id_" + str(self._parent_game.get_game_id() + ".spzd") # files will the named with the date and time of creation and the game id number
         self.push_data_to_file()
         if not has_ended:
             self._parent_game.start_round()
