@@ -4,6 +4,7 @@ from game_objects.Deck import Deck
 from game_objects.CallRules import CallRules
 from game_objects.CardRuleTree import CardRuleTree
 from game_objects.PartnerRuleTree import PartnerRuleTree
+from agents.RandomAgent import RandomAgent
 
 class GameTest(unittest.TestCase):
 
@@ -49,8 +50,11 @@ class GameTest(unittest.TestCase):
         self.assertEqual(self.temp_game.which_player_wins(), -1)
 
     def test_update_scores(self):
-        
-        self.assertNotEqual()
+        for player in self.temp_player_list:
+            player.set_controlling_agent(RandomAgent())
+            self.temp_deck.deal_cards_to(player)
+        self.temp_round.begin_play()
+        self.assertNotEqual(sum(self.temp_game.get_score_list()), 0)
 
     def tearDown(self):
         del self.temp_game

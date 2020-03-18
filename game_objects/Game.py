@@ -16,6 +16,7 @@ class Game:
    _card_rules = None
    _partner_rules = None
    _call_rules = None
+   _score_list = [0, 0, 0, 0]
    _scoring_table = [[0, -9, -6, 3, 6, 9], [-18, -15, -12, -9, 9, 12],
                      [0, -9, -6, 9, 12, 15], [-15, -12, -9, 18, 27, 36],
                      [-42, -36, -24, -18, 36, 39], [-42, -42, -39, -33, -27, 42]]
@@ -61,6 +62,9 @@ class Game:
    def get_leading_player(self):
       return self._leading_player
 
+   def get_score_list(self):
+      return self._score_list
+
    def which_player_wins(self):
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
       num_of_winners = 0
@@ -90,4 +94,55 @@ class Game:
       self._round.update_call(player_id, index_of_call_made)
 
    def update_scores(self):
-      
+      #Can this method be shortened at all?
+      call_made = -1
+      calling_player_id = -1
+      calling_team = []
+      calling_team_round_points = 0
+      point_value_index = -1
+      played_queen_of_clubs = -1
+      played_queen_of_spades = -1
+      for player_index in range(4):
+         for call_index in range(8):
+            if(self._round.get_call_matrix()[player_index][call_index] == 1):
+               call_made = call_index
+               calling_player_id = player_index
+      if(call_made == 0):
+         for player_index in range(4):
+            for trick_index in range(8):
+               if(self._round.get_trick_history()[player_index][trick_index][0] == 1): #If this player played the QC in any trick
+                  played_queen_of_clubs = player_index
+               elif(self._round.get_trick_history()[player_index][trick_index][2] == 1):#If this player played the QS in any trick
+                  played_queen_of_spades = player_index
+         if(played_queen_of_clubs == played_queen_of_spades):
+            calling_team = [played_queen_of_clubs]
+         else:
+            calling_team = [played_queen_of_clubs, played_queen_of_spades]
+      else:
+         calling_ppl = self._players_list[calling_player_id].get_potential_partners_list()
+         for player_id in range(4):
+            if(calling_ppl[player_index] == 1):
+               calling_team.append(player_id)
+               calling_team_round_points += self._players_list[calling_player_id].get_round_points()
+      if(0 <= calling_team_round_points <= 30):
+         point_value_index = 1
+      elif(31 <= calling_team_round_points <= 60):
+         point_value_index = 2
+      elif(61 <= calling_team_round_points <= 89):
+         point_value_index = 3
+      elif(90 <= calling_team_round_points <= 120):
+         point_value_index = 4
+      else:
+         #Should raise an error here...?
+         point_value_index = -1
+      for player_index in range(4):
+         value_to_add = self._scoring_table[call_index][point_value_index]
+         for player_id in calling_team: #is this even what we want here?
+            if(player_index == player_id):
+               if(value_to_add > 0):
+                  self._players_list[player_index].update_total_score(value_to_add)
+                  self._score_list[player_index] = self._players_list[player_index].get_final_score()
+            else:
+               if(value_to_add < 0):
+                  self._players_list[player_index].update_total_score(abs(value_to_add))
+                  self._score_list[player_index] = self._players_list[player_index].get_final_score()
