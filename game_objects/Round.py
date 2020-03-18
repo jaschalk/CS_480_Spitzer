@@ -31,7 +31,7 @@ class Round:
                      "player_point_history":_player_point_history,
                      "player_partner_prediction_history":__player_partner_prediction_history} # TODO this should also include which player won
     __file_out_data = []
-    _file_out_name = ""
+    _file_out_name = "" # initalized to an empty string, as there should be no path to file out that doesn't set it
     _trick_count = 0
     _cards_played_binary = 0
 
@@ -150,14 +150,14 @@ class Round:
         for i in range(4):
             points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
         has_ended = self._parent_game.update_scores(points_taken_list) #this feels like it should cause the game to check if the game should end?
-        file_name = str(datetime.datetime.now()) + " game_id " + str(self._parent_game.get_game_id()) # files will the named with the date and time of creation and the game id number
-        self.push_data_to_file(file_name)
+        self._file_out_name = str(datetime.datetime.now()) + " game_id " + str(self._parent_game.get_game_id()) # files will the named with the date and time of creation and the game id number
+        self.push_data_to_file()
         if not has_ended:
             self._parent_game.start_round()
 
-    def push_data_to_file(self, file_name): #need to think about this more to know what info will be needed by the learned agent TODO
-        if not os.path.isfile(file_name):
-            with open(file_name, 'wb') as data_file:
+    def push_data_to_file(self): #need to think about this more to know what info will be needed by the learned agent TODO
+        if not os.path.isfile(self._file_out_name):
+            with open(self._file_out_name, 'wb') as data_file:
                 pickle.dump(self.__file_out_data, data_file)
 
     def update_call(self, player_id, call_index):

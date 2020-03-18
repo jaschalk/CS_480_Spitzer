@@ -64,18 +64,32 @@ class CustomAgent(Agent):
         #   
         #   Make a tree that returns a rating that relates to how "good" of a play each card would be?
         #       How would this even work?
+        #           Make each node multiply or divide by some value, this might not be possible without making a new node type
 
         current_trick = a_game.get_trick()
 
 
     class card_selection_tree:
+        # this tree should be used to evaluate the strength of each card in the players hand
         _root = None
 
         def get_root(self):
             return self._root
 
         def __init__(self):
-            pass
+            # TODO do more analysis and design before coding this up
+            def points_on_trick(self): # how should this be used?
+                pass
+            def is_player_leading(self):
+                pass
+            def is_player_second(self):
+                pass
+            def is_player_third(self):
+                pass
+            def is_player_last(self):
+                pass
+            
+
 
         def evaluate(self, *args):
             return self._root.validate(*args)
