@@ -43,6 +43,9 @@ class Player:
     def set_total_score(self, a_total_score):
         self._total_score = a_total_score
 
+    def update_total_score(self, a_score):
+        self._total_score += a_score
+
     def get_round_points(self):
         return self._round_points
     
