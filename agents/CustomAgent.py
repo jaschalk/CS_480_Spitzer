@@ -64,19 +64,10 @@ class CustomAgent(Agent):
         #   
         #   Make a tree that returns a rating that relates to how "good" of a play each card would be?
         #       How would this even work?
+        #           Make each node multiply or divide by some value, this might not be possible without making a new node type
 
+        # Changing behavior:
+        #   If leading: Play an ace, if no ace play weakest card(highest rank/index)
+        #   If 2nd: 
         current_trick = a_game.get_trick()
-
-
-    class card_selection_tree:
-        _root = None
-
-        def get_root(self):
-            return self._root
-
-        def __init__(self):
-            pass
-
-        def evaluate(self, *args):
-            return self._root.validate(*args)
 

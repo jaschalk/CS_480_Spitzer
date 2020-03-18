@@ -47,11 +47,11 @@ if __name__ == "__main__":
         print("sum > 3?")
         return (args[0] + args[1]) > 3
 
-    first_node = RuleNode(None, "This node checks if both inputs are less than 7",
+    first_node = RuleNode("This node checks if both inputs are less than 7",
                         is_less_than_7)
-    second_node = RuleNode(None, "This node compares two numbers and returns true if the first is less than the second",
+    second_node = RuleNode("This node compares two numbers and returns true if the first is less than the second",
                         sample)
-    third_node = RuleNode(None, "Checks if the two numbers sum is greater than 3",
+    third_node = RuleNode("Checks if the two numbers sum is greater than 3",
                         sum_greater_than_3)
     first_node.set_left(second_node)
     second_node.set_left(third_node)
