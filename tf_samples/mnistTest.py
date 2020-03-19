@@ -15,8 +15,10 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 #Create the model with the properties provided by the arguments:
 model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)), #the input layer is a vectorized 28x28 matrix
-  tf.keras.layers.Dense(128, activation='relu'), #the next layer is 128 elements, Densely connected to the previous layer, and using relu activation
-  tf.keras.layers.Dropout(0.2), #not sure what this is doing yet?
+  tf.keras.layers.Dense(16, activation='relu'), #the next layer is 128 elements, Densely connected to the previous layer, and using relu activation
+  tf.keras.layers.Dropout(0.05), #% chance of each neuron being 0, this is to prevent overfitting
+  tf.keras.layers.Dense(16, activation='relu'),
+  tf.keras.layers.Dropout(0.05),
   tf.keras.layers.Dense(10) #the final layer is 10 elements and densely connected
 ])
 
