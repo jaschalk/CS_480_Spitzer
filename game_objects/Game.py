@@ -8,7 +8,7 @@ from random import randint
 
 class Game:
 
-   _game_id = None
+   _game_id = 0
    _deck = None
    _round = None
    _players_list = [None, None, None, None]
@@ -33,6 +33,9 @@ class Game:
       self._partner_rules = PartnerRuleTree()
       self._call_rules = CallRules()
 
+   def get_game_id(self):
+      return self._game_id
+
    def get_round(self):
       return self._round
 
@@ -44,6 +47,7 @@ class Game:
 
    def begin_round(self):
       for player in self._players_list:
+         self._deck.populate_deck()
          self._deck.deal_cards_to(player)
       self._round.begin_play()
 
@@ -107,6 +111,8 @@ class Game:
             if(self._round.get_call_matrix()[player_index][call_index] == 1):
                call_made = call_index
                calling_player_id = player_index
+
+      # split off into a helper method?
       if(call_made == 0):
          for player_index in range(4):
             for trick_index in range(8):
@@ -121,28 +127,38 @@ class Game:
       else:
          calling_ppl = self._players_list[calling_player_id].get_potential_partners_list()
          for player_id in range(4):
-            if(calling_ppl[player_index] == 1):
+            if(calling_ppl[player_id] == 1): # player_index or player_id?
                calling_team.append(player_id)
                calling_team_round_points += self._players_list[calling_player_id].get_round_points()
-      if(0 <= calling_team_round_points <= 30):
-         point_value_index = 1
-      elif(31 <= calling_team_round_points <= 60):
-         point_value_index = 2
-      elif(61 <= calling_team_round_points <= 89):
-         point_value_index = 3
-      elif(90 <= calling_team_round_points <= 120):
-         point_value_index = 4
+      
+
+      # split off into a helper method?
+      noncalling_team = set(calling_team).difference(range(4))
+      if len(set(calling_team).difference(self._round.get_trick_winners_list())) == 0:
+         point_value_index = 0
+      elif len(noncalling_team.difference(self._round.get_trick_winners_list())) == 0:
+         point_value_index = 5
       else:
-         #Should raise an error here...?
-         point_value_index = -1
+         if(calling_team_round_points <= 30):
+            point_value_index = 1
+         elif(calling_team_round_points <= 60):
+            point_value_index = 2
+         elif(calling_team_round_points <= 89):
+            point_value_index = 3
+         elif(calling_team_round_points <= 120):
+            point_value_index = 4
+         else:
+            #Should raise an error here...?
+            point_value_index = -1
+
+
       for player_index in range(4):
-         value_to_add = self._scoring_table[call_index][point_value_index]
-         for player_id in calling_team: #is this even what we want here?
-            if(player_index == player_id):
-               if(value_to_add > 0):
-                  self._players_list[player_index].update_total_score(value_to_add)
-                  self._score_list[player_index] = self._players_list[player_index].get_final_score()
-            else:
-               if(value_to_add < 0):
-                  self._players_list[player_index].update_total_score(abs(value_to_add))
-                  self._score_list[player_index] = self._players_list[player_index].get_final_score()
+         value_to_add = self._scoring_table[call_made][point_value_index] # call_index or call_made?
+         if player_index in calling_team:
+            if(value_to_add > 0):
+               self._players_list[player_index].update_total_score(value_to_add)
+               self._score_list[player_index] = self._players_list[player_index].get_total_score() # get_total_score
+         else:
+            if(value_to_add < 0):
+               self._players_list[player_index].update_total_score(abs(value_to_add))
+               self._score_list[player_index] = self._players_list[player_index].get_total_score() # get_total_score
