@@ -51,6 +51,7 @@ class Player:
     
     def set_round_points(self, a_round_points):
         self._round_points = a_round_points
+        print("Player " + str(self._player_id) + " has " + str(self._round_points) + " total points.")
 
     def get_valid_call_list(self):
         return self._valid_call_list
@@ -92,7 +93,7 @@ class Player:
 
     def play_card_to(self, a_trick):
         #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the inex returned to the trick.
-        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand
+        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand TODO Need to reset the Hands valid play list when a new round starts, There's likely other stuff that needs to be done at that time too
         self._hand.play_card_at_index(a_trick, card_to_play_index)
     
     def validate_card(self, a_card):

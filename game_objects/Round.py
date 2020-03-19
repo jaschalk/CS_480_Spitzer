@@ -39,10 +39,24 @@ class Round:
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
         self._leading_player = a_game.get_leading_player()
+        self._trick_history = np.zeros((4,8,32),dtype=np.int8)
+        self._call_matrix = np.zeros((4,8),dtype=np.int8)
         self._current_trick = Trick(self)
         for i in range(4):
             self._call_matrix[i][0] = 1
+        self._trick_winners_list = [-1 for i in range(8)]
         self.__player_partners = np.zeros((4,4),dtype=np.int8)
+        self.__player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64)
+        self.__trick_point_history = np.zeros((4,8),dtype=np.int8)
+        self.__file_out_data_instance = {"trick_history":self._trick_history,
+                     "trick_point_history":self.__trick_point_history,
+                     "player_partners":self.__player_partners,
+                     "call_matrix":self._call_matrix,
+                     "player_point_history":self._player_point_history,
+                     "player_partner_prediction_history":self.__player_partner_prediction_history}
+        __file_out_data = []
+        self._trick_count = 0
+        self._cards_played_binary = 0
 
     def get_player_binary_card_state(self, a_player_id):
         #This method should return the binary card state of the cards the player 
@@ -141,23 +155,24 @@ class Round:
 
     def update_player_partner_prediction_history(self):
         #this could stand to be rewritten to be more readable TODO
+        print("PPHL preupdate: " + str(self.__player_partner_prediction_history))
         for player_number in range(4):
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
                 self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
 
     def on_round_end(self):
-        points_taken_list = []
-        for i in range(4):
-            points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
-        has_ended = self._parent_game.update_scores() #this feels like it should cause the game to check if the game should end?
-        self._file_out_name = str(datetime.datetime.now()) + "_game_id_" + str(self._parent_game.get_game_id() + ".spzd") # files will the named with the date and time of creation and the game id number
+#        points_taken_list = []
+#        for i in range(4):
+#            points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
+#        print("Total points taken: " + str((points_taken_list)))
+        self._parent_game.update_scores()
+
+        self._file_out_name = str(datetime.datetime.now()).replace(":",";").replace(".",",") + "_game_id_" + str(self._parent_game.get_game_id()) + ".spzd" # files will the named with the date and time of creation and the game id number
         self.push_data_to_file()
-        if not has_ended:
-            self._parent_game.start_round()
 
     def push_data_to_file(self): #need to think about this more to know what info will be needed by the learned agent TODO
         if not os.path.isfile(self._file_out_name):
-            with open(self._file_out_name, 'wb') as data_file:
+            with open(self._file_out_name, 'wb+') as data_file:
                 pickle.dump(self.__file_out_data, data_file)
 
     def update_call(self, player_id, call_index):
@@ -166,6 +181,10 @@ class Round:
         self._call_matrix[player_id][call_index] = 1
 
     def begin_play(self): #this method should start asking players to play cards to the active trick while they can do so
+        for i in range(4):
+            self._players_list[i].ask_for_call()
+            if sum(self._call_matrix[i][1:]) != 0:
+                break
         while self._leading_player.does_play_continue():
             for player in self._players_list:
                 player.play_card_to(self._current_trick)
