@@ -121,23 +121,24 @@ class Game:
       else:
          calling_ppl = self._players_list[calling_player_id].get_potential_partners_list()
          for player_id in range(4):
-            if(calling_ppl[player_index] == 1):
+            if(calling_ppl[player_id] == 1):
                calling_team.append(player_id)
                calling_team_round_points += self._players_list[calling_player_id].get_round_points()
-      if(0 <= calling_team_round_points <= 30):
+      if(calling_team_round_points <= 30):
          point_value_index = 1
-      elif(31 <= calling_team_round_points <= 60):
+      elif(calling_team_round_points <= 60):
          point_value_index = 2
-      elif(61 <= calling_team_round_points <= 89):
+      elif(calling_team_round_points <= 89):
          point_value_index = 3
-      elif(90 <= calling_team_round_points <= 120):
+      elif(calling_team_round_points <= 120):
          point_value_index = 4
       else:
          #Should raise an error here...?
          point_value_index = -1
+      
       for player_index in range(4):
          value_to_add = self._scoring_table[call_index][point_value_index]
-         for player_id in calling_team: #is this even what we want here?
+         if(player_index in calling_team):
             if(player_index == player_id):
                if(value_to_add > 0):
                   self._players_list[player_index].update_total_score(value_to_add)
