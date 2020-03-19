@@ -58,3 +58,4 @@ class Trick:
         self._parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)
         self._played_cards_list = [None, None, None, None]
         self._winning_card = Card(-1, "null")
+        self._points_on_trick = 0

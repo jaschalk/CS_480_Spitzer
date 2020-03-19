@@ -33,8 +33,6 @@ class TrickTest(unittest.TestCase):
         self.assertIsNotNone(self.testTrick.get_played_cards_list()[0])
         self.assertEqual(self.testTrick.get_suit_lead(), "hearts")
         self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0]) # for reasons unknown these are different player objects that have the same id# setup/tear down behavior is suspected; For further unknown reaons it's started working now...
-        print("Player hand:")
-        print(self.tempPlayers[1].get_hand().get_cards_in_hand())
         self.tempPlayers[1].get_hand().play_card_at_index(self.testTrick, 0)
         for card in self.testTrick.get_played_cards_list():
             if card is None:
@@ -54,6 +52,7 @@ class TrickTest(unittest.TestCase):
         self.assertEqual(self.testTrick.get_winning_card(), Card(-1, "null"))
         for i in range(4):
             self.assertIsNone(self.testTrick.get_played_cards_list()[i])
+        self.assertEqual(self.testTrick.get_points_on_trick(), 0)
 
     def tearDown(self):
         self.testTrick._winning_card = Card(-1, "null")
