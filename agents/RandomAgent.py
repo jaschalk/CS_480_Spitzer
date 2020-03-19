@@ -4,7 +4,7 @@ import operator
 
 class RandomAgent:
 
-    call_weight_list = [700, 900, 900, 900, 1000, 150, 10, 1] #NC, AC, AS, AH, FT, Z, ZS, ZSS
+    call_weight_list = [700, 1400, 1400, 1400, 2100, 150, 10, 1] #NC, AC, AS, AH, FT, Z, ZS, ZSS # TODO Change numbers back to something sensible
     
     def make_call(self, a_player):
         #Should return the index in the call list of the call the agent "chooses" to make.
@@ -20,12 +20,15 @@ class RandomAgent:
             call_list_after_weight[index] = (call_list_after_weight[index]/total)
             if index != 0:
                 call_list_after_weight[index] = call_list_after_weight[index] + call_list_after_weight[index-1]
-        call_to_make = random.random(0, 1) #generate a random floating pt. number between 0 and 1
+        call_to_make = random.random() #generate a random floating pt. number between 0 and 1
+        print("Agent asked to make a call")
+        print(call_list_after_weight)
+        print(call_to_make)
         for index in range(8):
             if call_to_make <= call_list_after_weight[index]:
+                print("Agent is making call: " + str(index))
                 return index
-            else:
-                raise RuntimeError("Returned an invalid index")
+        raise RuntimeError("Returned an invalid index")
 
     def play_card(self, a_player, a_game):
         #Should return the index in the valid play list of the card the agent "chooses" to play.

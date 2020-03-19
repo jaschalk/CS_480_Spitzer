@@ -30,6 +30,10 @@ class Hand:
     def accept(self, a_card):
         self._cards_in_hand.append(a_card)
         card_id = a_card.get_card_id()
+        if card_id == 0:
+            print("Player " + str(self._my_player.get_player_id()) + " has the queen of clubs")
+        if card_id == 2:
+            print("Player " + str(self._my_player.get_player_id()) + " has the queen of spades")
         self._binary_representation += 1<<card_id
 
     def determine_valid_play_list(self):

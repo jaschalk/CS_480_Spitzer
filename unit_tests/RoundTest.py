@@ -67,6 +67,7 @@ class RoundTest(unittest.TestCase):
             self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         #               self.test_round.potential_partners_history[player_num][potential_partner_num][trick_depth]
+        print("PPHL: " + str(self.test_round._get_potential_partners_history()))
         self.assertEqual(self.test_round._get_potential_partners_history()[0][2][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[1][3][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[2][0][0], 1)
@@ -84,7 +85,7 @@ class RoundTest(unittest.TestCase):
         self.test_round.begin_play() #Need to use a method to run a round to completion here, not manually step through
 # TODO  self.assertNotEqual(sum(self.test_round.scoreList), 0) #after a round has been played the sum of the scores cannot be 0
                     # the round currently isn't storing this, I think this got moved to the game. It might be best if the the test went as well
-        self.assertEqual(len(self.temp_deck.get_card_list()), 32)
+        self.assertEqual(len(self.temp_deck.get_card_list()), 0)
 
     def test_update_trick_winners_list(self):
         for i in range(4):

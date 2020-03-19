@@ -14,6 +14,7 @@ class Deck:
         '''
         Populating the deck will clear the contents of the cardlist and refill it with the proper collection of cards to play the game with.
         '''
+        self._card_list.clear()
         for i in range(15):
             if i < 14:
                 self._card_list.append(Card.Card(i, "trump"))
