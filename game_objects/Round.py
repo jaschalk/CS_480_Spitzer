@@ -196,4 +196,4 @@ class Round:
         a_game_state["current_trick"] = self._current_trick
         a_game_state["current_player"] = self._players_list[a_player_index] # used for getting info about the players cards from their hand
         return a_game_state
-        #TODO finish this method! Consider what else need to go in here
+        #TODO Consider what else need to go in here
