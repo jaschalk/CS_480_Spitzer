@@ -11,6 +11,9 @@ class Hand:
 
     def __init__(self, a_player):
         self._my_player = a_player
+        self.set_initial_values()
+
+    def set_initial_values(self):
         self._cards_in_hand = []
         self._valid_play_list = [1, 1, 1, 1, 1, 1, 1, 1]
         self._binary_representation = 0

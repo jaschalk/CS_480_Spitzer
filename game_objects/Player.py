@@ -21,12 +21,21 @@ class Player:
         self._player_id = player_id
         self._parent_game = a_game
         self._controlling_agent = an_agent
+        self._total_score = 0
+        self.set_initial_values()
+
+    def set_initial_values(self):
         self._potential_partners_list = [0, 0, 0, 0] 
         self._potential_partners_list[self._player_id] = 1
         for index in range(4):
             if index != self._player_id:
                 self._potential_partners_list[index] = (1/3)
         self._hand = Hand(self)
+        self._valid_call_list = [1, 0, 0, 0, 0, 1, 1, 1]
+        self._round_points = 0
+        self._trick_points = 0
+        self._is_leading = False
+        self._cards_played = 0
 
     def get_player_id(self):
         return self._player_id

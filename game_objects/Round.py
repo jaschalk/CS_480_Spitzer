@@ -38,7 +38,10 @@ class Round:
     def __init__(self, a_game):
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
-        self._leading_player = a_game.get_leading_player()
+        self._leading_player = a_game.get_leading_player() #this will need to be updated at the end of the round
+        self.set_initial_values()
+
+    def set_initial_values(self):
         self._trick_history = np.zeros((4,8,32),dtype=np.int8)
         self._call_matrix = np.zeros((4,8),dtype=np.int8)
         self._current_trick = Trick(self)
@@ -132,12 +135,12 @@ class Round:
         for player in self._players_list:
             player.determine_valid_play_list()
 
-    def on_trick_end(self, winning_player, points_on_trick, card_list): #is winning player the player object<this>, or their index? TODO
+    def on_trick_end(self, winning_player, points_on_trick, card_list): #winning player is the player object here
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
         for card in card_list:
             self._cards_played_binary += 1<<card.get_card_id()
-            player_number = card.get_owning_player() #this should be changed? TODO why?
+            player_number = card.get_owning_player()
             self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
         self._trick_winners_list[self._trick_count] = winning_player.get_player_id()
         winning_player.set_trick_points(points_on_trick)
@@ -145,7 +148,7 @@ class Round:
         self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick
         for player in self._players_list:
             player.determine_potential_partners()
-        self.update_player_partner_prediction_history() #I don't remember how was supposed to work? TODO is this working correctly right now?
+        self.update_player_partner_prediction_history()
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
         # by making a copy of the data we'll have a history of how it's changed with each trick
         # using deep copy here to actually duplicate the data and not just link to it's location in memory
@@ -154,7 +157,6 @@ class Round:
             self.on_round_end()
 
     def update_player_partner_prediction_history(self):
-        #this could stand to be rewritten to be more readable TODO
         for player_number in range(4):
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
                 self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
@@ -168,6 +170,11 @@ class Round:
 
         self._file_out_name = str(datetime.datetime.now()).replace(":",";").replace(".",",") + "_game_id_" + str(self._parent_game.get_game_id()) + ".spzd" # files will the named with the date and time of creation and the game id number
         self.push_data_to_file()
+        for i in range(4):
+            self._players_list[i].set_initial_values()
+        self.set_initial_values()
+        self._leading_player = self._players_list[(self._leading_player.get_player_id() + 1)%4]
+        #TODO Make things reset values to their initial state here
 
     def push_data_to_file(self): #need to think about this more to know what info will be needed by the learned agent TODO
         if not os.path.isfile(self._file_out_name):
