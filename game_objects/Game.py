@@ -49,6 +49,7 @@ class Game:
 
    def play_game(self):
       while self.which_player_wins() == -1:
+         print(self._score_list)
          self.begin_round()
 
    def begin_round(self):
