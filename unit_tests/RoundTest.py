@@ -105,9 +105,13 @@ class RoundTest(unittest.TestCase):
         with open(self.test_round.get_file_out_name(), 'rb') as input:
             file_data = pickle.load(input)
             for i in range(len(file_data)):
-                print(type(self.test_round._get_file_out_data()[i]))
-                print(self.test_round._get_file_out_data()[i] == file_data[i])
-            self.assertTrue((self.test_round._get_file_out_data() == file_data))
+                self.assertTrue(self.test_round._get_file_out_data()[i]["trick_history"].all() == file_data[i]["trick_history"].all())
+                self.assertTrue(self.test_round._get_file_out_data()[i]["trick_point_history"].all() == file_data[i]["trick_history"].all())
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_partners"].all() == file_data[i]["player_partners"].all())
+                self.assertTrue(self.test_round._get_file_out_data()[i]["call_matrix"].all() == file_data[i]["call_matrix"].all())
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_point_history"].all() == file_data[i]["player_point_history"].all())
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_partner_prediction_history"].all() == file_data[i]["player_partner_prediction_history"].all())
+            
 
     def tearDown(self):
         for player in self.temp_players:

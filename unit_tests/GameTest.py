@@ -67,6 +67,5 @@ class GameTest(unittest.TestCase):
         del self.temp_player_list
         del self.temp_round
 
-
 if __name__ == "__main__":
     unittest.main()
