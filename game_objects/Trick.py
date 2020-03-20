@@ -55,7 +55,6 @@ class Trick:
         self.on_trick_fill()
 
     def on_trick_fill(self):
-        print("Player " + str(self._winning_player.get_player_id()) + " took " + str(self._points_on_trick) + " points.")
         self._parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)
         self._played_cards_list = [None, None, None, None]
         self._winning_card = Card(-1, "null")

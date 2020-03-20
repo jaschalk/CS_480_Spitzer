@@ -51,7 +51,6 @@ class Player:
     
     def set_round_points(self, a_round_points):
         self._round_points = a_round_points
-        print("Player " + str(self._player_id) + " has " + str(self._round_points) + " total points.")
 
     def get_valid_call_list(self):
         return self._valid_call_list

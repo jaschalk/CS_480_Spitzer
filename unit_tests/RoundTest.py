@@ -67,7 +67,6 @@ class RoundTest(unittest.TestCase):
             self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         #               self.test_round.potential_partners_history[player_num][potential_partner_num][trick_depth]
-        print("PPHL: " + str(self.test_round._get_potential_partners_history()))
         self.assertEqual(self.test_round._get_potential_partners_history()[0][2][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[1][3][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[2][0][0], 1)
@@ -105,7 +104,9 @@ class RoundTest(unittest.TestCase):
         #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
         with open(self.test_round.get_file_out_name(), 'rb') as input:
             file_data = pickle.load(input)
-            print(self.test_round._get_file_out_data() == file_data)
+            for i in range(len(file_data)):
+                print(type(self.test_round._get_file_out_data()[i]))
+                print(self.test_round._get_file_out_data()[i] == file_data[i])
             self.assertTrue((self.test_round._get_file_out_data() == file_data))
 
     def tearDown(self):

@@ -24,7 +24,7 @@ class Round:
     __player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64) # __ because it shouldn't be needed anywhere other than this class
     __trick_point_history = np.zeros((4,8),dtype=np.int8) # __ because it shouldn't be needed anywhere other than this class
     #the values in the file_out_data_instance dict are mutable so changes to the variables will be reflected here
-    __file_out_data_instance = {"trick_history":_trick_history,
+    __file_out_data_instance = {"trick_history":_trick_history, # TODO consider using a custom class to hold the data, that way equality can be more easily defined
                      "trick_point_history":__trick_point_history,
                      "player_partners":__player_partners,
                      "call_matrix":_call_matrix,

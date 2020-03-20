@@ -21,12 +21,8 @@ class RandomAgent:
             if index != 0:
                 call_list_after_weight[index] = call_list_after_weight[index] + call_list_after_weight[index-1]
         call_to_make = random.random() #generate a random floating pt. number between 0 and 1
-        print("Agent asked to make a call")
-        print(call_list_after_weight)
-        print(call_to_make)
         for index in range(8):
             if call_to_make <= call_list_after_weight[index]:
-                print("Agent is making call: " + str(index))
                 return index
         raise RuntimeError("Returned an invalid index")
 

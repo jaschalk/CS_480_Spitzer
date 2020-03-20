@@ -118,7 +118,6 @@ class Game:
          for player_index in range(4):
             for call_made in range(1,8):
                if(self._round.get_call_matrix()[player_index][call_made] == 1):
-                  print("The call made was " + str(call_made))
                   call_index = call_made
                   if call_index < 5:
                      call_index = 0
@@ -128,7 +127,6 @@ class Game:
                   return call_made
          return 0
       call_made = find_call_made()
-      print("The call made was " + str(call_index))
       # split off into a helper method?
       if(call_made == 0):
          for player_index in range(4):
@@ -151,11 +149,8 @@ class Game:
       for i in range(4):
          if i in calling_team:
             calling_team_round_points += self._players_list[i].get_round_points()
-      print("The calling team was " + str(calling_team))
-      print("The calling team took " + str(calling_team_round_points))
 
       # split off into a helper method?
-      print([self._players_list[i].get_round_points() for i in range(4)])
       noncalling_team = set(range(4)).difference(set(calling_team))
       if len(set(self._round.get_trick_winners_list()).difference(set(calling_team))) == 0:
          point_value_index = 0
@@ -176,7 +171,6 @@ class Game:
             #Should raise an error here...?
 
       for player_index in range(4):
-         print("Point value index: " + str(point_value_index))
          value_to_add = self._scoring_table[call_index][point_value_index]
          if player_index in calling_team:
             if(value_to_add > 0):
@@ -186,4 +180,3 @@ class Game:
             if(value_to_add < 0):
                self._players_list[player_index].update_total_score(abs(value_to_add))
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
-         print(self._score_list[player_index])
