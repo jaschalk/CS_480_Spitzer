@@ -52,9 +52,7 @@ class GameTest(unittest.TestCase):
     def test_update_scores(self):
         for player in self.temp_player_list:
             player.set_controlling_agent(RandomAgent())
-#            self.temp_deck.deal_cards_to(player)
         self.temp_game.begin_round()
-#        self.temp_round.begin_play()
         self.assertNotEqual(sum(self.temp_game.get_score_list()), 0)
 
     def test_play_game(self):

@@ -48,9 +48,10 @@ class Game:
       return self._deck
 
    def play_game(self):
+      print(self._score_list)
       while self.which_player_wins() == -1:
-         print(self._score_list)
          self.begin_round()
+         print(self._score_list)
 
    def begin_round(self):
       for player in self._players_list:
@@ -80,8 +81,9 @@ class Game:
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
       num_of_winners = 0
       winning_index = -1
+      max_score = max(self._score_list)
       for index in range(4):
-         if self.get_players_list()[index].get_total_score() >= 42:
+         if self.get_players_list()[index].get_total_score() >= 42 and self.get_players_list()[index].get_total_score() >= max_score:
             num_of_winners += 1
             winning_index = index
       if num_of_winners != 1:
