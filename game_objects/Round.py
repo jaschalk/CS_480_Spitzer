@@ -155,7 +155,6 @@ class Round:
 
     def update_player_partner_prediction_history(self):
         #this could stand to be rewritten to be more readable TODO
-        print("PPHL preupdate: " + str(self.__player_partner_prediction_history))
         for player_number in range(4):
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
                 self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]

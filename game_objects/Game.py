@@ -150,11 +150,12 @@ class Game:
                
       for i in range(4):
          if i in calling_team:
-            calling_team_round_points += self._players_list[calling_player_id].get_round_points()
+            calling_team_round_points += self._players_list[i].get_round_points()
       print("The calling team was " + str(calling_team))
       print("The calling team took " + str(calling_team_round_points))
 
       # split off into a helper method?
+      print([self._players_list[i].get_round_points() for i in range(4)])
       noncalling_team = set(range(4)).difference(set(calling_team))
       if len(set(self._round.get_trick_winners_list()).difference(set(calling_team))) == 0:
          point_value_index = 0

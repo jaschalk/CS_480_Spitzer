@@ -105,7 +105,8 @@ class RoundTest(unittest.TestCase):
         #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
         with open(self.test_round.get_file_out_name(), 'rb') as input:
             file_data = pickle.load(input)
-            self.assertEqual(self.test_round._get_file_out_data(), file_data)
+            print(self.test_round._get_file_out_data() == file_data)
+            self.assertTrue((self.test_round._get_file_out_data() == file_data))
 
     def tearDown(self):
         for player in self.temp_players:
