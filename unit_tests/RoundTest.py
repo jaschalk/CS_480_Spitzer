@@ -111,7 +111,6 @@ class RoundTest(unittest.TestCase):
                 self.assertTrue(self.test_round._get_file_out_data()[i]["call_matrix"].all() == file_data[i]["call_matrix"].all())
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_point_history"].all() == file_data[i]["player_point_history"].all())
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_partner_prediction_history"].all() == file_data[i]["player_partner_prediction_history"].all())
-            
 
     def tearDown(self):
         for player in self.temp_players:

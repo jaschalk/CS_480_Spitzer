@@ -56,18 +56,6 @@ class Card():
             self._point_value = 0
 
     def accept(self, a_card):
-        '''
-        if self.get_card_suit() == "trump":
-            if a_card.get_card_suit() == "trump":
-                return self.accept_trump(self, a_card)
-            else:
-                return True
-        else:
-            if a_card.get_card_suit() == "trump":
-                return False
-            else:
-                return self.accept_fail(self, a_card)
-        '''
         pass
 
     def visit(self, an_object):

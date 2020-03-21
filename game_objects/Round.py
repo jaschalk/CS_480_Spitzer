@@ -7,12 +7,12 @@ from game_objects.Trick import Trick
 
 class Round:
 
-    #Might want to add a get game state method to the round for use in the agent.
+    #Might want to add a get game state method to the round for use in the agent. TODO
 
     _current_trick = None
     _parent_game = None
     _leading_player = None
-    _winner_of_first_trick = None # TODO this might be redundent with the introduction of the trick winners list
+    _winner_of_first_trick = None
     _players_list = [None, None, None, None]
     #using numpy's arrays rather than standard python lists since this is the data that will be interfacing with the ML process
     #also it's much easier to make 2D/3D arrays this way
@@ -24,12 +24,12 @@ class Round:
     __player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64) # __ because it shouldn't be needed anywhere other than this class
     __trick_point_history = np.zeros((4,8),dtype=np.int8) # __ because it shouldn't be needed anywhere other than this class
     #the values in the file_out_data_instance dict are mutable so changes to the variables will be reflected here
-    __file_out_data_instance = {"trick_history":_trick_history, # TODO consider using a custom class to hold the data, that way equality can be more easily defined
+    __file_out_data_instance = {"trick_history":_trick_history,
                      "trick_point_history":__trick_point_history,
                      "player_partners":__player_partners,
                      "call_matrix":_call_matrix,
                      "player_point_history":_player_point_history,
-                     "player_partner_prediction_history":__player_partner_prediction_history} # TODO this should also include which player won
+                     "player_partner_prediction_history":__player_partner_prediction_history} # TODO this should also include which player won: Should it? Do we actually need that to train the agent?
     __file_out_data = []
     _file_out_name = "" # initalized to an empty string, as there should be no path to file out that doesn't set it
     _trick_count = 0
@@ -162,19 +162,13 @@ class Round:
                 self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
 
     def on_round_end(self):
-#        points_taken_list = []
-#        for i in range(4):
-#            points_taken_list.append(self.__trick_point_history[i][7]) #this should generate a list of the points the players took on this trick in order of player number
-#        print("Total points taken: " + str((points_taken_list)))
         self._parent_game.update_scores()
-
         self._file_out_name = str(datetime.datetime.now()).replace(":",";").replace(".",",") + "_game_id_" + str(self._parent_game.get_game_id()) + ".spzd" # files will the named with the date and time of creation and the game id number
         self.push_data_to_file()
         for i in range(4):
             self._players_list[i].set_initial_values()
         self.set_initial_values()
         self._leading_player = self._players_list[(self._leading_player.get_player_id() + 1)%4]
-        #TODO Make things reset values to their initial state here
 
     def push_data_to_file(self): #need to think about this more to know what info will be needed by the learned agent TODO
         if not os.path.isfile(self._file_out_name):

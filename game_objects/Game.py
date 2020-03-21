@@ -34,6 +34,7 @@ class Game:
       self._card_rules = CardRuleTree()
       self._partner_rules = PartnerRuleTree()
       self._call_rules = CallRules()
+      self._score_list = [0, 0, 0, 0]
 
    def get_game_id(self):
       return self._game_id

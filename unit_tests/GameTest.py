@@ -5,6 +5,7 @@ from game_objects.CallRules import CallRules
 from game_objects.CardRuleTree import CardRuleTree
 from game_objects.PartnerRuleTree import PartnerRuleTree
 from agents.RandomAgent import RandomAgent
+from agents.CustomAgent import CustomAgent
 
 class GameTest(unittest.TestCase):
 
@@ -58,6 +59,12 @@ class GameTest(unittest.TestCase):
     def test_play_game(self):
         for player in self.temp_player_list:
             player.set_controlling_agent(RandomAgent())
+        self.temp_game.play_game()
+        self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
+
+    def test_play_with_custom_agent(self):
+        for player in self.temp_player_list:
+            player.set_controlling_agent(CustomAgent())
         self.temp_game.play_game()
         self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
 

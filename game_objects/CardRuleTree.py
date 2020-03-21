@@ -34,7 +34,7 @@ class CardRuleTree:
             elif suit == "hearts":
                 return 0b11111100000000000000000000000000
             else:
-                # raise an error if the suit requested isn't in the valid set, to prevent silent errors
+                # raise an error if the suit requested isn't in the valid set, to prevent silent errors, this is mostly to catch typos
                 raise RuntimeError("Get suit binary representation received a request for an invalid suit. " + suit)
 
         def is_player_leading(*args):
