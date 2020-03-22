@@ -8,7 +8,7 @@ from game_objects.Trick import Trick
 class Round:
 
     #Might want to add a get game state method to the round for use in the agent. TODO
-
+    # TODO clean up unneeded class variables!
     _current_trick = None
     _parent_game = None
     _leading_player = None
@@ -178,6 +178,7 @@ class Round:
         if not os.path.isfile(self._file_out_name):
             with open(self._file_out_name, 'wb+') as data_file:
                 pickle.dump(self.__file_out_data, data_file)
+            # TODO Make sure this contains all the data that we want it to
 
     def update_call(self, player_id, call_index):
         for index in range(8):

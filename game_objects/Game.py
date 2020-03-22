@@ -51,7 +51,7 @@ class Game:
    def play_game(self):
       while self.which_player_wins() == -1:
          self.begin_round()
-         self._round.clear_file_out_history()
+      self.clean_up_round_file_data()
 
    def begin_round(self):
       self._deck.populate_deck()
@@ -76,6 +76,9 @@ class Game:
 
    def get_score_list(self):
       return self._score_list
+
+   def clean_up_round_file_data(self):
+      self._round.clear_file_out_history()
 
    def which_player_wins(self):
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
