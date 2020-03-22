@@ -45,12 +45,12 @@ class CustomAgent:
     def make_call(self, a_player):
         # This might be too conserative with making hard calls
         call_index = -1
-        self.gauge_hand_strength(a_player.get_hand()) #cutoffs ZSS 40K, ZS 10K, Z 4K, A >1600, FT >1800, else no call
-        if self._total_strength > 40000:
+        self.gauge_hand_strength(a_player.get_hand()) #cutoffs ZSS 42K, ZS 28K, Z 9K, A >2500, FT >2300, else no call
+        if self._total_strength > 42000:
             call_index = 7 # should make these not "magic numbers"
-        elif self._total_strength > 10000:
+        elif self._total_strength > 28000:
             call_index = 6
-        elif self._total_strength > 7500:
+        elif self._total_strength > 9000:
             call_index = 5
         elif self._total_strength < 2500 and a_player.get_valid_call_list()[4] == 1:
             call_index = 4

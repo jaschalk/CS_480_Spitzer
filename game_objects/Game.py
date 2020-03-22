@@ -193,7 +193,11 @@ class Game:
             if(value_to_add > 0):
                self._players_list[player_index].update_total_score(value_to_add)
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
+               if call_made != 0:
+                  print("Good call " + str(call_made))
          else:
             if(value_to_add < 0):
                self._players_list[player_index].update_total_score(abs(value_to_add))
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
+               if call_made != 0:
+                  print("Bad call " + str(call_made))
