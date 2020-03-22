@@ -22,7 +22,6 @@ class Deck:
                 self._card_list.append(Card.Card(i, "clubs"))
                 self._card_list.append(Card.Card(i, "spades"))
                 self._card_list.append(Card.Card(i, "hearts"))
-
         shuffle(self._card_list)
 
     def deal_cards_to(self, targetPlayer):

@@ -51,6 +51,7 @@ class Round:
         self.__player_partners = np.zeros((4,4),dtype=np.int8)
         self.__player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64)
         self.__trick_point_history = np.zeros((4,8),dtype=np.int8)
+        self._player_point_history = np.zeros((4,8),dtype=np.int8)
         self.__file_out_data_instance = {"trick_history":self._trick_history,
                      "trick_point_history":self.__trick_point_history,
                      "player_partners":self.__player_partners,
@@ -130,6 +131,9 @@ class Round:
 
     def get_first_trick_winner(self):
         return self._winner_of_first_trick
+
+    def clear_file_out_history(self):
+        self.__file_out_data.clear()
 
     def notify_players_of_played_card(self):
         for player in self._players_list:

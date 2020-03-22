@@ -9,6 +9,8 @@ from agents.CustomAgent import CustomAgent
 
 class GameTest(unittest.TestCase):
 
+    number_of_games_to_be_played = 50
+
     def setUp(self):
         setup_results = general_setup()
         self.temp_game = setup_results["active_game"]
@@ -62,11 +64,25 @@ class GameTest(unittest.TestCase):
         self.temp_game.play_game()
         self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
 
+    def test_play_multiple_games(self):
+        self.tearDown()
+        for i in range(self.number_of_games_to_be_played):
+            print("Game number " + str(i))
+            self.setUp()
+            self.test_play_game()
+
     def test_play_with_custom_agent(self):
         for player in self.temp_player_list:
             player.set_controlling_agent(CustomAgent())
         self.temp_game.play_game()
         self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
+
+    def test_play_multiple_games_with_custom_agent(self):
+        self.tearDown()
+        for i in range(self.number_of_games_to_be_played):
+            print("Game number w/ custom " + str(i))
+            self.setUp()
+            self.test_play_with_custom_agent()
 
     def tearDown(self):
         del self.temp_game

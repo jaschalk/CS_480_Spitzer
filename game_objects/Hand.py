@@ -4,7 +4,6 @@ import numpy as np
 
 class Hand:
     
-    _cards_in_hand = []
     _binary_representation = 0
     _valid_play_list = []
     _my_player = None

@@ -26,7 +26,7 @@ class CustomAgent:
             if card.get_card_suit() == "trump":
                 self._trump_strength *= self.__trump_strengths[card.get_card_rank()]
             elif card.get_card_suit() == "clubs":
-                self._clubs_strength *= self.__fail_strengths[card.get_card_rank() - 9] # TODO need an off set here!
+                self._clubs_strength *= self.__fail_strengths[card.get_card_rank() - 9]
             elif card.get_card_suit() == "spades":
                 self._spades_strength *= self.__fail_strengths[card.get_card_rank() - 9]
             elif card.get_card_suit() == "hearts":
@@ -50,11 +50,11 @@ class CustomAgent:
             call_index = 7 # should make these not "magic numbers"
         elif self._total_strength > 10000:
             call_index = 6
-        elif self._total_strength > 4000:
+        elif self._total_strength > 7500:
             call_index = 5
-        elif self._total_strength < 1800 and a_player.get_valid_call_list()[4] == 1:
+        elif self._total_strength < 2500 and a_player.get_valid_call_list()[4] == 1:
             call_index = 4
-        elif self._total_strength < 1600 and sum(a_player.get_valid_call_list()[1:3]) > 0: # the second condition means this block is only entered if an ace is callable
+        elif self._total_strength < 2300 and sum(a_player.get_valid_call_list()[1:3]) > 0: # the second condition means this block is only entered if an ace is callable
             call_index = self.find_best_callable_ace_suit(a_player)
         else:
             call_index = 0

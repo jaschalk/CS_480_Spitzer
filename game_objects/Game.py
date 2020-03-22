@@ -17,8 +17,8 @@ class Game:
    _partner_rules = None
    _call_rules = None
    _score_list = [0, 0, 0, 0]
-   _scoring_table = [[0, -9, -6, 3, 6, 9],
-                     [0, -9, -6, 9, 12, 15],
+   _scoring_table = [["impossible", -9, -6, 3, 6, 9],
+                     ["impossible", -9, -6, 9, 12, 15],
                      [-15, -12, -9, 18, 27, 36],
                      [-42, -36, -24, -18, 36, 39],
                      [-42, -42, -39, -33, -27, 42]]
@@ -49,14 +49,13 @@ class Game:
       return self._deck
 
    def play_game(self):
-      print(self._score_list)
       while self.which_player_wins() == -1:
          self.begin_round()
-         print(self._score_list)
+         self._round.clear_file_out_history()
 
    def begin_round(self):
+      self._deck.populate_deck()
       for player in self._players_list:
-         self._deck.populate_deck()
          self._deck.deal_cards_to(player)
       self._round.begin_play()
 
@@ -131,7 +130,15 @@ class Game:
                   return call_made
          return 0
       call_made = find_call_made()
+
       # split off into a helper method?
+      sum = 0
+      total_played_of_each_card = [0 for i in range(32)]
+      for p in range(len(self._round.get_trick_history())):
+         for t in range(len(self._round.get_trick_history()[p])):
+            for c in range(len(self._round.get_trick_history()[p][t])):
+               sum += self._round.get_trick_history()[p][t][c]
+               total_played_of_each_card[c] += self._round.get_trick_history()[p][t][c]
       if(call_made == 0):
          for player_index in range(4):
             for trick_index in range(8):
@@ -156,9 +163,9 @@ class Game:
 
       # split off into a helper method?
       noncalling_team = set(range(4)).difference(set(calling_team))
-      if len(set(self._round.get_trick_winners_list()).difference(set(calling_team))) == 0:
+      if set(self._round.get_trick_winners_list()).isdisjoint(set(calling_team)):
          point_value_index = 0
-      elif len(set(self._round.get_trick_winners_list()).difference(noncalling_team)) == 0:
+      elif set(self._round.get_trick_winners_list()).isdisjoint(noncalling_team):
          point_value_index = 5
       else:
          if(calling_team_round_points <= 30):
@@ -171,11 +178,14 @@ class Game:
             point_value_index = 4
          else:
             point_value_index = -1
-            raise Exception("Calling team round points didn't resolve to an index" + str(calling_team_round_points))
+            raise Exception("Calling team round points didn't resolve to an index. " + str(calling_team_round_points) + "\r\n" + str([player.get_round_points() for player in self._players_list]))
             #Should raise an error here...?
 
       for player_index in range(4):
          value_to_add = self._scoring_table[call_index][point_value_index]
+         if type(value_to_add) == type("string"):
+            print("In unreachable state")
+            raise Exception("Entered an unreachable state in the scoring table.")
          if player_index in calling_team:
             if(value_to_add > 0):
                self._players_list[player_index].update_total_score(value_to_add)
