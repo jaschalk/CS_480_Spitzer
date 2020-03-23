@@ -168,7 +168,7 @@ class Round:
     def on_round_end(self):
         self._parent_game.update_scores()
         self._file_out_name = str(datetime.datetime.now()).replace(":",";").replace(".",",") + "_game_id_" + str(self._parent_game.get_game_id()) + ".spzd" # files will the named with the date and time of creation and the game id number
-        self.push_data_to_file()
+#        self.push_data_to_file()
         for i in range(4):
             self._players_list[i].set_initial_values()
         self.set_initial_values()

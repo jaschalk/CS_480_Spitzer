@@ -51,6 +51,7 @@ class Game:
    def play_game(self):
       while self.which_player_wins() == -1:
          self.begin_round()
+      self._round.push_data_to_file()
       self.clean_up_round_file_data()
 
    def begin_round(self):
