@@ -9,7 +9,7 @@ from agents.CustomAgent import CustomAgent
 
 class GameTest(unittest.TestCase):
 
-    number_of_games_to_be_played = 50
+    number_of_games_to_be_played = 5
 
     def setUp(self):
         setup_results = general_setup()
@@ -67,7 +67,7 @@ class GameTest(unittest.TestCase):
     def test_play_multiple_games(self):
         self.tearDown()
         for i in range(self.number_of_games_to_be_played):
-            print("Game number " + str(i))
+#            print("Game number " + str(i))
             self.setUp()
             self.test_play_game()
 
@@ -80,7 +80,7 @@ class GameTest(unittest.TestCase):
     def test_play_multiple_games_with_custom_agent(self):
         self.tearDown()
         for i in range(self.number_of_games_to_be_played):
-            print("Game number w/ custom " + str(i))
+#            print("Game number w/ custom " + str(i))
             self.setUp()
             self.test_play_with_custom_agent()
 

@@ -58,7 +58,6 @@ class Round:
                      "call_matrix":self._call_matrix,
                      "player_point_history":self._player_point_history,
                      "player_partner_prediction_history":self.__player_partner_prediction_history}
-        __file_out_data = []
         self._trick_count = 0
         self._cards_played_binary = 0
 

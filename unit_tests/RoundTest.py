@@ -100,7 +100,7 @@ class RoundTest(unittest.TestCase):
         for player in self.temp_players:
             player.set_controlling_agent(RandomAgent())
             self.temp_deck.deal_cards_to(player)
-        self.test_round.begin_play()
+        self.temp_game.play_game()
         #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
         with open(self.test_round.get_file_out_name(), 'rb') as input:
             file_data = pickle.load(input)
