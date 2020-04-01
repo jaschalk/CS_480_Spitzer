@@ -25,12 +25,12 @@ class Round:
     __trick_point_history = np.zeros((4,8),dtype=np.int8) # __ because it shouldn't be needed anywhere other than this class
     #the values in the file_out_data_instance dict are mutable so changes to the variables will be reflected here
     __file_out_data_instance = {"trick_history":_trick_history,
-                     "trick_point_history":__trick_point_history,
-                     "player_partners":__player_partners,
+                     "trick_point_history":__trick_point_history, 
+                     "player_partners":__player_partners, #TODO not updating?
                      "call_matrix":_call_matrix,
-                     "player_point_history":_player_point_history,
+                     "player_point_history":_player_point_history, # TODO this is not being updated right now?
                      "player_partner_prediction_history":__player_partner_prediction_history} # TODO this should also include which player won: Should it? Do we actually need that to train the agent?
-    __file_out_data = []
+    __file_out_data = [] # This is updated every trick!
     _file_out_name = "" # initalized to an empty string, as there should be no path to file out that doesn't set it
     _trick_count = 0
     _cards_played_binary = 0
