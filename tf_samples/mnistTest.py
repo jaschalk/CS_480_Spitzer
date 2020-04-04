@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 14 10:03:02 2020
+# sample code brought in from https://www.tensorflow.org/tutorials/quickstart/beginner
 
-@author: Jesse
-"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 import tensorflow as tf
 

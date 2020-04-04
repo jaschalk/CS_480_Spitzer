@@ -51,7 +51,10 @@ class Game:
    def play_game(self):
       self.clean_up_round_file_data()
       while self.which_player_wins() == -1:
+         self._round.set_initial_values()
          self.begin_round()
+#      self._round.update_player_score_history([score for score in self._score_list])
+#      print(self._round._player_score_history) #TODO This is doing strange things need to fix
       self._round.push_data_to_file()
       
 
@@ -203,3 +206,4 @@ class Game:
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
 #               if call_made != 0:
 #                  print("Bad call " + str(call_made))
+      self._round.update_player_score_history([self._players_list[player_index].get_total_score() for player_index in range(4)])

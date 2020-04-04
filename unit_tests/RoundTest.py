@@ -101,16 +101,24 @@ class RoundTest(unittest.TestCase):
             player.set_controlling_agent(RandomAgent())
             self.temp_deck.deal_cards_to(player)
         self.temp_game.play_game()
+
         #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
         with open(self.test_round.get_file_out_name(), 'rb') as input:
             file_data = pickle.load(input)
             for i in range(len(file_data)):
                 self.assertTrue(self.test_round._get_file_out_data()[i]["trick_history"].all() == file_data[i]["trick_history"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["trick_history"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["trick_point_history"].all() == file_data[i]["trick_history"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["trick_point_history"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_partners"].all() == file_data[i]["player_partners"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["player_partners"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["call_matrix"].all() == file_data[i]["call_matrix"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["call_matrix"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_point_history"].all() == file_data[i]["player_point_history"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["player_point_history"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_partner_prediction_history"].all() == file_data[i]["player_partner_prediction_history"].all())
+                for e in range(len(file_data[i]["player_score_history"])):
+                    self.assertTrue(self.test_round._get_file_out_data()[i]["player_score_history"][e] == file_data[i]["player_score_history"][e])
 
     def tearDown(self):
         for player in self.temp_players:
