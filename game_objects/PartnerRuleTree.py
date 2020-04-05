@@ -13,7 +13,7 @@ class PartnerRuleTree:
     def __init__(self):
 
         #args should be aPlayer, aPlayer, and aRound in that order.
-        
+
         def get_ace_called_id(*args):
             # need to go through the call matrix to see what ace was called
             call_state = args[2].get_call_matrix()
@@ -37,7 +37,7 @@ class PartnerRuleTree:
                     if(call_matrix[index][i] == 1):
                         call_has_been_made = True
             return call_has_been_made
-        
+
         def did_asking_player_make_call(*args):
             asking_player_id = args[0].get_player_id()
             call_matrix = args[2].get_call_matrix()
@@ -205,8 +205,8 @@ class PartnerRuleTree:
         __root_LL.set_right(__root_LLR)
         __root_LLR.set_left(__root_LLRL)
         __root_LLRL.set_right(__root_LLRLR)
-        __root_LLRLR.set_right(RuleNodeUnknown()) 
-        __root_LLRLR.set_left(RuleNodeFalse()) 
+        __root_LLRLR.set_right(RuleNodeUnknown())
+        __root_LLRLR.set_left(RuleNodeFalse())
 
     def validate_partners(self, asking_player, target_player, a_round):
         _result = self._root.validate(asking_player, target_player, a_round)
@@ -215,4 +215,4 @@ class PartnerRuleTree:
         elif _result == False:
             return "target is not my partner"
         else:
-            return "unknown"     
+            return "unknown"

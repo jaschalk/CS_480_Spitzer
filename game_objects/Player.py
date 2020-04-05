@@ -79,6 +79,9 @@ class Player:
     def get_cards_in_hand(self):
         return self.get_hand().get_cards_in_hand()
 
+    def get_hand_binary_representation(self):
+        return self._hand.get_binary_representation()
+
     def set_hand(self, a_hand):
         self._hand = a_hand
 
@@ -101,7 +104,7 @@ class Player:
 
     def play_card_to(self, a_trick):
         #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the inex returned to the trick.
-        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand TODO Need to reset the Hands valid play list when a new round starts, There's likely other stuff that needs to be done at that time too
+        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand
         self._hand.play_card_at_index(a_trick, card_to_play_index)
     
     def validate_card(self, a_card):

@@ -1,16 +1,13 @@
 from game_objects import RuleNodeTrue
 from game_objects import RuleNodeFalse
 from game_objects import RuleNodeUnknown
-class RuleNode: #this might be generic enough to handle the nodes for both trees?
-    _description = "" #is this needed/desired?
+class RuleNode:
+    _description = ""
     _left = None
     _right = None
     _evaluator_function = None
 
     def __init__(self, description, code_block):
-        # it might make more sense to have the left default to true and the right false
-        # then make setter methods to assign new left and right nodes
-        # that way we wouldn't have to build the tree from the leaves up
         self._description = description
         self._left = RuleNodeTrue.RuleNodeTrue()
         self._right = RuleNodeFalse.RuleNodeFalse()
@@ -28,13 +25,14 @@ class RuleNode: #this might be generic enough to handle the nodes for both trees
     def set_right(self, new_right):
         self._right = new_right
 
+# sample code to test if/how this is working
 if __name__ == "__main__":
     true_node = RuleNodeTrue.RuleNodeTrue()
     false_node = RuleNodeFalse.RuleNodeFalse()
     print(false_node)
     test_node = RuleNodeFalse.RuleNodeFalse() #Singleton behavior works as desired, 2 variables address the same memory location
     print(test_node)
-    
+
     def sample(*args):
         print("is first less than second?")
         return args[0] < args[1]
@@ -56,8 +54,7 @@ if __name__ == "__main__":
     first_node.set_left(second_node)
     second_node.set_left(third_node)
     print("First test: 1 & 2")
-    print(first_node.validate(1,2)) #since the "sample" function takes 2 parameters, then bundles those into a tuple which
-                                #must be passed into the validate method
+    print(first_node.validate(1,2))
     print("Second test: 3 & 2")
     print(first_node.validate(3,2))
     print("Third test: 9 & 8")

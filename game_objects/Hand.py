@@ -3,7 +3,7 @@ from game_objects import Trick
 import numpy as np
 
 class Hand:
-    
+
     _binary_representation = 0
     _valid_play_list = []
     _my_player = None

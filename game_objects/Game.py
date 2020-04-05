@@ -3,7 +3,7 @@ from game_objects.Round import Round
 from game_objects.Player import Player
 from game_objects.CardRuleTree import CardRuleTree
 from game_objects.CallRules import CallRules
-from game_objects.PartnerRuleTree import PartnerRuleTree 
+from game_objects.PartnerRuleTree import PartnerRuleTree
 from random import randint
 
 class Game:
@@ -53,10 +53,7 @@ class Game:
       while self.which_player_wins() == -1:
          self._round.set_initial_values()
          self.begin_round()
-#      self._round.update_player_score_history([score for score in self._score_list])
-#      print(self._round._player_score_history) #TODO This is doing strange things need to fix
       self._round.push_data_to_file()
-      
 
    def begin_round(self):
       self._deck.populate_deck()
@@ -164,7 +161,7 @@ class Game:
          for player_id in range(4):
             if(calling_ppl[player_id] == 1):
                calling_team.append(player_id)
-               
+
       for i in range(4):
          if i in calling_team:
             calling_team_round_points += self._players_list[i].get_round_points()

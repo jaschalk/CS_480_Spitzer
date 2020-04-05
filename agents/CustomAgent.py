@@ -133,8 +133,6 @@ class CustomAgent:
             
             # this doesn't need to be checked against a -1 return since it's starting with the all the valid values
             return get_index_of_first_card_in(reversed_binary_value, True)
-                
-        # TODO Need to remember to check if any card I want to play can actually be played
 
         #   is the winning player my partner? if yes then smear, that is play points to the trick
         if a_player.get_potential_partners_list()[current_winning_card.get_owning_player()] == 1:

@@ -7,44 +7,16 @@ from game_objects.Trick import Trick
 
 class Round:
 
-    #Might want to add a get game state method to the round for use in the agent. TODO
-    # TODO clean up unneeded class variables!
-#    _current_trick = None
-#    _parent_game = None
-#    _leading_player = None
-#    _winner_of_first_trick = None
-#    _players_list = [None, None, None, None]
-    #using numpy's arrays rather than standard python lists since this is the data that will be interfacing with the ML process
-    #also it's much easier to make 2D/3D arrays this way
-    _trick_history = np.zeros((4,8,32),dtype=np.int8)
-    _call_matrix = np.zeros((4,8),dtype=np.int8)
-    _player_point_history = np.zeros((4,8),dtype=np.int8)
-    __player_partners = np.zeros((4,4),dtype=np.int8) 
-    __player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64) 
-    __trick_point_history = np.zeros((4,8),dtype=np.int8) # __ because it shouldn't be needed anywhere other than this class
-    #the values in the file_out_data_instance dict are mutable so changes to the variables will be reflected here
-    __file_out_data_instance = {"trick_history":_trick_history,
-                     "trick_point_history":__trick_point_history, 
-                     "player_partners":__player_partners, 
-                     "call_matrix":_call_matrix,
-                     "player_point_history":_player_point_history,
-                     "player_partner_prediction_history":__player_partner_prediction_history} 
-#    __file_out_data = [] # This is updated every trick!
-    #^ This needs to be a class variable right now, not quite sure why.
-    # If it's converted to an object variable 
-    _file_out_name = "" # initalized to an empty string, as there should be no path to file out that doesn't set it
-#    _trick_count = 0
-#    _cards_played_binary = 0
-
     def __init__(self, a_game):
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
-        self._leading_player = a_game.get_leading_player() #this will need to be updated at the end of the round
-        self.__file_out_data =[]
+        self._leading_player = a_game.get_leading_player()
+        self.__file_out_data =[] # This is updated every trick!
         #^ This needs to not be reset between rounds, since it's tracking data between rounds! So it doesn't go in the set_initial_values_method
-        self._player_score_history = [] #TODO this needs to be updated when the round ends
+        self._player_score_history = []
         #^ This is a list to which the list of scores for each player at the end of each round will be appended
         # Not using numpy arrays here because the number of rounds/game is nondeterministic
+        # NOTE: The score history will be pushed to file at the end of every trick, but only updated on each round
         self.set_initial_values()
 
     def set_initial_values(self):
@@ -55,7 +27,7 @@ class Round:
         for i in range(4):
             self._call_matrix[i][0] = 1
         self._trick_winners_list = np.zeros((8),dtype=np.int8)
-        self.__player_partners = np.zeros((4,4),dtype=np.int8) # TODO This isn't being updated anywhere, can't really use the rules to make this
+        self.__player_partners = np.zeros((4,4),dtype=np.int8)
         # ^This is needed to provide the ML Agent a correct value to train the partner prediction against
         self.__player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64)
         #^ This tracks asking_players analyisis of the likelyhood of target player being their partner across each trick
@@ -63,20 +35,19 @@ class Round:
         #^ This tracks the change in points per player
         self._player_point_history = np.zeros((4,8),dtype=np.int8)
         #^ This tracks the point totals per player
-        
+
         self.__file_out_data_instance = {"trick_history":self._trick_history,
                      "trick_point_history":self.__trick_point_history,
-                     "player_partners":self.__player_partners,#TODO not updating?
+                     "player_partners":self.__player_partners,
                      "call_matrix":self._call_matrix,
                      "player_point_history":self._player_point_history,
                      "player_partner_prediction_history":self.__player_partner_prediction_history,
                      "player_score_history":self._player_score_history}
-                      # TODO figure out why this can only be accessed from the file with a -1 index
         self._trick_count = 0
         self._cards_played_binary = 0
 
     def get_player_binary_card_state(self, a_player_id):
-        #This method should return the binary card state of the cards the player 
+        #This method should return the binary card state of the cards the player
         #with the matching player id has played
         return self.get_players_list()[a_player_id].get_cards_played() #This is a binary number representing the cards a player has played
 
@@ -166,8 +137,6 @@ class Round:
         for i in range(len(self._players_list)):
             self._players_list[i].determine_potential_partners()
             self._player_point_history[i][self._trick_count] = self._players_list[i].get_round_points()
-            print(self._player_point_history)
-#        self.__player_partners[self._trick_count] = ? TODO
 
         self.update_player_partner_prediction_history()
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
@@ -185,18 +154,22 @@ class Round:
             for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
                 self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
 
+    def update_player_partners_history(self):
+        # Since this data is only used in training the ML Agent it can be retroactively updated to the correct values
+        self.__player_partners = self.__player_partner_prediction_history[-1]
+        for instance in self.__file_out_data:
+            instance["player_partners"] = self.__player_partners
+
     def on_round_end(self):
-#        self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
         self._parent_game.update_scores()
         self._file_out_name = str(datetime.datetime.now()).replace(":",";").replace(".",",") + "_game_id_" + str(self._parent_game.get_game_id()) + ".spzd" # files will the named with the date and time of creation and the game id number
         for i in range(4):
             self._players_list[i].set_initial_values()
-#        self.set_initial_values()
         self._leading_player = self._players_list[(self._leading_player.get_player_id() + 1)%4]
 
     def push_data_to_file(self): #need to think about this more to know what info will be needed by the learned agent TODO
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
-        print(self.__file_out_data[-1]["player_score_history"])
+        self.update_player_partners_history()
         if not os.path.isfile(self._file_out_name):
             with open(self._file_out_name, 'wb+') as data_file:
                 pickle.dump(self.__file_out_data, data_file)
