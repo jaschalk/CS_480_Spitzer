@@ -1,4 +1,5 @@
 import random
+from enums import *
 class CustomAgent:
 
     # Should be able to gauge the strength of a hand and act accordingly
@@ -38,26 +39,24 @@ class CustomAgent:
         callable_strengths = []
         for i in range(3):
             callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i])
-        
-        return 1 + callable_strengths.index(max(callable_strengths)) # I'm not sure how this will react to having no fail, I think it'll just call clubs? This should be very rare
+        return 1 + callable_strengths.index(max(callable_strengths))
         
 
     def make_call(self, a_player):
-        # This might be too conserative with making hard calls
         call_index = -1
-        self.gauge_hand_strength(a_player.get_hand()) #cutoffs ZSS 42K, ZS 28K, Z 9K, A >2500, FT >2300, else no call
+        self.gauge_hand_strength(a_player.get_hand())
         if self._total_strength > 42000:
-            call_index = 7 # should make these not "magic numbers"
+            call_index = Calls.zolo_s_s
         elif self._total_strength > 28000:
-            call_index = 6
+            call_index = Calls.zolo_s
         elif self._total_strength > 9000:
-            call_index = 5
-        elif self._total_strength < 2500 and a_player.get_valid_call_list()[4] == 1:
-            call_index = 4
-        elif self._total_strength < 2300 and sum(a_player.get_valid_call_list()[1:3]) > 0: # the second condition means this block is only entered if an ace is callable
+            call_index = Calls.zolo
+        elif self._total_strength < 2500 and a_player.get_valid_call_list()[Calls.first_trick] == 1:
+            call_index = Calls.first_trick
+        elif self._total_strength < 2300 and sum(a_player.get_valid_call_list()[Calls.ace_clubs:Calls.ace_hearts]) > 0: # the second condition means this block is only entered if an ace is callable
             call_index = self.find_best_callable_ace_suit(a_player)
         else:
-            call_index = 0
+            call_index = Calls.none
 
         self.__reset_default_strengths()
         return call_index

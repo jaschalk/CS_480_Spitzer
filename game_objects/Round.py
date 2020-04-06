@@ -3,6 +3,7 @@ import numpy as np
 import copy
 import os
 import datetime
+from enums import *
 from game_objects.Trick import Trick
 
 class Round:
@@ -24,8 +25,8 @@ class Round:
         self._trick_history = np.zeros((4,8,32),dtype=np.int8)
         self._call_matrix = np.zeros((4,8),dtype=np.int8)
         self._current_trick = Trick(self)
-        for i in range(4):
-            self._call_matrix[i][0] = 1
+        for player_index in range(4):
+            self._call_matrix[player_index][Calls.none] = 1
         self._trick_winners_list = np.zeros((8),dtype=np.int8)
         self.__player_partners = np.zeros((4,4),dtype=np.int8)
         # ^This is needed to provide the ML Agent a correct value to train the partner prediction against
