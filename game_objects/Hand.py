@@ -44,6 +44,8 @@ class Hand:
     def play_card_at_index(self, a_trick, a_card_index):
         #Tell the trick to accept the card specified by the agent.
         card_index_to_be_played = self._cards_in_hand[a_card_index].get_card_id()
+        if self._valid_play_list[card_index_to_be_played] == 0:
+            raise Exception("Attempting to play a card that can't be played")
         self._my_player._cards_played += 1<<(card_index_to_be_played)
         self._binary_representation -= 1<<(card_index_to_be_played)
         a_trick.accept(self._cards_in_hand.pop(a_card_index))

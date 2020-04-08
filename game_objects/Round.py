@@ -44,6 +44,7 @@ class Round:
                      "player_point_history":self._player_point_history,
                      "player_partner_prediction_history":self.__player_partner_prediction_history,
                      "player_score_history":self._player_score_history}
+                     # TODO make this store the cards in the players hands
         self._trick_count = 0
         self._cards_played_binary = 0
 
