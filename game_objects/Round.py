@@ -26,7 +26,7 @@ class Round:
         self._call_matrix = np.zeros((4,8),dtype=np.int8)
         self._current_trick = Trick(self)
         for player_index in range(4):
-            self._call_matrix[player_index][Calls.none] = 1
+            self._call_matrix[player_index][Calls.none.value] = 1
         self._trick_winners_list = np.zeros((8),dtype=np.int8)
         self.__player_partners = np.zeros((4,4),dtype=np.int8)
         # ^This is needed to provide the ML Agent a correct value to train the partner prediction against

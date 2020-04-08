@@ -46,17 +46,17 @@ class CustomAgent:
         call_index = -1
         self.gauge_hand_strength(a_player.get_hand())
         if self._total_strength > 42000:
-            call_index = Calls.zolo_s_s
+            call_index = Calls.zolo_s_s.value
         elif self._total_strength > 28000:
-            call_index = Calls.zolo_s
+            call_index = Calls.zolo_s.value
         elif self._total_strength > 9000:
-            call_index = Calls.zolo
-        elif self._total_strength < 2500 and a_player.get_valid_call_list()[Calls.first_trick] == 1:
-            call_index = Calls.first_trick
-        elif self._total_strength < 2300 and sum(a_player.get_valid_call_list()[Calls.ace_clubs:Calls.ace_hearts]) > 0: # the second condition means this block is only entered if an ace is callable
+            call_index = Calls.zolo.value
+        elif self._total_strength < 2500 and a_player.get_valid_call_list()[Calls.first_trick.value] == 1:
+            call_index = Calls.first_trick.value
+        elif self._total_strength < 2300 and sum(a_player.get_valid_call_list()[Calls.ace_clubs.value:Calls.ace_hearts.value]) > 0: # the second condition means this block is only entered if an ace is callable
             call_index = self.find_best_callable_ace_suit(a_player)
         else:
-            call_index = Calls.none
+            call_index = Calls.none.value
 
         self.__reset_default_strengths()
         return call_index

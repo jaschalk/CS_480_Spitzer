@@ -1,4 +1,7 @@
 from enum import Enum
+
+# I'm not sold on using this type of enum, it feels really bulky to address
+# i.e. Calls.none.value just feels like to many layers
 class Calls(Enum):
     """
     These enums 
@@ -53,35 +56,35 @@ class CardBinary(Enum):
     """
     These enums represent the binary number associated with each card
     """
-    queen_clubs = 1<<CardIds.queen_clubs
-    seven_diamonds = 1<<CardIds.seven_diamonds
-    queen_spades = 1<<CardIds.queen_spades
-    queen_hearts = 1<<CardIds.queen_hearts
-    queen_diamonds = 1<<CardIds.queen_diamonds
-    jack_clubs = 1<<CardIds.jack_clubs
-    jack_spades = 1<<CardIds.jack_spades
-    jack_hearts = 1<<CardIds.jack_hearts
-    jack_diamonds = 1<<CardIds.jack_diamonds
-    ace_diamonds = 1<<CardIds.ace_diamonds
-    ten_diamonds = 1<<CardIds.ten_diamonds
-    king_diamonds = 1<<CardIds.king_diamonds
-    nine_diamonds = 1<<CardIds.nine_diamonds
-    eight_diamonds = 1<<CardIds.eight_diamonds
-    ace_clubs = 1<<CardIds.ace_clubs
-    ten_clubs = 1<<CardIds.ten_clubs
-    king_clubs = 1<<CardIds.king_clubs
-    nine_clubs = 1<<CardIds.nine_clubs
-    eight_clubs = 1<<CardIds.eight_clubs
-    seven_clubs = 1<<CardIds.seven_clubs
-    ace_spades = 1<<CardIds.ace_spades
-    ten_spades = 1<<CardIds.ten_spades
-    king_spades = 1<<CardIds.king_spades
-    nine_spades = 1<<CardIds.nine_spades
-    eight_spades = 1<<CardIds.eight_spades
-    seven_spades = 1<<CardIds.seven_spades
-    ace_hearts = 1<<CardIds.ace_hearts
-    ten_hearts = 1<<CardIds.ten_hearts
-    king_hearts = 1<<CardIds.king_hearts
-    nine_hearts = 1<<CardIds.nine_hearts
-    eight_hearts = 1<<CardIds.eight_hearts
-    seven_hearts = 1<<CardIds.seven_hearts
+    queen_clubs = 1<<CardIds.queen_clubs.value
+    seven_diamonds = 1<<CardIds.seven_diamonds.value
+    queen_spades = 1<<CardIds.queen_spades.value
+    queen_hearts = 1<<CardIds.queen_hearts.value
+    queen_diamonds = 1<<CardIds.queen_diamonds.value
+    jack_clubs = 1<<CardIds.jack_clubs.value
+    jack_spades = 1<<CardIds.jack_spades.value
+    jack_hearts = 1<<CardIds.jack_hearts.value
+    jack_diamonds = 1<<CardIds.jack_diamonds.value
+    ace_diamonds = 1<<CardIds.ace_diamonds.value
+    ten_diamonds = 1<<CardIds.ten_diamonds.value
+    king_diamonds = 1<<CardIds.king_diamonds.value
+    nine_diamonds = 1<<CardIds.nine_diamonds.value
+    eight_diamonds = 1<<CardIds.eight_diamonds.value
+    ace_clubs = 1<<CardIds.ace_clubs.value
+    ten_clubs = 1<<CardIds.ten_clubs.value
+    king_clubs = 1<<CardIds.king_clubs.value
+    nine_clubs = 1<<CardIds.nine_clubs.value
+    eight_clubs = 1<<CardIds.eight_clubs.value
+    seven_clubs = 1<<CardIds.seven_clubs.value
+    ace_spades = 1<<CardIds.ace_spades.value
+    ten_spades = 1<<CardIds.ten_spades.value
+    king_spades = 1<<CardIds.king_spades.value
+    nine_spades = 1<<CardIds.nine_spades.value
+    eight_spades = 1<<CardIds.eight_spades.value
+    seven_spades = 1<<CardIds.seven_spades.value
+    ace_hearts = 1<<CardIds.ace_hearts.value
+    ten_hearts = 1<<CardIds.ten_hearts.value
+    king_hearts = 1<<CardIds.king_hearts.value
+    nine_hearts = 1<<CardIds.nine_hearts.value
+    eight_hearts = 1<<CardIds.eight_hearts.value
+    seven_hearts = 1<<CardIds.seven_hearts.value
