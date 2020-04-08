@@ -56,6 +56,7 @@ class DuelingDeepQNetwork(keras.Model):
         return A
 
 class ReplayBuffer():
+    #This is confisung to me. Might need some more explanation. AD
     # This class is used to hold onto action-state collections and the reward associated with that transition
     def __init__(self, max_size, input_shape):
         self.mem_size = max_size
@@ -95,6 +96,7 @@ class ReplayBuffer():
 
 class Agent():
     # This should be the actual agent that is making the decisions
+    #I think we should go through and discuss this in person so we know we both understand. AD
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
                     input_dims, epsilon_dec=1e-3, epsilon_min=1e-3,
                     mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128, # TODO The dims need to be changed
