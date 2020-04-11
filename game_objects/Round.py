@@ -21,6 +21,7 @@ class Round:
         self.set_initial_values()
 
     def set_initial_values(self):
+        # This method is called at the start of each round
         self._winner_of_first_trick = None
         self._trick_history = np.zeros((4,8,32),dtype=np.int8)
         self._call_matrix = np.zeros((4,8),dtype=np.int8)
@@ -28,6 +29,8 @@ class Round:
         for player_index in range(4):
             self._call_matrix[player_index][Calls.none.value] = 1
         self._trick_winners_list = np.zeros((8),dtype=np.int8)
+        self.__player_cards_in_hand_history = np.zeros((4,8,32), dtype=np.int8)
+        # ^This tracks which player had which cards in their hand for each trick in the round
         self.__player_partners = np.zeros((4,4),dtype=np.int8)
         # ^This is needed to provide the ML Agent a correct value to train the partner prediction against
         self.__player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64)
@@ -41,10 +44,10 @@ class Round:
                      "trick_point_history":self.__trick_point_history,
                      "player_partners":self.__player_partners,
                      "call_matrix":self._call_matrix,
+                     "player_cards_in_hand_history":self.__player_cards_in_hand_history,
                      "player_point_history":self._player_point_history,
                      "player_partner_prediction_history":self.__player_partner_prediction_history,
                      "player_score_history":self._player_score_history}
-                     # TODO make this store the cards in the players hands
         self._trick_count = 0
         self._cards_played_binary = 0
 
@@ -121,6 +124,11 @@ class Round:
     def clear_file_out_history(self):
         self.__file_out_data.clear()
 
+    def update_player_cards_in_hand_history_for_player(self, a_player):
+        cards_in_hand = a_player.get_cards_in_hand()
+        for card in cards_in_hand:
+            self.__player_cards_in_hand_history[a_player.get_player_id()][self._trick_count][card.get_card_id()] = 1
+
     def notify_players_of_played_card(self):
         cards_on_trick = self._current_trick.get_played_cards_list()
         players_already_played = [card.get_owning_player() for card in cards_on_trick if card is not None]
@@ -150,6 +158,9 @@ class Round:
         self._trick_count += 1
         if self._trick_count == 8:
             self.on_round_end()
+        else:
+            for player in self._players_list:
+                self.update_player_cards_in_hand_history_for_player(player)
 
     def update_player_score_history(self, scores_to_be_added):
         self._player_score_history.append(scores_to_be_added)

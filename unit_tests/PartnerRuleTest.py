@@ -22,7 +22,7 @@ class PartnerRuleTest(unittest.TestCase):
         for index in range(9,15):
             self.card_list.append(Card(index, "hearts"))
         del setup_results
-    
+
     def test_first_trick_called(self):
         for index in range(5):
             self.temp_player_list[0].accept(self.card_list[index]) #give the first player the first 5 trump cards (includes both queens)
@@ -53,7 +53,7 @@ class PartnerRuleTest(unittest.TestCase):
         self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0])
         self.assertEqual(self.temp_player_list[2].get_potential_partners_list(), [0,0,1,1])
         self.assertEqual(self.temp_player_list[3].get_potential_partners_list(), [0,0,1,1])
-        
+
     def test_ace_called(self):
         self.temp_player_list[0].accept(self.card_list[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
         self.temp_player_list[0].accept(self.card_list[2])
@@ -118,7 +118,7 @@ class PartnerRuleTest(unittest.TestCase):
         self.assertAlmostEqual(self.temp_player_list[3].get_potential_partners_list()[1], 1/2)
         self.assertAlmostEqual(self.temp_player_list[3].get_potential_partners_list()[2], 1/2)
         self.assertEqual(self.temp_player_list[3].get_potential_partners_list()[3], 1)
-        
+
     def test_no_call_no_queen_played(self):
         self.temp_player_list[0].accept(self.card_list[0])
         self.temp_player_list[0].accept(self.card_list[3])

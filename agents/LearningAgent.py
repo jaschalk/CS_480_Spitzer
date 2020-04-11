@@ -200,7 +200,12 @@ class Agent():
 
         normalized_player_score_list = [player.get_total_score()/120 for player in a_game.get_players_list()]
         game_state.append(tf.keras.backend.flatten(tf.constant(normalized_player_score_list)))
-        game_state = tf.keras.backend.flatten(tf.constant(game_state))
+        print(game_state)
+        # TODO game_state can't be flattened here? does it need to be?
+        test = tf.keras.backend.concatenate((game_state[0], game_state[1]), axis=-1)
+        print(test)
+        game_state = tf.convert_to_tensor(game_state, dtype=tf.float32)
+#        game_state = tf.keras.backend.flatten(tf.constant(game_state))
         # ^In theory game_state is now a 1228 element long tensor?
         print(game_state)
         

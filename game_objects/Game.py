@@ -59,6 +59,7 @@ class Game:
       self._deck.populate_deck()
       for player in self._players_list:
          self._deck.deal_cards_to(player)
+         self._round.update_player_cards_in_hand_history_for_player(player)
       self._round.begin_play()
 
    def get_players_list(self):

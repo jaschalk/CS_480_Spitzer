@@ -116,6 +116,8 @@ class RoundTest(unittest.TestCase):
                 self.assertGreater(self.test_round._get_file_out_data()[i]["player_partners"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["call_matrix"].all() == file_data[i]["call_matrix"].all())
                 self.assertGreater(self.test_round._get_file_out_data()[i]["call_matrix"].sum(), 0)
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_cards_in_hand_history"].all() == file_data[i]["player_cards_in_hand_history"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["player_cards_in_hand_history"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_point_history"].all() == file_data[i]["player_point_history"].all())
                 self.assertGreater(self.test_round._get_file_out_data()[i]["player_point_history"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_partner_prediction_history"].all() == file_data[i]["player_partner_prediction_history"].all())
