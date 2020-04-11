@@ -46,7 +46,7 @@ class PartnerRuleTest(unittest.TestCase):
         self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 6) #AS -- index = 20
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 7) #9D -- index 12 player 2 wins the trick
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 7) #KS -- index 22
-        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 7) #9S -- index 23
+        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #9S -- index 23
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,1,0,0])

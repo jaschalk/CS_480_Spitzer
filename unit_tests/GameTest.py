@@ -87,7 +87,7 @@ class GameTest(unittest.TestCase):
 
     def test_play_with_learning_agent(self):
         for player in self.temp_player_list:
-            player.set_controlling_agent(Agent(0.9, 0.9, 8, 0.99, 512, 1288, 1e-4, 1e-3, 250000, "network_test.h5", 512, 64, 500))
+            player.set_controlling_agent(Agent(0.9, 0.9, 8, 0.99, 512, (1288, ), 1e-4, 1e-3, 250000, "network_test.h5", 512, 64, 500))
         self.temp_game.play_game()
         self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
 

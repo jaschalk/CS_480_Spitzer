@@ -30,7 +30,7 @@ class HandTest(unittest.TestCase):
         self.test_hand.play_card_at_index(self.temp_trick, 0)
         self.assertEqual(len(self.test_hand.get_cards_in_hand()), start_hand_size - 1)
         self.test_hand.determine_valid_play_list()
-        self.assertEqual(len(self.test_hand.get_valid_play_list()), start_valid_list_size - 1)
+        self.assertEqual(len(self.test_hand.get_valid_play_list()), start_valid_list_size)
 
     def tearDown(self):
         self.test_hand.get_cards_in_hand().clear()

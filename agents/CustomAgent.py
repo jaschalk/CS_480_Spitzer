@@ -120,7 +120,7 @@ class CustomAgent:
         # if there is only one valid card to play, play that card
         if len(valid_indices) == 1:
             return valid_indices[0]
-            
+
         #If has a fail ace that can take the trick play that ace
         ace_index = can_play_a_card_in_id_list(aces_ids, winning_card_indecies)
         if ace_index != -1:

@@ -7,6 +7,7 @@ import glob2
 import pickle
 import random
 import numpy as np
+from enums import *
 from contextlib import ExitStack
 
 # what are we computing loss against?
@@ -206,6 +207,10 @@ class Agent():
         card_to_play_index = self.choose_action(game_state)
         # TODO makes sure this card is valid
         return card_to_play_index
+
+    def make_call(self, a_player):
+        #TODO Expanded this method
+        return Calls.none.value
 
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:

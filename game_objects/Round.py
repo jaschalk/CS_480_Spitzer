@@ -122,8 +122,11 @@ class Round:
         self.__file_out_data.clear()
 
     def notify_players_of_played_card(self):
+        cards_on_trick = self._current_trick.get_played_cards_list()
+        players_already_played = [card.get_owning_player() for card in cards_on_trick if card is not None]
         for player in self._players_list:
-            player.determine_valid_play_list()
+            if player.get_player_id() not in players_already_played:
+                player.determine_valid_play_list()
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #winning player is the player object here
         if self._winner_of_first_trick is None:
@@ -193,7 +196,7 @@ class Round:
 
     def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective for use in the ML agent
         a_game_state = {}
-        a_game_state["trick history"] = self._trick_history
+        a_game_state["trick_history"] = self._trick_history
         a_game_state["trick_point_history"] = self.__trick_point_history
         a_game_state["call_matrix"] = self._call_matrix
         a_game_state["current_trick"] = self._current_trick
