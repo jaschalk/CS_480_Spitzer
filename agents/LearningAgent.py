@@ -153,6 +153,7 @@ class Agent():
 
         return action
 
+    # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
         # NOTE: To make sure that a card is valid to play we can prefliter the cards in hand by the
         # valid play list
@@ -200,6 +201,7 @@ class Agent():
         game_state.append(tf.keras.backend.flatten(tf.constant(normalized_player_score_list)))
         game_state = tf.keras.backend.flatten(tf.constant(game_state))
         # ^In theory game_state is now a 1228 element long tensor?
+        print(game_state)
         
         card_to_play_index = self.choose_action(game_state)
         # TODO makes sure this card is valid

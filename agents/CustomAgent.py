@@ -31,16 +31,16 @@ class CustomAgent:
             elif card.get_card_suit() == "spades":
                 self._spades_strength *= self.__fail_strengths[card.get_card_rank() - 9]
             elif card.get_card_suit() == "hearts":
-                self._hearts_strength *= self.__fail_strengths[card.get_card_rank() - 9]     
+                self._hearts_strength *= self.__fail_strengths[card.get_card_rank() - 9]
         self._total_strength = self._trump_strength + self._clubs_strength + self._spades_strength + self._hearts_strength
-    
+
     def find_best_callable_ace_suit(self, a_player):
         fail_strengths =[self._clubs_strength, self._spades_strength, self._hearts_strength]
         callable_strengths = []
         for i in range(3):
             callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i])
         return 1 + callable_strengths.index(max(callable_strengths))
-        
+
 
     def make_call(self, a_player):
         call_index = -1
@@ -67,9 +67,9 @@ class CustomAgent:
                 return i
         raise Exception("Couldn't find an expected card in the hand. " + str([card.get_card_id() for card in a_card_list]) + " Was looking for: " + str(a_card_id))
 
-    
 
-    def play_card(self, a_player, a_game): 
+
+    def play_card(self, a_player, a_game):
         # This sub function will determine if any card in a given list of card ids is within a provided filter list, returns -1 if it is not
         def can_play_a_card_in_id_list(an_id_list, index_filter_list):
             for card_id in an_id_list:
@@ -117,6 +117,10 @@ class CustomAgent:
         reversed_binary_value = int(format(valid_binary_value, '#034b')[:2:-1], 2)
         #^ reversing the binary value so the weakest card can be picked out
 
+        # if there is only one valid card to play, play that card
+        if len(valid_indices) == 1:
+            return valid_indices[0]
+            
         #If has a fail ace that can take the trick play that ace
         ace_index = can_play_a_card_in_id_list(aces_ids, winning_card_indecies)
         if ace_index != -1:
@@ -129,7 +133,7 @@ class CustomAgent:
                 if valid_trump_value != 0:
                     return get_index_of_first_card_in(valid_trump_value)
                     # can just return here because it'll only be called if there is at least 1 valid trump card to play
-            
+
             # this doesn't need to be checked against a -1 return since it's starting with the all the valid values
             return get_index_of_first_card_in(reversed_binary_value, True)
 
@@ -164,12 +168,4 @@ class CustomAgent:
                         return card_unsorted_index
 
             # I cannot take the trick
-#            reversed_binary_value = int(format(valid_binary_value, '#034b')[:2:-1], 2)
             return get_index_of_first_card_in(reversed_binary_value, True)
-
-        #fall back on playing a card at random if some case was missed above
-        print("Custom agent is playing a random card")
-        if len(valid_indices) == 1:
-            return 0
-        temp = valid_indices[random.randint(0,len(valid_indices)-1)]
-        return temp

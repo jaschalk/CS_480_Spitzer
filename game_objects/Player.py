@@ -3,18 +3,6 @@ import numpy as np
 from agents import agent
 
 class Player:
-    
-    _trick_points = 0
-    _round_points = 0
-    _total_score = 0
-    _valid_call_list = [1, 0, 0, 0, 0, 1, 1, 1]
-    _potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
-    _hand = None
-    _is_leading = False
-    _player_id = None
-    _parent_game = None
-    _controlling_agent = None
-    _cards_played = 0
 
     def __init__(self, a_game, player_id, an_agent): 
         #initializes the hand object and sets the potential partners list to correct values.
@@ -25,7 +13,7 @@ class Player:
         self.set_initial_values()
 
     def set_initial_values(self):
-        self._potential_partners_list = [0, 0, 0, 0] 
+        self._potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
         self._potential_partners_list[self._player_id] = 1
         for index in range(4):
             if index != self._player_id:
@@ -93,6 +81,9 @@ class Player:
 
     def get_valid_play_list(self):
         return self.get_hand().get_valid_play_list()
+
+    def get_controlling_agent(self):
+        return self._controlling_agent
 
     def set_controlling_agent(self, an_agent):
         self._controlling_agent = an_agent

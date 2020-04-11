@@ -28,6 +28,8 @@ class PlayerTest(unittest.TestCase):
         current_round_points = self.temp_player_zero.get_round_points()
         for index in range(4):
             self.temp_player_list[index].accept(Card(index, "trump"))
+        for index in range(4): # NOTE With the new the new raise error behavior added to the hands play card at index
+                                # this had to become two loops so that valid play lists are set correctly
             self.temp_player_list[index].get_hand().play_card_at_index(self.current_trick, 0)
         #Tell the player to update the round points before we assert that it has changed.
         self.assertEqual(self.temp_player_zero.get_round_points(), 9)
