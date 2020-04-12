@@ -22,7 +22,7 @@ class RoundTest(unittest.TestCase):
         self.temp_trick = setup_results["current_trick"]
         self.temp_deck = setup_results["game_deck"]
         del setup_results
-        
+
     def test_init(self):
         self.assertIsInstance(self.test_round.get_current_trick(), Trick)
         trick_history = self.test_round.get_trick_history()
@@ -72,7 +72,7 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.test_round._get_potential_partners_history()[1][3][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[2][0][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[3][1][0], 1)
-        
+
     def test_on_round_finish(self):
         initial_player_points = []
         for player in self.temp_players:
@@ -98,7 +98,7 @@ class RoundTest(unittest.TestCase):
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         self.assertEqual(self.test_round.get_trick_winners_list()[1], 3) # the 4th player, zero indexed, should be the winner of the 2nd, zero indexed, trick
-    
+
     def test_file_out_behavior(self):
         for player in self.temp_players:
             player.set_controlling_agent(RandomAgent())

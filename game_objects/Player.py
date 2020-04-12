@@ -4,7 +4,7 @@ from agents import agent
 
 class Player:
 
-    def __init__(self, a_game, player_id, an_agent): 
+    def __init__(self, a_game, player_id, an_agent):
         #initializes the hand object and sets the potential partners list to correct values.
         self._player_id = player_id
         self._parent_game = a_game
@@ -27,7 +27,7 @@ class Player:
 
     def get_player_id(self):
         return self._player_id
-    
+
     def get_trick_points(self):
         return self._trick_points
 
@@ -45,7 +45,7 @@ class Player:
 
     def get_round_points(self):
         return self._round_points
-    
+
     def set_round_points(self, a_round_points):
         self._round_points = a_round_points
 
@@ -57,7 +57,7 @@ class Player:
 
     def get_potential_partners_list(self):
         return self._potential_partners_list
-    
+
     def set_potential_partners_list(self, a_potential_partners_list):
         self._potential_partners_list = a_potential_partners_list
 
@@ -97,7 +97,7 @@ class Player:
         #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the inex returned to the trick.
         card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand
         self._hand.play_card_at_index(a_trick, card_to_play_index)
-    
+
     def validate_card(self, a_card):
         #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
         return self._parent_game.validate_card(a_card, self)
@@ -118,7 +118,7 @@ class Player:
                 _results[index] = _result
             else:
                 _results[index] = "target is my partner"
-        
+
         for index in range(4):
             if _results[index] == "target is my partner":
                 self._potential_partners_list[index] = 1

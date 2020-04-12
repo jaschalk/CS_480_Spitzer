@@ -3,10 +3,10 @@ from random import shuffle
 
 class Deck:
     '''
-    The Deck class is used to hold onto, and distribute, the cards at the start of rounds.
+    The Deck class is used to hold onto and distribute the cards at the start of rounds.
     '''
     _card_list = []
-    
+
     def __init__(self):
         self.populate_deck()
 
@@ -26,11 +26,10 @@ class Deck:
 
     def deal_cards_to(self, targetPlayer):
         '''
-        This method will cause 8 cards to visit the targetPlayer. 
+        This method results in 8 cards being dealt from the deck out to each player.
         '''
         for i in range(8):
             self._card_list.pop().visit(targetPlayer)
 
     def get_card_list(self):
         return self._card_list
-            

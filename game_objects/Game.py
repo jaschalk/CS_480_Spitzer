@@ -5,6 +5,7 @@ from game_objects.CardRuleTree import CardRuleTree
 from game_objects.CallRules import CallRules
 from game_objects.PartnerRuleTree import PartnerRuleTree
 from random import randint
+from enums import CardIds
 
 class Game:
 
@@ -22,7 +23,7 @@ class Game:
                      [-15, -12, -9, 18, 27, 36],
                      [-42, -36, -24, -18, 36, 39],
                      [-42, -42, -39, -33, -27, 42]]
-
+=
    def __init__(self, a_game_id, list_of_agents): #initializes the deck, round, players list, and all three sets of rules.
       self._game_id = a_game_id
       self._players_list = [None, None, None, None]
@@ -138,19 +139,12 @@ class Game:
       call_made = find_call_made()
 
       # split off into a helper method?
-      sum = 0
-      total_played_of_each_card = [0 for i in range(32)]
-      for p in range(len(self._round.get_trick_history())):
-         for t in range(len(self._round.get_trick_history()[p])):
-            for c in range(len(self._round.get_trick_history()[p][t])):
-               sum += self._round.get_trick_history()[p][t][c]
-               total_played_of_each_card[c] += self._round.get_trick_history()[p][t][c]
       if(call_made == 0):
          for player_index in range(4):
             for trick_index in range(8):
-               if(self._round.get_trick_history()[player_index][trick_index][0] == 1): #If this player played the QC in any trick
+               if(self._round.get_trick_history()[player_index][trick_index][CardIds.queen_clubs.value] == 1): #If this player played the QC in any trick
                   played_queen_of_clubs = player_index
-               elif(self._round.get_trick_history()[player_index][trick_index][2] == 1):#If this player played the QS in any trick
+               elif(self._round.get_trick_history()[player_index][trick_index][CardIds.queen_spades.value] == 1):#If this player played the QS in any trick
                   played_queen_of_spades = player_index
          if(played_queen_of_clubs == played_queen_of_spades):
             calling_team = [played_queen_of_clubs]
@@ -185,7 +179,6 @@ class Game:
          else:
             point_value_index = -1
             raise Exception("Calling team round points didn't resolve to an index. " + str(calling_team_round_points) + "\r\n" + str([player.get_round_points() for player in self._players_list]))
-            #Should raise an error here...?
 
       for player_index in range(4):
          value_to_add = self._scoring_table[call_index][point_value_index]
@@ -196,12 +189,10 @@ class Game:
             if(value_to_add > 0):
                self._players_list[player_index].update_total_score(value_to_add)
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
-#               if call_made != 0:
-#                  print("Good call " + str(call_made))
+
          else:
             if(value_to_add < 0):
                self._players_list[player_index].update_total_score(abs(value_to_add))
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
-#               if call_made != 0:
-#                  print("Bad call " + str(call_made))
+
       self._round.update_player_score_history([self._players_list[player_index].get_total_score() for player_index in range(4)])

@@ -62,7 +62,6 @@ class ReplayBuffer():
     def __init__(self, max_size, input_shape):
         self.mem_size = max_size
         self.mem_cntr = 0
-        # 
         self.state_memory = np.zeros((self.mem_size, *input_shape),
                                         dtype=np.float32)
         self.new_state_memory = np.zeros((self.mem_size, *input_shape),
@@ -100,7 +99,7 @@ class Agent():
     #I think we should go through and discuss this in person so we know we both understand. AD
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
                     input_dims, epsilon_dec=1e-3, epsilon_min=1e-3,
-                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128, # TODO The dims need to be changed
+                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128,
                     fc2_dims=128, replace=500):
         # The action_space is the number of possible actions, for us I think this should be 8?
         self.action_space = [i for i in range(n_actions)]
@@ -119,7 +118,7 @@ class Agent():
         self.replace = replace
         # batch_size is the amount of games to be loaded into memory for training at a time
         self.batch_size = batch_size
-        # learn_step_counter is the number of training runs done so far TODO make sure this is correct
+        # learn_step_counter is the number of training runs done so far
         self.learn_step_counter = 0
         # memory is the buffer into which action-state transitions will be stored
         self.memory = ReplayBuffer(mem_size, input_dims)
