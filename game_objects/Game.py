@@ -23,7 +23,7 @@ class Game:
                      [-15, -12, -9, 18, 27, 36],
                      [-42, -36, -24, -18, 36, 39],
                      [-42, -42, -39, -33, -27, 42]]
-=
+
    def __init__(self, a_game_id, list_of_agents): #initializes the deck, round, players list, and all three sets of rules.
       self._game_id = a_game_id
       self._players_list = [None, None, None, None]

@@ -135,24 +135,6 @@ class Agent():
     def store_transition(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
 
-    def choose_action(self, observation):
-        if np.random.random() < self.epsilon:
-        # The agent should take a random action some % of the time to continue exploring
-            action = np.random.choice(self.action_space)
-        else:
-        # Here is where the agent looks across the set of advantages and selects the highest one
-            state = np.array([observation])
-            actions = self.q_eval.advantage(state)
-            # TODO Filter the actions based on the valid play list
-            # actions is expected to be 8 elements in size
-            # the valid play list is also 8 elements in size
-            # if we do an elementwise multiplication of each
-            # the result should be filtered?
-            # This is assuming that the action values are positive!
-            action = tf.math.argmax(actions, axis=1).numpy()[0]
-
-        return action
-
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
         # NOTE: To make sure that a card is valid to play we can prefliter the cards in hand by the
@@ -172,13 +154,13 @@ class Agent():
         game_state_for_player = current_round.get_game_state_for_player(a_player.get_player_id())
         game_state = []
         poorly_named_cards_in_hand_list = [0 for i in range(32)]
-        valid_indices_list = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != 0]
+        self._valid_indices_list = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != 0]
         cards_in_hand = a_player.get_cards_in_hand()
         #   get the id of the card at each valid index
         #   at that id set the value of poorly_named_cards_in_hand_list to 1
-        for index in valid_indices_list:
+        for index in self._valid_indices_list:
             poorly_named_cards_in_hand_list[cards_in_hand[index].get_card_id()] = 1
-        game_state.append(tf.keras.backend.flatten(tf.constant(poorly_named_cards_in_hand_list)))
+        game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(poorly_named_cards_in_hand_list)), dtype=tf.float32))
 
         current_trick = game_state_for_player["current_trick"]
         cards_played_to_trick = current_trick.get_played_cards_list()
@@ -186,31 +168,49 @@ class Agent():
         for card in cards_played_to_trick:
             if card is not None:
                 poorly_named_list_of_cards_played_to_trick[card.get_owning_player()][card.get_card_id()] = 1
-        game_state.append(tf.keras.backend.flatten(tf.constant(poorly_named_list_of_cards_played_to_trick)))
+        game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(poorly_named_list_of_cards_played_to_trick)), dtype=tf.float32))
 
-        game_state.append(tf.keras.backend.flatten(tf.constant(a_player.get_potential_partners_list())))
+        game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(a_player.get_potential_partners_list())), dtype=tf.float32))
 
-        game_state.append(tf.keras.backend.flatten(tf.constant(game_state_for_player["trick_history"])))
+        game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(game_state_for_player["trick_history"])), dtype=tf.float32))
 
-        game_state.append(tf.keras.backend.flatten(tf.constant(game_state_for_player["call_matrix"])))
+        game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(game_state_for_player["call_matrix"])), dtype=tf.float32))
 
         normalized_player_point_list = [player.get_round_points()/120 for player in a_game.get_players_list()]
-        game_state.append(tf.keras.backend.flatten(tf.constant(normalized_player_point_list)))
+        game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(normalized_player_point_list)), dtype=tf.float32))
 
         normalized_player_score_list = [player.get_total_score()/120 for player in a_game.get_players_list()]
-        game_state.append(tf.keras.backend.flatten(tf.constant(normalized_player_score_list)))
-        print(game_state)
-        # TODO game_state can't be flattened here? does it need to be?
-        test = tf.keras.backend.concatenate((game_state[0], game_state[1]), axis=-1)
-        print(test)
-        game_state = tf.convert_to_tensor(game_state, dtype=tf.float32)
-#        game_state = tf.keras.backend.flatten(tf.constant(game_state))
+        game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(normalized_player_score_list)), dtype=tf.float32))
+
+        temp = tf.keras.backend.concatenate((game_state[0], game_state[1]), axis=-1)
+        for i in range(2, len(game_state)):
+            temp = tf.keras.backend.concatenate((temp, game_state[i]), axis=-1)
+        game_state = temp
         # ^In theory game_state is now a 1228 element long tensor?
-        print(game_state)
         
         card_to_play_index = self.choose_action(game_state)
         # TODO makes sure this card is valid
+
         return card_to_play_index
+
+    def choose_action(self, observation):
+        if np.random.random() < self.epsilon:
+        # The agent should take a random action some % of the time to continue exploring
+            action = np.random.choice(self._valid_indices_list)
+        else:
+        # Here is where the agent looks across the set of advantages and selects the highest one
+            state = np.array([observation])
+            print(observation.shape)
+            actions = self.q_eval.advantage(observation)
+            print(actions)
+            # TODO Filter the actions based on the valid play list
+            # actions is expected to be 8 elements in size
+            # the valid play list is also 8 elements in size
+            # if we do an elementwise multiplication of each
+            # the result should be filtered?
+            # This is assuming that the action values are positive!
+            action = tf.math.argmax(actions, axis=1).numpy()[0]
+        return action
 
     def make_call(self, a_player):
         #TODO Expanded this method
@@ -268,17 +268,18 @@ class Agent():
         
 # Code spiking group file read
 if __name__ == "__main__":
-    training_data = glob2.glob("*.spzd") # creates a list of all files ending in .spzd
+    if false:
+        training_data = glob2.glob("*.spzd") # creates a list of all files ending in .spzd
 
-#    print(training_data)
-    file_count = len(training_data)
-    #random.shuffle(training_data)
-    testing_data = []
-    while len(training_data) > int(file_count*0.9): # randomize the list then move 10% of them to the testing data set
-        testing_data.append(training_data.pop())
-    with ExitStack() as stack: # setup an exitstack so multiple files can be safely opened at the same time.
-        files = [stack.enter_context(open(fname, 'rb')) for fname in training_data] # open all the files in the training_data list
-        file_data = pickle.load(files[0])
-        for data in file_data:
-            print(data["player_score_history"])
-        # from the last file in the list, get the data from the last trick played, from that get the player_partner_prediction_history, then get the last element of that
+    #    print(training_data)
+        file_count = len(training_data)
+        #random.shuffle(training_data)
+        testing_data = []
+        while len(training_data) > int(file_count*0.9): # randomize the list then move 10% of them to the testing data set
+            testing_data.append(training_data.pop())
+        with ExitStack() as stack: # setup an exitstack so multiple files can be safely opened at the same time.
+            files = [stack.enter_context(open(fname, 'rb')) for fname in training_data] # open all the files in the training_data list
+            file_data = pickle.load(files[0])
+            for data in file_data:
+                print(data["player_score_history"])
+            # from the last file in the list, get the data from the last trick played, from that get the player_partner_prediction_history, then get the last element of that
