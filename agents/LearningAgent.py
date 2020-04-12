@@ -181,11 +181,14 @@ class Agent():
 
         normalized_player_score_list = [player.get_total_score()/120 for player in a_game.get_players_list()]
         game_state.append(tf.cast(tf.keras.backend.flatten(tf.constant(normalized_player_score_list)), dtype=tf.float32))
-
         temp = tf.keras.backend.concatenate((game_state[0], game_state[1]), axis=-1)
         for i in range(2, len(game_state)):
             temp = tf.keras.backend.concatenate((temp, game_state[i]), axis=-1)
-        game_state = temp
+        # use tf.Variable(aTensor) to make a new variable tensor
+        game_state = tf.Variable(temp)
+        print(game_state)
+        # the new tensor created above can now be reshaped
+        game_state = tf.reshape(game_state, (1228,1))
         # ^In theory game_state is now a 1228 element long tensor?
         
         card_to_play_index = self.choose_action(game_state)
@@ -202,7 +205,7 @@ class Agent():
             state = np.array([observation])
             print(observation.shape)
             actions = self.q_eval.advantage(observation)
-            print(actions)
+            print(f"actions is : {actions}")
             # TODO Filter the actions based on the valid play list
             # actions is expected to be 8 elements in size
             # the valid play list is also 8 elements in size
@@ -268,7 +271,7 @@ class Agent():
         
 # Code spiking group file read
 if __name__ == "__main__":
-    if false:
+    if False:
         training_data = glob2.glob("*.spzd") # creates a list of all files ending in .spzd
 
     #    print(training_data)
