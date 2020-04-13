@@ -3,17 +3,13 @@ import tensorflow as tf
 from keras.optimizers import Adam
 from keras.models import load_model
 import keras
-import glob2
-import pickle
-import random
+import gym
 import numpy as np
-from enums import *
-from contextlib import ExitStack
+
 
 # what are we computing loss against?
 # seperate training from running
 # different networks for different tasks? playing cards, predicting partners, making calls
-# Qt+1(st,at)=Qt(st,at)+αt[rt+1+γmaxaQ(st+1,a)−Qt(st,at)]
 
 # TODO Modify to fit our needs. This is mostly copied in to serve as a framework that we can learn from.
 # Code transcribed from https://www.youtube.com/watch?v=CoePrz751lg
@@ -101,7 +97,6 @@ class Agent():
                     input_dims, epsilon_dec=1e-3, epsilon_min=1e-3,
                     mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128,
                     fc2_dims=128, replace=500):
-        tf.compat.v1.disable_eager_execution()
         # The action_space is the number of possible actions, for us I think this should be 8?
         self.action_space = [i for i in range(n_actions)]
         # gamma is the future discount factor, the more distant a reward is in the future the less influence it should have now
@@ -136,37 +131,17 @@ class Agent():
     def store_transition(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
 
-    # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
-    def play_card(self, a_player, a_game):
-        self._valid_indices_list =[index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != False]
-
-        current_round = a_game.get_round()
-        game_state = current_round.get_game_state_for_play_card(a_player.get_player_id())
-
-        # use tf.Variable(aTensor) to make a new variable tensor
-        game_state = tf.Variable(game_state)
-        print(f"pre shaping: {game_state}")
-        # the new tensor created above can now be reshaped
-#        game_state = tf.reshape(game_state, (1228,1))
-#        print(f"post shaping: {game_state}")
-        # ^In theory game_state is now a 1228 element long tensor?
-        
-        card_to_play_index = self.choose_action(game_state)
-        # TODO makes sure this card is valid
-
-        return card_to_play_index
-
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
         # The agent should take a random action some % of the time to continue exploring
-            action = np.random.choice(self._valid_indices_list)
+            action = np.random.choice(observation)
         else:
         # Here is where the agent looks across the set of advantages and selects the highest one
             state = np.array([observation])
             print(observation.shape)
-            actions = self.q_eval.advantage(observation)
-            print(f"actions is : {actions}")
-            print(f"actions argmax is {tf.math.argmax(actions, axis=1)}")
+            actions = self.q_eval.advantage(state)
+#            print(f"actions is : {actions}")
+#            print(f"actions argmax is {tf.math.argmax(actions, axis=1)}")
             # TODO Filter the actions based on the valid play list
             # actions is expected to be 8 elements in size
             # the valid play list is also 8 elements in size
@@ -175,12 +150,8 @@ class Agent():
             # This is assuming that the action values are positive!
             action = tf.math.argmax(actions, axis=1)
             action = tf.keras.backend.eval(action)
-            print(action)
+#            print(action)
         return action
-
-    def make_call(self, a_player):
-        #TODO Expanded this method
-        return Calls.none.value
 
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:
@@ -231,21 +202,29 @@ class Agent():
 #        self.q_eval = load_model(self.model_file)
 
 # ^NOTE: This is the end of the transcribed sample code, I'm sure there's was we can modify it to suit our needs.
-        
-# Code spiking group file read
-if __name__ == "__main__":
-    if False:
-        training_data = glob2.glob("*.spzd") # creates a list of all files ending in .spzd
 
-    #    print(training_data)
-        file_count = len(training_data)
-        #random.shuffle(training_data)
-        testing_data = []
-        while len(training_data) > int(file_count*0.9): # randomize the list then move 10% of them to the testing data set
-            testing_data.append(training_data.pop())
-        with ExitStack() as stack: # setup an exitstack so multiple files can be safely opened at the same time.
-            files = [stack.enter_context(open(fname, 'rb')) for fname in training_data] # open all the files in the training_data list
-            file_data = pickle.load(files[0])
-            for data in file_data:
-                print(data["player_score_history"])
-            # from the last file in the list, get the data from the last trick played, from that get the player_partner_prediction_history, then get the last element of that
+if __name__ == "__main__":
+    env = gym.make('LunarLander-v2')
+    n_games = 400
+    agent = Agent(gamma=0.99, epsilon=1, lr=1e-3, input_dims=[8], 
+            epsilon_dec=1e-3, epsilon_min=1e-3, batch_size=64,
+             fc1_dims=128, fc2_dims=128, replace=100, n_actions=4)
+
+    scores, eps_history = [], []
+    for i in range(n_games):
+        done = False
+        score = 0
+        observation = env.reset()
+        while not done:
+            action = agent.choose_action(observation)
+            observation_, reward, done, info = env.step(action)
+            score += reward
+            agent.store_transition(observation, action, reward, observation_, done)
+            observation = observation_
+            agent.learn()
+        eps_history.append(agent.epsilon)
+        scores.append(score)
+        avg_score = np.mean(scores[-100:])
+        print('episode ', i, 'score %.1f' % score, 'average score %.1f' % avg_score, 'epsilon %.2f' % agent.epsilon)
+
+    filename='keras_lunar_lander.png'

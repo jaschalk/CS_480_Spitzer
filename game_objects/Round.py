@@ -214,3 +214,51 @@ class Round:
         a_game_state["current_player"] = self._players_list[a_player_index] # used for getting info about the players cards from their hand
         return a_game_state
         #TODO Consider what else need to go in here
+
+    def get_game_state_for_play_card(self, a_player_index):
+        # We want:
+        #   The cards in hand, (This would be a 32 element list) DONE?
+        #   The cards played to the trick so far, (4*32 element list) Done?
+        #   The players potential partners list, (4 element list) Done?
+        #   The list of cards played so far, (4*8*32 elements) Done?
+        #   The call state of the game, (This would be a 4*8 element list)
+        #   The normalized list of points taken by each player (4 elements) NOTE: [pl_1_points, pl_2_points...]
+        #   The normailzed score list for each player (4 elements) NOTE: handle the same way as points
+        #   32 + 4*32  + 4 + 4*8*32 + 4*8 + 4 + 4 = 1228
+        game_state = np.zeros((1228,1), dtype=np.float32)
+        index_of_write = 0
+        for card in self._players_list[a_player_index].get_cards_in_hand(): # this isn't filtering by valid or not
+            game_state[card.get_card_id()] = 1
+        index_of_write = 32
+
+        for card in self._current_trick.get_played_cards_list():
+            if card is not None:
+                game_state[index_of_write + card.get_card_id()] = 1
+            index_of_write += 32
+
+        for i in range(4):
+            game_state[index_of_write] = self._players_list[a_player_index].get_potential_partners_list()[i]
+            index_of_write += 1
+
+        for player_num in range(4):
+            for trick_num in range(8):
+                for card_num in range(32):
+                    game_state[index_of_write] = self._trick_history[player_num][trick_num][card_num]
+                    index_of_write += 1
+
+        for player_num in range(4):
+            for call_num in range(8):
+                game_state[index_of_write] = self._call_matrix[player_num][call_num]
+                index_of_write += 1
+
+        normalized_player_point_list = [player.get_round_points()/120 for player in self._players_list]
+        for player_num in range(4):
+            game_state[index_of_write] = normalized_player_point_list[player_num]
+            index_of_write += 1
+
+        normalized_player_score_list = [player.get_total_score()/120 for player in self._players_list]
+        for player_num in range(4):
+            game_state[index_of_write] = normalized_player_score_list[player_num]
+            index_of_write += 1
+
+        return game_state
