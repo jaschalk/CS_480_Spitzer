@@ -7,8 +7,10 @@ mnist = tf.keras.datasets.mnist
 tf.keras.backend.set_floatx('float64')
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train, x_test = x_train / 255.0, x_test / 255.0
+print(x_test)
 
 #Create the model with the properties provided by the arguments:
+
 model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)), #the input layer is a vectorized 28x28 matrix
   tf.keras.layers.Dense(16, activation='relu'), #the next layer is 128 elements, Densely connected to the previous layer, and using relu activation
