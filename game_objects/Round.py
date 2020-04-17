@@ -6,12 +6,15 @@ import datetime
 from enums import *
 from game_objects.Trick import Trick
 
+#TODO: Check leading player is being updated properly.
+
 class Round:
 
     def __init__(self, a_game):
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
         self._leading_player = a_game.get_leading_player()
+        self._starting_player = self._leading_player
         self.__file_out_data =[] # This is updated every trick!
         #^ This needs to not be reset between rounds, since it's tracking data between rounds! So it doesn't go in the set_initial_values_method
         self._player_score_history = []
@@ -135,14 +138,15 @@ class Round:
         for player in self._players_list:
             if player.get_player_id() not in players_already_played:
                 player.determine_valid_play_list()
+        for card in self._current_trick.get_played_cards_list():
+            if card is not None:
+                self._cards_played_binary += 1<<card.get_card_id()
+                player_number = card.get_owning_player()
+                self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #winning player is the player object here
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
-        for card in card_list:
-            self._cards_played_binary += 1<<card.get_card_id()
-            player_number = card.get_owning_player()
-            self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
         self._trick_winners_list[self._trick_count] = winning_player.get_player_id()
         winning_player.set_trick_points(points_on_trick)
         winning_player.set_round_points(winning_player.get_round_points() + points_on_trick)
@@ -156,6 +160,7 @@ class Round:
         # by making a copy of the data we'll have a history of how it's changed with each trick
         # using deep copy here to actually duplicate the data and not just link to it's location in memory
         self._trick_count += 1
+        self._leading_player = winning_player
         if self._trick_count == 8:
             self.on_round_end()
         else:
@@ -181,7 +186,7 @@ class Round:
         self._file_out_name = str(datetime.datetime.now()).replace(":",";").replace(".",",") + "_game_id_" + str(self._parent_game.get_game_id()) + ".spzd" # files will the named with the date and time of creation and the game id number
         for i in range(4):
             self._players_list[i].set_initial_values()
-        self._leading_player = self._players_list[(self._leading_player.get_player_id() + 1)%4]
+        self._starting_player = self._players_list[(self._starting_player.get_player_id() + 1)%4]
 
     def push_data_to_file(self): #need to think about this more to know what info will be needed by the learned agent TODO
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
@@ -202,7 +207,8 @@ class Round:
             if sum(self._call_matrix[i][1:]) != 0:
                 break
         while self._leading_player.does_play_continue():
-            for player in self._players_list:
+            play_order_list = [self._players_list[(index+self._leading_player.get_player_id())%4] for index in range(len(self._players_list))]
+            for player in play_order_list:
                 player.play_card_to(self._current_trick)
 
     def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective for use in the ML agent
@@ -225,40 +231,40 @@ class Round:
         #   The normalized list of points taken by each player (4 elements) NOTE: [pl_1_points, pl_2_points...]
         #   The normailzed score list for each player (4 elements) NOTE: handle the same way as points
         #   32 + 4*32  + 4 + 4*8*32 + 4*8 + 4 + 4 = 1228
-        game_state = np.zeros((1228,1), dtype=np.float32)
+        game_state = np.zeros((1, 1228), dtype=np.float32)
         index_of_write = 0
         for card in self._players_list[a_player_index].get_cards_in_hand(): # this isn't filtering by valid or not
-            game_state[card.get_card_id()] = 1
+            game_state[0][card.get_card_id()] = 1
         index_of_write = 32
 
         for card in self._current_trick.get_played_cards_list():
             if card is not None:
-                game_state[index_of_write + card.get_card_id()] = 1
+                game_state[0][index_of_write + card.get_card_id()] = 1
             index_of_write += 32
 
         for i in range(4):
-            game_state[index_of_write] = self._players_list[a_player_index].get_potential_partners_list()[i]
+            game_state[0][index_of_write] = self._players_list[a_player_index].get_potential_partners_list()[i]
             index_of_write += 1
 
         for player_num in range(4):
             for trick_num in range(8):
                 for card_num in range(32):
-                    game_state[index_of_write] = self._trick_history[player_num][trick_num][card_num]
+                    game_state[0][index_of_write] = self._trick_history[player_num][trick_num][card_num]
                     index_of_write += 1
 
         for player_num in range(4):
             for call_num in range(8):
-                game_state[index_of_write] = self._call_matrix[player_num][call_num]
+                game_state[0][index_of_write] = self._call_matrix[player_num][call_num]
                 index_of_write += 1
 
         normalized_player_point_list = [player.get_round_points()/120 for player in self._players_list]
         for player_num in range(4):
-            game_state[index_of_write] = normalized_player_point_list[player_num]
+            game_state[0][index_of_write] = normalized_player_point_list[player_num]
             index_of_write += 1
 
         normalized_player_score_list = [player.get_total_score()/120 for player in self._players_list]
         for player_num in range(4):
-            game_state[index_of_write] = normalized_player_score_list[player_num]
+            game_state[0][index_of_write] = normalized_player_score_list[player_num]
             index_of_write += 1
 
         return game_state

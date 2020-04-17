@@ -40,6 +40,8 @@ class Hand:
 
     def play_card_at_index(self, a_trick, a_card_index):
         #Tell the trick to accept the card specified by the agent.
+        print(f"Card index to be played: {a_card_index}")
+        print(f"Length of cards in hand list: {len(self._cards_in_hand)}")
         card_to_be_played_id = self._cards_in_hand[a_card_index].get_card_id()
 
         # TODO This check is causing tests to fail, figure out why!

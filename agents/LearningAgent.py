@@ -6,6 +6,7 @@ import keras
 import glob2
 import pickle
 import random
+import copy
 import numpy as np
 from enums import *
 from contextlib import ExitStack
@@ -49,6 +50,7 @@ class DuelingDeepQNetwork(keras.Model):
         return Q
 
     def advantage(self, state):
+        print(f"State type is: {type(state)}")
         x = self.dense1(state)
         x = self.dense2(x)
         A = self.A(x)
@@ -57,15 +59,13 @@ class DuelingDeepQNetwork(keras.Model):
         return A
 
 class ReplayBuffer():
-    #This is confisung to me. Might need some more explanation. AD
     # This class is used to hold onto action-state collections and the reward associated with that transition
     def __init__(self, max_size, input_shape):
         self.mem_size = max_size
         self.mem_cntr = 0
         self.state_memory = np.zeros((self.mem_size, *input_shape),
                                         dtype=np.float32)
-        self.new_state_memory = np.zeros((self.mem_size, *input_shape),
-                                        dtype=np.float32)
+        self.new_state_memory = np.zeros((self.mem_size, *input_shape), dtype=np.float32)
         self.action_memory = np.zeros(self.mem_size, dtype=np.int32)
         self.reward_memory = np.zeros(self.mem_size, dtype=np.float32)
         self.terminal_memory = np.zeros(self.mem_size, dtype=np.bool)
@@ -96,11 +96,10 @@ class ReplayBuffer():
 
 class Agent():
     # This should be the actual agent that is making the decisions
-    #I think we should go through and discuss this in person so we know we both understand. AD
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
                     input_dims, epsilon_dec=1e-3, epsilon_min=1e-3,
                     mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128,
-                    fc2_dims=128, replace=500):
+                    fc2_dims=128, replace=100):
         tf.compat.v1.disable_eager_execution()
         # The action_space is the number of possible actions, for us I think this should be 8?
         self.action_space = [i for i in range(n_actions)]
@@ -142,16 +141,16 @@ class Agent():
 
         current_round = a_game.get_round()
         game_state = current_round.get_game_state_for_play_card(a_player.get_player_id())
-
+        copied_state = copy.deepcopy(game_state)
         # use tf.Variable(aTensor) to make a new variable tensor
-        game_state = tf.Variable(game_state)
-        print(f"pre shaping: {game_state}")
+        copied_state = tf.Variable(copied_state)
+        print(f"pre shaping: {copied_state}")
         # the new tensor created above can now be reshaped
 #        game_state = tf.reshape(game_state, (1228,1))
 #        print(f"post shaping: {game_state}")
         # ^In theory game_state is now a 1228 element long tensor?
         
-        card_to_play_index = self.choose_action(game_state)
+        card_to_play_index = self.choose_action(copied_state)
         # TODO makes sure this card is valid
 
         return card_to_play_index
@@ -164,6 +163,7 @@ class Agent():
         # Here is where the agent looks across the set of advantages and selects the highest one
             state = np.array([observation])
             print(observation.shape)
+            print(f"Observation type is: {type(observation)}")
             actions = self.q_eval.advantage(observation)
             print(f"actions is : {actions}")
             print(f"actions argmax is {tf.math.argmax(actions, axis=1)}")

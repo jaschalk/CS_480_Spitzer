@@ -87,10 +87,10 @@ class GameTest(unittest.TestCase):
 
     def test_play_with_learning_agent(self):
         for player in self.temp_player_list:
-            player.set_controlling_agent(Agent(lr=0.9, gamma=0.9, n_actions=8, epsilon=0, batch_size=512,
-                                                input_dims=(1288, 1), epsilon_dec=1e-4, epsilon_min=1e-3,
-                                                mem_size=250000, fname="network_test.h5", fc1_dims=1228, 
-                                                fc2_dims=64, replace=500))
+            player.set_controlling_agent(Agent(lr=0.001, gamma=0.9, n_actions=8, epsilon=0, batch_size=64,
+                                                input_dims=[1228], epsilon_dec=1e-4, epsilon_min=1e-3,
+                                                mem_size=100000, fname="network_test.h5", fc1_dims=128, 
+                                                fc2_dims=128, replace=100))
         self.temp_game.play_game()
         self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
 
