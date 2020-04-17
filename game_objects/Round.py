@@ -147,14 +147,14 @@ class Round:
         winning_player.set_trick_points(points_on_trick)
         winning_player.set_round_points(winning_player.get_round_points() + points_on_trick)
         self.__trick_point_history[winning_player.get_player_id()][self._trick_count] = points_on_trick
-        for i in range(len(self._players_list)):
-            self._players_list[i].determine_potential_partners()
-            self._player_point_history[i][self._trick_count] = self._players_list[i].get_round_points()
         for card in self._current_trick.get_played_cards_list():
             if card is not None:
                 self._cards_played_binary += 1<<card.get_card_id()
                 player_number = card.get_owning_player()
                 self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
+        for i in range(len(self._players_list)):
+            self._players_list[i].determine_potential_partners()
+            self._player_point_history[i][self._trick_count] = self._players_list[i].get_round_points()
         self.update_player_partner_prediction_history()
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
         # by making a copy of the data we'll have a history of how it's changed with each trick
@@ -207,9 +207,12 @@ class Round:
             if sum(self._call_matrix[i][1:]) != 0:
                 break
         while self._leading_player.does_play_continue():
-            play_order_list = [self._players_list[(index+self._leading_player.get_player_id())%4] for index in range(len(self._players_list))]
-            for player in play_order_list:
-                player.play_card_to(self._current_trick)
+            self.play_trick()
+
+    def play_trick(self):
+        play_order_list = [self._players_list[(index+self._leading_player.get_player_id())%4] for index in range(len(self._players_list))]
+        for player in play_order_list:
+            player.play_card_to(self._current_trick)
 
     def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective for use in the ML agent
         a_game_state = {}

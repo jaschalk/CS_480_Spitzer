@@ -1,6 +1,6 @@
 from game_objects.Hand import Hand
 import numpy as np
-from agents import agent
+#from agents import agent
 
 class Player:
 

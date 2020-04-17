@@ -100,7 +100,7 @@ class Agent():
                     input_dims, epsilon_dec=1e-3, epsilon_min=1e-3,
                     mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128,
                     fc2_dims=128, replace=100):
-        tf.compat.v1.disable_eager_execution()
+        self.score = 0
         # The action_space is the number of possible actions, for us I think this should be 8?
         self.action_space = [i for i in range(n_actions)]
         # gamma is the future discount factor, the more distant a reward is in the future the less influence it should have now
@@ -137,23 +137,19 @@ class Agent():
 
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
-        self._valid_indices_list =[index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != False]
 
-        current_round = a_game.get_round()
-        game_state = current_round.get_game_state_for_play_card(a_player.get_player_id())
-        copied_state = copy.deepcopy(game_state)
-        # use tf.Variable(aTensor) to make a new variable tensor
-        copied_state = tf.Variable(copied_state)
-        print(f"pre shaping: {copied_state}")
-        # the new tensor created above can now be reshaped
-#        game_state = tf.reshape(game_state, (1228,1))
-#        print(f"post shaping: {game_state}")
-        # ^In theory game_state is now a 1228 element long tensor?
-        
-        card_to_play_index = self.choose_action(copied_state)
+        observation = a_game.get_game_state()
+        action = self.choose_action(observation)
+        observation_, reward, done, info = a_game.get_player.handle_action(action) #Currently shooting for the end of every trick.
+        #self.score += reward
+        self.store_transition(observation, action, reward, observation_, done) #This stores the result observation from the action. We aren't doing this yet either.
+        observation = observation_ #The game's observation is reset to the observation after a specific action has been made and the env has been stepped.
+        self.learn() #Updates the weights of the network?
+
+        self._valid_indices_list =[index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != False]
         # TODO makes sure this card is valid
 
-        return card_to_play_index
+        return action
 
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
@@ -233,19 +229,3 @@ class Agent():
 # ^NOTE: This is the end of the transcribed sample code, I'm sure there's was we can modify it to suit our needs.
         
 # Code spiking group file read
-if __name__ == "__main__":
-    if False:
-        training_data = glob2.glob("*.spzd") # creates a list of all files ending in .spzd
-
-    #    print(training_data)
-        file_count = len(training_data)
-        #random.shuffle(training_data)
-        testing_data = []
-        while len(training_data) > int(file_count*0.9): # randomize the list then move 10% of them to the testing data set
-            testing_data.append(training_data.pop())
-        with ExitStack() as stack: # setup an exitstack so multiple files can be safely opened at the same time.
-            files = [stack.enter_context(open(fname, 'rb')) for fname in training_data] # open all the files in the training_data list
-            file_data = pickle.load(files[0])
-            for data in file_data:
-                print(data["player_score_history"])
-            # from the last file in the list, get the data from the last trick played, from that get the player_partner_prediction_history, then get the last element of that
