@@ -138,11 +138,7 @@ class Round:
         for player in self._players_list:
             if player.get_player_id() not in players_already_played:
                 player.determine_valid_play_list()
-        for card in self._current_trick.get_played_cards_list():
-            if card is not None:
-                self._cards_played_binary += 1<<card.get_card_id()
-                player_number = card.get_owning_player()
-                self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
+
 
     def on_trick_end(self, winning_player, points_on_trick, card_list): #winning player is the player object here
         if self._winner_of_first_trick is None:
@@ -154,7 +150,11 @@ class Round:
         for i in range(len(self._players_list)):
             self._players_list[i].determine_potential_partners()
             self._player_point_history[i][self._trick_count] = self._players_list[i].get_round_points()
-
+        for card in self._current_trick.get_played_cards_list():
+            if card is not None:
+                self._cards_played_binary += 1<<card.get_card_id()
+                player_number = card.get_owning_player()
+                self._trick_history[player_number][self._trick_count][card.get_card_id()] = 1
         self.update_player_partner_prediction_history()
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
         # by making a copy of the data we'll have a history of how it's changed with each trick
