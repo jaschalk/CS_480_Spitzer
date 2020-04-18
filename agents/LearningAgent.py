@@ -138,7 +138,7 @@ class Agent():
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
 
-        observation = a_game.get_game_state()
+        observation = a_game.get_game_state_for_player(a_player.get_player_id())
         action = self.choose_action(observation)
         observation_, reward, done, info = a_game.get_player.handle_action(action) #Currently shooting for the end of every trick.
         #self.score += reward
