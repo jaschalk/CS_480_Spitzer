@@ -86,6 +86,7 @@ class GameTest(unittest.TestCase):
             self.test_play_with_custom_agent()
 
     def test_play_with_learning_agent(self):
+        
         self.temp_player_list[0].set_controlling_agent(Agent(lr=0.001, gamma=0.9, n_actions=8, epsilon=0, batch_size=64,
                                                 input_dims=[1228], epsilon_dec=1e-4, epsilon_min=1e-3,
                                                 mem_size=100000, fname="network_test.h5", fc1_dims=128, 
