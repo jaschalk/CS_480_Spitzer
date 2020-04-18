@@ -84,8 +84,8 @@ class Game:
    def clean_up_round_file_data(self):
       self._round.clear_file_out_history()
 
-   def get_game_state(self):
-      return self._round.get_game_state_for_play_card()
+   def get_game_state(self, a_player_index):
+      return self._round.get_game_state_for_play_card(a_player_index)
 
    def which_player_wins(self):
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.

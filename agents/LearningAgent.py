@@ -51,6 +51,7 @@ class DuelingDeepQNetwork(keras.Model):
 
     def advantage(self, state):
         print(f"State type is: {type(state)}")
+#        test = tf.convert_to_tensor(state)
         x = self.dense1(state)
         x = self.dense2(x)
         A = self.A(x)
@@ -138,7 +139,7 @@ class Agent():
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
 
-        observation = a_game.get_game_state()
+        observation = a_game.get_game_state(a_player.get_player_id())
         action = self.choose_action(observation)
         observation_, reward, done, info = a_game.get_player.handle_action(action) #Currently shooting for the end of every trick.
         #self.score += reward
@@ -157,10 +158,11 @@ class Agent():
             action = np.random.choice(self._valid_indices_list)
         else:
         # Here is where the agent looks across the set of advantages and selects the highest one
-            state = np.array([observation])
+#            state = np.array([observation])
+            state = tf.convert_to_tensor(observation)
             print(observation.shape)
             print(f"Observation type is: {type(observation)}")
-            actions = self.q_eval.advantage(observation)
+            actions = self.q_eval.advantage(state)
             print(f"actions is : {actions}")
             print(f"actions argmax is {tf.math.argmax(actions, axis=1)}")
             # TODO Filter the actions based on the valid play list
@@ -169,13 +171,17 @@ class Agent():
             # if we do an elementwise multiplication of each
             # the result should be filtered?
             # This is assuming that the action values are positive!
-            action = tf.math.argmax(actions, axis=1)
+#            tf.compat.v1.disable_eager_execution()
+            action = tf.math.argmax(actions, axis=-1)
+#            tf.executing_eagerly()
+#            test = tf.constant(action)
+#            print(f"value of test is {tf.keras.backend.get_value(test)}")
+            print(action)
             action = tf.keras.backend.eval(action)
             print(action)
         return action
 
-    def make_call(self, a_player):
-        #TODO Expanded this method
+    def make_call(self, a_player):#TODO Expanded this method
         return Calls.none.value
 
     def learn(self):
