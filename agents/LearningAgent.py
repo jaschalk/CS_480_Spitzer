@@ -26,6 +26,7 @@ class DuelingDeepQNetwork(keras.Model):
     # ^This is creating a custom model that will have the dueling deep Q behavior built into it
     def __init__(self, n_actions, fc1_dims, fc2_dims):
         super(DuelingDeepQNetwork, self).__init__()
+        self.output_names = ["loss"]
         # ^Do the keras.Model init
         self.dense1 = keras.layers.Dense(fc1_dims, activation="relu")
         # ^Add a first densely connected layer, I think this is the input layer, though it might actually not be
@@ -60,6 +61,17 @@ class DuelingDeepQNetwork(keras.Model):
         # here A is collection of advantages gained through each action-state transition
         # I've referenced A as the action layer elsewhere, that's slightly inacurate I think
         return A
+
+    def compute_output_shape(self, input_shape):
+        #Within keras.engine.base_layer, the following behavior was observed:
+
+        #Computes the output shape given an input.
+        #Input = Shape tuple (tuple of integers)
+                #or list of shape tuples (one per output tensor of the layer).
+                #Shape tuples can include None for free dimensions,
+                #instead of an integer.
+        #Output = An output shape tuple.
+        return input_shape
 
 class ReplayBuffer():
     # This class is used to hold onto action-state collections and the reward associated with that transition
@@ -199,9 +211,12 @@ class Agent():
         states = tf.convert_to_tensor(states)
         q_pred = self.q_eval(states)
         # This gets the value of the max future action
-        q_next = tf.math.reduce_max(self.q_next(states_), axis=1, keepdims=True).numpy()
+        states_ = tf.convert_to_tensor(states_)
+        q_next = tf.math.reduce_max(self.q_next(states_), axis=1, keepdims=True)
+        q_next = keras.backend.eval(q_next)
         # need to copy the prediction network because of the way keras handles calculating loss
         # https://youtu.be/CoePrz751lg?t=1698
+        q_pred = keras.backend.eval(q_pred)
         q_target = np.copy(q_pred)
         # NOTE: I don't like the naming here since there's a target network in use that's called next,
         # then we get this copied network that's called target. This seems confusing.
@@ -215,6 +230,7 @@ class Agent():
             # https://youtu.be/CoePrz751lg?t=1819
             q_target[index, actions[index]] = rewards[index] + self.gamma*q_next[index]
         # TODO: Not really sure what this is doing
+        print("hi")
         self.q_eval.train_on_batch(states, q_target)
         # decrement the epsilon value, make plays less randomly as tranining progresses
         self.epsilon = self.epsilon - self.epsilon_dec if self.epsilon > \
