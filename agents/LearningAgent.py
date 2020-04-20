@@ -1,5 +1,8 @@
 import random
 import tensorflow as tf
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.compat.v1.Session(config=config)
 from keras.optimizers import Adam
 from keras.models import load_model
 import keras
@@ -176,10 +179,9 @@ class Agent():
             action = tf.math.argmax(actions, axis=-1)
 #            tf.executing_eagerly()
 #            test = tf.constant(action)
-#            print(f"value of test is {tf.keras.backend.get_value(test)}")
-            print(action)
-            action = tf.keras.backend.eval(action)
-            print(action)
+            print(f"action is {action}")
+            action = keras.backend.eval(action)
+            print(f"action post eval: {action}")
         return action
 
     def make_call(self, a_player):#TODO Expanded this method
