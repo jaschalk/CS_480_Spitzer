@@ -9,15 +9,6 @@ from enums import CardIds
 
 class Game:
 
-   _game_id = 0
-   _deck = None
-   _round = None
-   _players_list = [None, None, None, None]
-   _leading_player = None
-   _card_rules = None
-   _partner_rules = None
-   _call_rules = None
-   _score_list = [0, 0, 0, 0]
    _scoring_table = [["impossible", -9, -6, 3, 6, 9],
                      ["impossible", -9, -6, 9, 12, 15],
                      [-15, -12, -9, 18, 27, 36],

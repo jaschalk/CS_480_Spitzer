@@ -1,17 +1,13 @@
-from game_objects import RuleNodeTrue
-from game_objects import RuleNodeFalse
-from game_objects import RuleNodeUnknown
+from game_objects.RuleNodeTrue import RuleNodeTrue
+from game_objects.RuleNodeFalse import RuleNodeFalse
+from game_objects.RuleNodeUnknown import RuleNodeUnknown
 class RuleNode:
-    _description = ""
-    _left = None
-    _right = None
-    _evaluator_function = None
 
-    def __init__(self, description, code_block):
+    def __init__(self, description, a_boolean_return_function):
         self._description = description
-        self._left = RuleNodeTrue.RuleNodeTrue()
-        self._right = RuleNodeFalse.RuleNodeFalse()
-        self._evaluator_function = code_block #this should always be a function that returns True/False
+        self._left = RuleNodeTrue()
+        self._right = RuleNodeFalse()
+        self._evaluator_function = a_boolean_return_function
 
     def validate(self, *args):
         if self._evaluator_function(*args):
@@ -25,12 +21,12 @@ class RuleNode:
     def set_right(self, new_right):
         self._right = new_right
 
-# sample code to test if/how this is working
+# code spike to test if/how this is working
 if __name__ == "__main__":
-    true_node = RuleNodeTrue.RuleNodeTrue()
-    false_node = RuleNodeFalse.RuleNodeFalse()
+    true_node = RuleNodeTrue()
+    false_node = RuleNodeFalse()
     print(false_node)
-    test_node = RuleNodeFalse.RuleNodeFalse() #Singleton behavior works as desired, 2 variables address the same memory location
+    test_node = RuleNodeFalse() #Singleton behavior works as desired, 2 variables address the same memory location
     print(test_node)
 
     def sample(*args):
