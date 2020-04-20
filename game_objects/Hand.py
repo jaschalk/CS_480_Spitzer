@@ -3,14 +3,12 @@ from game_objects import Trick
 import numpy as np
 
 class Hand:
-    
-    _cards_in_hand = []
-    _binary_representation = 0
-    _valid_play_list = []
-    _my_player = None
 
     def __init__(self, a_player):
         self._my_player = a_player
+        self.set_initial_values()
+
+    def set_initial_values(self):
         self._cards_in_hand = []
         self._valid_play_list = [1, 1, 1, 1, 1, 1, 1, 1]
         self._binary_representation = 0
@@ -30,24 +28,21 @@ class Hand:
     def accept(self, a_card):
         self._cards_in_hand.append(a_card)
         card_id = a_card.get_card_id()
-        if card_id == 0:
-            print("Player " + str(self._my_player.get_player_id()) + " has the queen of clubs")
-        if card_id == 2:
-            print("Player " + str(self._my_player.get_player_id()) + " has the queen of spades")
         self._binary_representation += 1<<card_id
 
     def determine_valid_play_list(self):
         #Asks the player to use its validate card method on every card in the hand and set the return value to the valid play list.
-        #self._valid_play_list = list(map(self._my_player.validate_card, self._cards_in_hand))
-        self._valid_play_list.clear()
+        self._valid_play_list = [0 for i in range(8)]
         for index in range(len(self._cards_in_hand)):
-            self._valid_play_list.append(self._my_player.validate_card(self._cards_in_hand[index]))
+            self._valid_play_list[index] = self._my_player.validate_card(self._cards_in_hand[index])
 
     def play_card_at_index(self, a_trick, a_card_index):
         #Tell the trick to accept the card specified by the agent.
-        card_index_to_be_played = self._cards_in_hand[a_card_index].get_card_id()
-        self._my_player._cards_played += 1<<(card_index_to_be_played)
-        self._binary_representation -= 1<<(card_index_to_be_played)
+        card_to_be_played_id = self._cards_in_hand[a_card_index].get_card_id()
+        if self._valid_play_list[a_card_index] == False:
+            raise Exception("Attempting to play a card that can't be played")
+        self._my_player._cards_played += 1<<(card_to_be_played_id)
+        self._binary_representation -= 1<<(card_to_be_played_id)
         a_trick.accept(self._cards_in_hand.pop(a_card_index))
 
     def determine_valid_calls(self):

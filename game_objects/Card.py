@@ -1,6 +1,6 @@
 
 class Card():
-    
+
     _card_id = None
     _card_suit = None
     _card_rank = None
@@ -11,7 +11,7 @@ class Card():
         #Take another look at this. Might not need this at all.
         #self._card_suit = a_suit
         #self._card_rank = a_rank
-    
+
     def __new__(cls, a_rank, a_suit):
         if a_suit == "trump":
             from game_objects import TrumpCard
@@ -25,7 +25,7 @@ class Card():
 
     def get_card_id(self): #Getters. Shouldn't ever need to set the id, suit, or rank of a card.
         return self._card_id
-    
+
     def get_card_suit(self):
         return self._card_suit
 
@@ -56,18 +56,6 @@ class Card():
             self._point_value = 0
 
     def accept(self, a_card):
-        '''
-        if self.get_card_suit() == "trump":
-            if a_card.get_card_suit() == "trump":
-                return self.accept_trump(self, a_card)
-            else:
-                return True
-        else:
-            if a_card.get_card_suit() == "trump":
-                return False
-            else:
-                return self.accept_fail(self, a_card)
-        '''
         pass
 
     def visit(self, an_object):

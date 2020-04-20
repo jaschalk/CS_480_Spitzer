@@ -3,22 +3,14 @@ from game_objects.Round import Round
 from game_objects.Player import Player
 from game_objects.CardRuleTree import CardRuleTree
 from game_objects.CallRules import CallRules
-from game_objects.PartnerRuleTree import PartnerRuleTree 
+from game_objects.PartnerRuleTree import PartnerRuleTree
 from random import randint
+from enums import CardIds
 
 class Game:
 
-   _game_id = 0
-   _deck = None
-   _round = None
-   _players_list = [None, None, None, None]
-   _leading_player = None
-   _card_rules = None
-   _partner_rules = None
-   _call_rules = None
-   _score_list = [0, 0, 0, 0]
-   _scoring_table = [[0, -9, -6, 3, 6, 9],
-                     [0, -9, -6, 9, 12, 15],
+   _scoring_table = [["impossible", -9, -6, 3, 6, 9],
+                     ["impossible", -9, -6, 9, 12, 15],
                      [-15, -12, -9, 18, 27, 36],
                      [-42, -36, -24, -18, 36, 39],
                      [-42, -42, -39, -33, -27, 42]]
@@ -34,6 +26,7 @@ class Game:
       self._card_rules = CardRuleTree()
       self._partner_rules = PartnerRuleTree()
       self._call_rules = CallRules()
+      self._score_list = [0, 0, 0, 0]
 
    def get_game_id(self):
       return self._game_id
@@ -48,13 +41,17 @@ class Game:
       return self._deck
 
    def play_game(self):
+      self.clean_up_round_file_data()
       while self.which_player_wins() == -1:
+         self._round.set_initial_values()
          self.begin_round()
+      self._round.push_data_to_file()
 
    def begin_round(self):
+      self._deck.populate_deck()
       for player in self._players_list:
-         self._deck.populate_deck()
          self._deck.deal_cards_to(player)
+         self._round.update_player_cards_in_hand_history_for_player(player)
       self._round.begin_play()
 
    def get_players_list(self):
@@ -75,12 +72,19 @@ class Game:
    def get_score_list(self):
       return self._score_list
 
+   def clean_up_round_file_data(self):
+      self._round.clear_file_out_history()
+
+   def get_game_state_for_player(self, a_player_id):
+      return self._round.get_game_state_for_play_card(a_player_id)
+
    def which_player_wins(self):
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
       num_of_winners = 0
       winning_index = -1
+      max_score = max(self._score_list)
       for index in range(4):
-         if self.get_players_list()[index].get_total_score() >= 42:
+         if self.get_players_list()[index].get_total_score() >= 42 and self.get_players_list()[index].get_total_score() >= max_score:
             num_of_winners += 1
             winning_index = index
       if num_of_winners != 1:
@@ -103,6 +107,17 @@ class Game:
    def update_call(self, player_id, index_of_call_index):
       self._round.update_call(player_id, index_of_call_index)
 
+   def handle_action_for_player(self, an_action, a_player):
+      #Needs to:  Inform the player to actually play the requested card.
+      #           Log the new game state
+      #           Log the player's reward
+      #           Log if the game has ended
+      a_player.play_card_at_index(self._round.get_current_trick(), an_action)
+      updated_game_state = self.get_game_state_for_player(a_player.get_player_id())
+      player_reward = a_player.get_trick_points()
+      has_ended = (self.which_player_wins() == -1)
+      return updated_game_state, player_reward, has_ended
+
    def update_scores(self):
       #Can this method be shortened at all?
       call_index = 0
@@ -118,7 +133,6 @@ class Game:
          for player_index in range(4):
             for call_made in range(1,8):
                if(self._round.get_call_matrix()[player_index][call_made] == 1):
-                  print("The call made was " + str(call_made))
                   call_index = call_made
                   if call_index < 5:
                      call_index = 0
@@ -128,14 +142,14 @@ class Game:
                   return call_made
          return 0
       call_made = find_call_made()
-      print("The call made was " + str(call_index))
+
       # split off into a helper method?
       if(call_made == 0):
          for player_index in range(4):
             for trick_index in range(8):
-               if(self._round.get_trick_history()[player_index][trick_index][0] == 1): #If this player played the QC in any trick
+               if(self._round.get_trick_history()[player_index][trick_index][CardIds.queen_clubs.value] == 1): #If this player played the QC in any trick
                   played_queen_of_clubs = player_index
-               elif(self._round.get_trick_history()[player_index][trick_index][2] == 1):#If this player played the QS in any trick
+               elif(self._round.get_trick_history()[player_index][trick_index][CardIds.queen_spades.value] == 1):#If this player played the QS in any trick
                   played_queen_of_spades = player_index
          if(played_queen_of_clubs == played_queen_of_spades):
             calling_team = [played_queen_of_clubs]
@@ -147,18 +161,16 @@ class Game:
          for player_id in range(4):
             if(calling_ppl[player_id] == 1):
                calling_team.append(player_id)
-               
+
       for i in range(4):
          if i in calling_team:
-            calling_team_round_points += self._players_list[calling_player_id].get_round_points()
-      print("The calling team was " + str(calling_team))
-      print("The calling team took " + str(calling_team_round_points))
+            calling_team_round_points += self._players_list[i].get_round_points()
 
       # split off into a helper method?
       noncalling_team = set(range(4)).difference(set(calling_team))
-      if len(set(self._round.get_trick_winners_list()).difference(set(calling_team))) == 0:
+      if set(self._round.get_trick_winners_list()).isdisjoint(set(calling_team)):
          point_value_index = 0
-      elif len(set(self._round.get_trick_winners_list()).difference(noncalling_team)) == 0:
+      elif set(self._round.get_trick_winners_list()).isdisjoint(noncalling_team):
          point_value_index = 5
       else:
          if(calling_team_round_points <= 30):
@@ -171,18 +183,21 @@ class Game:
             point_value_index = 4
          else:
             point_value_index = -1
-            raise Exception("Calling team round points didn't resolve to an index" + str(calling_team_round_points))
-            #Should raise an error here...?
+            raise Exception("Calling team round points didn't resolve to an index. " + str(calling_team_round_points) + "\r\n" + str([player.get_round_points() for player in self._players_list]))
 
       for player_index in range(4):
-         print("Point value index: " + str(point_value_index))
          value_to_add = self._scoring_table[call_index][point_value_index]
+         if type(value_to_add) == type("string"):
+            print("In unreachable state")
+            raise Exception("Entered an unreachable state in the scoring table.")
          if player_index in calling_team:
             if(value_to_add > 0):
                self._players_list[player_index].update_total_score(value_to_add)
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
+
          else:
             if(value_to_add < 0):
                self._players_list[player_index].update_total_score(abs(value_to_add))
                self._score_list[player_index] = self._players_list[player_index].get_total_score()
-         print(self._score_list[player_index])
+
+      self._round.update_player_score_history([self._players_list[player_index].get_total_score() for player_index in range(4)])

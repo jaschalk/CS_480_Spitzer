@@ -1,36 +1,33 @@
 from game_objects.Hand import Hand
 import numpy as np
-from agents import agent
+#from agents import agent
 
 class Player:
-    
-    _trick_points = 0
-    _round_points = 0
-    _total_score = 0
-    _valid_call_list = [1, 0, 0, 0, 0, 1, 1, 1]
-    _potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
-    _hand = None
-    _is_leading = False
-    _player_id = None
-    _parent_game = None
-    _controlling_agent = None
-    _cards_played = 0
 
-    def __init__(self, a_game, player_id, an_agent): 
+    def __init__(self, a_game, player_id, an_agent):
         #initializes the hand object and sets the potential partners list to correct values.
         self._player_id = player_id
         self._parent_game = a_game
         self._controlling_agent = an_agent
-        self._potential_partners_list = [0, 0, 0, 0] 
+        self._total_score = 0
+        self.set_initial_values()
+
+    def set_initial_values(self):
+        self._potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
         self._potential_partners_list[self._player_id] = 1
         for index in range(4):
             if index != self._player_id:
                 self._potential_partners_list[index] = (1/3)
         self._hand = Hand(self)
+        self._valid_call_list = [1, 0, 0, 0, 0, 1, 1, 1]
+        self._round_points = 0
+        self._trick_points = 0
+        self._is_leading = False
+        self._cards_played = 0
 
     def get_player_id(self):
         return self._player_id
-    
+
     def get_trick_points(self):
         return self._trick_points
 
@@ -48,10 +45,9 @@ class Player:
 
     def get_round_points(self):
         return self._round_points
-    
+
     def set_round_points(self, a_round_points):
         self._round_points = a_round_points
-        print("Player " + str(self._player_id) + " has " + str(self._round_points) + " total points.")
 
     def get_valid_call_list(self):
         return self._valid_call_list
@@ -61,7 +57,7 @@ class Player:
 
     def get_potential_partners_list(self):
         return self._potential_partners_list
-    
+
     def set_potential_partners_list(self, a_potential_partners_list):
         self._potential_partners_list = a_potential_partners_list
 
@@ -70,6 +66,9 @@ class Player:
 
     def get_cards_in_hand(self):
         return self.get_hand().get_cards_in_hand()
+
+    def get_hand_binary_representation(self):
+        return self._hand.get_binary_representation()
 
     def set_hand(self, a_hand):
         self._hand = a_hand
@@ -83,6 +82,9 @@ class Player:
     def get_valid_play_list(self):
         return self.get_hand().get_valid_play_list()
 
+    def get_controlling_agent(self):
+        return self._controlling_agent
+
     def set_controlling_agent(self, an_agent):
         self._controlling_agent = an_agent
 
@@ -93,9 +95,13 @@ class Player:
 
     def play_card_to(self, a_trick):
         #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the inex returned to the trick.
-        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand TODO Need to reset the Hands valid play list when a new round starts, There's likely other stuff that needs to be done at that time too
+        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand
+        if card_to_play_index is not None:
+            self._hand.play_card_at_index(a_trick, card_to_play_index)
+
+    def play_card_at_index(self, a_trick, card_to_play_index):
         self._hand.play_card_at_index(a_trick, card_to_play_index)
-    
+
     def validate_card(self, a_card):
         #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
         return self._parent_game.validate_card(a_card, self)
@@ -116,7 +122,7 @@ class Player:
                 _results[index] = _result
             else:
                 _results[index] = "target is my partner"
-        
+
         for index in range(4):
             if _results[index] == "target is my partner":
                 self._potential_partners_list[index] = 1

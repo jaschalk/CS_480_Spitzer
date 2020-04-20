@@ -80,8 +80,6 @@ class CardRuleTest(unittest.TestCase):
         for i in range(22,30): # give the player 8 cards: KS,9S,8S,7S,AH,10H,KH,9H
             # this in range is deceptive since the cards have and id number one less than the displayed number
             self.temp_player.accept(self.card_list[i])
-#        for card in self.temp_player.get_hand().get_cards_in_hand():
-#            print(card.get_card_id())
         self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[0]))
         self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[1]))
         self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[2]))

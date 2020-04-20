@@ -22,7 +22,7 @@ class RoundTest(unittest.TestCase):
         self.temp_trick = setup_results["current_trick"]
         self.temp_deck = setup_results["game_deck"]
         del setup_results
-        
+
     def test_init(self):
         self.assertIsInstance(self.test_round.get_current_trick(), Trick)
         trick_history = self.test_round.get_trick_history()
@@ -65,14 +65,14 @@ class RoundTest(unittest.TestCase):
     def test_potential_partners_history(self): #Check if the Potential Partners history has been updated properly
         for i in range(4):
             self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+        for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         #               self.test_round.potential_partners_history[player_num][potential_partner_num][trick_depth]
-        print("PPHL: " + str(self.test_round._get_potential_partners_history()))
         self.assertEqual(self.test_round._get_potential_partners_history()[0][2][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[1][3][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[2][0][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[3][1][0], 1)
-        
+
     def test_on_round_finish(self):
         initial_player_points = []
         for player in self.temp_players:
@@ -83,29 +83,46 @@ class RoundTest(unittest.TestCase):
         #On Round finish:
         #tell players to update total scores, tell the game to repopulate the deck, if the game has not ended (make a new deck)
         self.test_round.begin_play() #Need to use a method to run a round to completion here, not manually step through
-# TODO  self.assertNotEqual(sum(self.test_round.scoreList), 0) #after a round has been played the sum of the scores cannot be 0
-                    # the round currently isn't storing this, I think this got moved to the game. It might be best if the the test went as well
         self.assertEqual(len(self.temp_deck.get_card_list()), 0)
 
     def test_update_trick_winners_list(self):
         for i in range(4):
             self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+        for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         self.assertEqual(self.test_round.get_trick_winners_list()[0], 0) # the 1st player, zero indexed, should be the winner of the 1st, zero indexed, trick
         for i in range(4):
+            self.temp_players[i].set_initial_values()
+        for i in range(4):
             self.temp_players[i].accept(Card(12-i, "hearts")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+        for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         self.assertEqual(self.test_round.get_trick_winners_list()[1], 3) # the 4th player, zero indexed, should be the winner of the 2nd, zero indexed, trick
-    
+
     def test_file_out_behavior(self):
         for player in self.temp_players:
             player.set_controlling_agent(RandomAgent())
-            self.temp_deck.deal_cards_to(player)
-        self.test_round.begin_play()
+        self.temp_game.play_game()
+
         #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
         with open(self.test_round.get_file_out_name(), 'rb') as input:
             file_data = pickle.load(input)
-            self.assertEqual(self.test_round._get_file_out_data(), file_data)
+            for i in range(len(file_data)):
+                self.assertTrue(self.test_round._get_file_out_data()[i]["trick_history"].all() == file_data[i]["trick_history"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["trick_history"].sum(), 0)
+                self.assertTrue(self.test_round._get_file_out_data()[i]["trick_point_history"].all() == file_data[i]["trick_history"].all())
+                self.assertGreaterEqual(self.test_round._get_file_out_data()[i]["trick_point_history"].sum(), 0)
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_partners"].all() == file_data[i]["player_partners"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["player_partners"].sum(), 0)
+                self.assertTrue(self.test_round._get_file_out_data()[i]["call_matrix"].all() == file_data[i]["call_matrix"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["call_matrix"].sum(), 0)
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_cards_in_hand_history"].all() == file_data[i]["player_cards_in_hand_history"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["player_cards_in_hand_history"].sum(), 0)
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_point_history"].all() == file_data[i]["player_point_history"].all())
+                self.assertGreater(self.test_round._get_file_out_data()[i]["player_point_history"].sum(), 0)
+                self.assertTrue(self.test_round._get_file_out_data()[i]["player_partner_prediction_history"].all() == file_data[i]["player_partner_prediction_history"].all())
+                for e in range(len(file_data[i]["player_score_history"])):
+                    self.assertTrue(self.test_round._get_file_out_data()[i]["player_score_history"][e] == file_data[i]["player_score_history"][e])
 
     def tearDown(self):
         for player in self.temp_players:

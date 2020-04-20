@@ -9,7 +9,7 @@ class CardRuleTree:
     def get_root(self):
         return self._root
 
-    def __init__(self): 
+    def __init__(self):
 
         def get_ace_called_id(*args):
             # this assumes that an ace has been called
@@ -34,7 +34,7 @@ class CardRuleTree:
             elif suit == "hearts":
                 return 0b11111100000000000000000000000000
             else:
-                # raise an error if the suit requested isn't in the valid set, to prevent silent errors
+                # raise an error if the suit requested isn't in the valid set, to prevent silent errors, this is mostly to catch typos
                 raise RuntimeError("Get suit binary representation received a request for an invalid suit. " + suit)
 
         def is_player_leading(*args):
@@ -54,14 +54,12 @@ class CardRuleTree:
 
         def has_called_ace(*args):
             ace_id = get_ace_called_id(*args)
-            return (args[1].get_hand().get_binary_representation() & 1<<ace_id) == 1<<ace_id
-            # TODO might want to add a method to the player to avoid this Law of Demeter violation
+            return (args[1].get_hand_binary_representation() & 1<<ace_id) == 1<<ace_id
 
         def has_suit_lead(*args):
             suit_lead = args[2].get_suit_lead()
             suit_lead_binary_representation = get_suit_binary_representation(suit_lead)
-            return (args[1].get_hand().get_binary_representation() & suit_lead_binary_representation) != 0
-            # might want to add a method to the player to avoid this Law of Demeter violation
+            return (args[1].get_hand_binary_representation() & suit_lead_binary_representation) != 0
 
         def is_card_called_ace(*args):
             ace_id = get_ace_called_id(*args)
@@ -74,7 +72,7 @@ class CardRuleTree:
 
         def does_player_have_trump(*args):
             trump_binary_representation = get_suit_binary_representation("trump")
-            return (trump_binary_representation & args[1].get_hand().get_binary_representation() != 0)
+            return (trump_binary_representation & args[1].get_hand_binary_representation() != 0)
 
         def was_called_ace_suit_lead(*args):
             called_ace_id = get_ace_called_id(*args)
@@ -112,6 +110,6 @@ class CardRuleTree:
         __root_RRRR.set_left(__root_RRRRL)
         __root_RRRR.set_right(RuleNodeTrue())
         #this is pretty confusing right now, maybe we can think of a way to clean it up.
-        
+
     def validate_card(self, a_card, a_player, a_round):
         return self._root.validate(a_card, a_player, a_round)
