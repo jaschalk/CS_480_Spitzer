@@ -107,6 +107,17 @@ class Game:
    def update_call(self, player_id, index_of_call_index):
       self._round.update_call(player_id, index_of_call_index)
 
+   def handle_action_for_player(self, an_action, a_player):
+      #Needs to:  Inform the player to actually play the requested card.
+      #           Log the new game state
+      #           Log the player's reward
+      #           Log if the game has ended
+      a_player.play_card_at_index(self._round.get_current_trick(), an_action)
+      updated_game_state = self.get_game_state_for_player(a_player.get_player_id())
+      player_reward = a_player.get_trick_points()
+      has_ended = (self.which_player_wins() == -1)
+      return updated_game_state, player_reward, has_ended
+
    def update_scores(self):
       #Can this method be shortened at all?
       call_index = 0

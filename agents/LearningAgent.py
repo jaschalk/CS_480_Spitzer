@@ -10,6 +10,7 @@ import glob2
 import pickle
 import random
 import copy
+import sys
 import numpy as np
 from enums import *
 from contextlib import ExitStack
@@ -53,8 +54,6 @@ class DuelingDeepQNetwork(keras.Model):
         return Q
 
     def advantage(self, state):
-        print(f"State type is: {type(state)}")
-#        test = tf.convert_to_tensor(state)
         x = self.dense1(state)
         x = self.dense2(x)
         A = self.A(x)
@@ -142,19 +141,19 @@ class Agent():
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
 
-
+        self._valid_indices_list = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != False]
+        self._valid_play_list = tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32)
         observation = a_game.get_game_state_for_player(a_player.get_player_id())
         action = self.choose_action(observation)
-        observation_, reward, done, info = a_game.get_player.handle_action(action) #Currently shooting for the end of every trick.
+        #print(f"Action is: {type(action)}")
+        observation_, reward, done = a_game.handle_action_for_player(action[0], a_player) #Currently shooting for the end of every trick.
         #self.score += reward
         self.store_transition(observation, action, reward, observation_, done) #This stores the result observation from the action. We aren't doing this yet either.
         observation = observation_ #The game's observation is reset to the observation after a specific action has been made and the env has been stepped.
         self.learn() #Updates the weights of the network?
 
-        self._valid_indices_list =[index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != False]
+        
         # TODO makes sure this card is valid
-
-        return action
 
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
@@ -162,26 +161,19 @@ class Agent():
             action = np.random.choice(self._valid_indices_list)
         else:
         # Here is where the agent looks across the set of advantages and selects the highest one
-#            state = np.array([observation])
-            state = tf.convert_to_tensor(observation)
-            print(observation.shape)
-            print(f"Observation type is: {type(observation)}")
-            actions = self.q_eval.advantage(state)
-            print(f"actions is : {actions}")
-            print(f"actions argmax is {tf.math.argmax(actions, axis=1)}")
-            # TODO Filter the actions based on the valid play list
-            # actions is expected to be 8 elements in size
-            # the valid play list is also 8 elements in size
-            # if we do an elementwise multiplication of each
-            # the result should be filtered?
-            # This is assuming that the action values are positive!
-#            tf.compat.v1.disable_eager_execution()
+            #For unknown reasons, we have to convert this to a tensor rather than a numpy array. (Research at future date)
+            state = tf.convert_to_tensor(observation) 
+            actions = self.q_eval.advantage(state) 
+            #We use the sigmoid function to force all of the values contained within actions to be between 0 and 1.
+            actions = tf.math.sigmoid(actions)
+            #By performing an element wise multiplication between actions and the valid play list, we can 
+            #ensure that the action chosen is a valid action. 
+            actions = tf.math.multiply(actions, self._valid_play_list)
+            #argmax returns the index of the largest element in the tensor.
             action = tf.math.argmax(actions, axis=-1)
-#            tf.executing_eagerly()
-#            test = tf.constant(action)
-            print(f"action is {action}")
+            #We eval so we can actually get the value out of the tensor. For unknown reasons, we have to use
+            #keras.backend.eval rather than tf.keras.backend.eval. We will research this at a later date.
             action = keras.backend.eval(action)
-            print(f"action post eval: {action}")
         return action
 
     def make_call(self, a_player):#TODO Expanded this method
@@ -204,6 +196,7 @@ class Agent():
         # Pull in information about a game from the buffer
 
         # TODO Don't quite know what this is doing
+        states = tf.convert_to_tensor(states)
         q_pred = self.q_eval(states)
         # This gets the value of the max future action
         q_next = tf.math.reduce_max(self.q_next(states_), axis=1, keepdims=True).numpy()
