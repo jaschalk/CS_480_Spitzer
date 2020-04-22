@@ -229,6 +229,11 @@ class Agent():
         card_list = [0 for i in range(32)]
         for card in a_player.get_cards_in_hand():
             card_list[card.get_card_id()] = 1
+        # NOTE: When any other player has made a solo call don't learn from that round
+        #   This is to avoid strengthing the connection between a hand state and no call
+        #   when another player made a bad call.
+        # NOTE: Expressed concern about associating good hands with hard calls
+        #   The no call could get over-reinforced?
         def call(input):
             # have some hidden layers
             result = self.call_generator.layers[0](input)
