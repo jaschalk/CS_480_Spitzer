@@ -104,7 +104,7 @@ class GameTest(unittest.TestCase):
 
     def test_play_multiple_games_with_learning_agent(self):
         self.tearDown()
-        for i in range(20):
+        for i in range(self.number_of_games_to_be_played):
             print("Game number w/ learning " + str(i))
             self.setUp()
             self.test_play_with_learning_agent()

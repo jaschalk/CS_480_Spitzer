@@ -90,19 +90,6 @@ class DuelingDeepQNetwork(keras.Model):
         # I've referenced A as the action layer elsewhere, that's slightly inacurate I think
         return actions
 
-
-#    def compute_output_shape(self, input_shape):
-        #Within keras.engine.base_layer, the following behavior was observed:
-
-        #Computes the output shape given an input.
-        #Input = Shape tuple (tuple of integers)
-                #or list of shape tuples (one per output tensor of the layer).
-                #Shape tuples can include None for free dimensions,
-                #instead of an integer.
-        #Output = An output shape tuple.
-#        return (input_shape[0],self.layers[-1].units)
-        #return input_shape
-
 class ReplayBuffer():
     # This class is used to hold onto action-state collections and the reward associated with that transition
     def __init__(self, max_size, input_shape):
@@ -143,7 +130,7 @@ class Agent():
     # This should be the actual agent that is making the decisions
     def __init__(self, lr=1e-3, gamma=.99, n_actions=8, epsilon=.9, batch_size=64,
                     input_dims=[1228], epsilon_dec=1e-3, epsilon_min=1e-3,
-                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=512, 
+                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=512,
                     fc2_dims=256, fc3_dims=64, replace=250):
         self.score = 0
         # The action_space is the number of possible actions, for us I think this should be 8?
@@ -173,6 +160,12 @@ class Agent():
         # TODO get a better understanding of what that means; https://youtu.be/CoePrz751lg?t=1305
         self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
         # TODO I think this preps the network for use, but don't really know for sure
+        self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),
+                                                        keras.layers.Dense(16, activation='relu'),
+                                                        keras.layers.Dense(8, activation='sigmoid')])
+        self.call_generator.compile(optimizer='adam',
+                                loss=tf.keras.losses.MeanSquaredError(),
+                                metrics=['accuracy'])
         self.q_eval.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         # this is just needed to make it work? don't really know why, the video didn't go into much depth here
         self.q_next.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
@@ -221,7 +214,7 @@ class Agent():
             #For unknown reasons, we have to convert this to a tensor rather than a numpy array. (Research at future date)
             state = tf.convert_to_tensor(observation) 
             actions = self.q_eval.advantage(state)
-            test = self.q_next.advantage(state)
+            _ = self.q_next.advantage(state)
 
             #argmax returns the index of the largest element in the tensor.
             action = tf.math.argmax(actions, axis=-1).numpy()[0]
@@ -232,9 +225,24 @@ class Agent():
 
     def make_call(self, a_player):#TODO Expanded this method
         # Take in a list of 32 numbers, 1's where the hand has that card
-        # have some hidden layers
-        # filter for valid calls
+        valid_call_tensor = tf.convert_to_tensor(a_player.get_valid_call_list(), dtype=tf.float32)
+        card_list = [0 for i in range(32)]
+        for card in a_player.get_cards_in_hand():
+            card_list[card.get_card_id()] = 1
+        def call(input):
+            # have some hidden layers
+            result = self.call_generator.layers[0](input)
+            result = self.call_generator.layers[1](result)
+            result = self.call_generator.layers[2](result)
+            # filter for valid calls
+            result = tf.math.multiply(result, valid_call_tensor)
+            return result
+
+        self.call_generator.call = call
+        call_weights = self.call_generator(tf.reshape(tf.convert_to_tensor(card_list, dtype=tf.float32),(32,1)))
         # output argmax(an 8 element output layer)
+        call = tf.math.argmax(call_weights, axis=-1).numpy()[0]
+#        print(call)
         return Calls.none.value
 
     def learn(self):
