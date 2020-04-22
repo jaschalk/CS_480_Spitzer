@@ -27,6 +27,7 @@ class Game:
       self._card_rules = CardRuleTree()
       self._partner_rules = PartnerRuleTree()
       self._call_rules = CallRules()
+      self._supress_write_to_winners_log = False
       self._score_list = [0, 0, 0, 0]
 
    def get_game_id(self):
@@ -80,12 +81,23 @@ class Game:
       return self._round.get_game_state_for_play_card(a_player_id)
 
    def handle_winning_agent_information(self, winning_index):
-      print(f"Player {winning_index} won the game with agent type {self._players_list[winning_index].get_controlling_agent()}")
-      for i in range(4):
-         if self._agents_list[i] is not None:
-            print(f"Agent {self._agents_list[i]} took {self._score_list[i]}")
-         else:
-            print(f"Agent {self._players_list[i].get_controlling_agent()} took {self._score_list[i]}")
+      # write information about the scores of the agents to a txt file for later use
+      if not self._supress_write_to_winners_log:
+         with open("game_winner_info.txt", 'a+') as data_file:
+            data_file.write(f"Player {winning_index} won the game with agent type {self._players_list[winning_index].get_controlling_agent()}\n")
+            for i in range(4):
+               if self._agents_list[i] is not None:
+                  data_file.write(f"Agent {self._agents_list[i]} took {self._score_list[i]}\n")
+               else:
+                  data_file.write(f"Agent {self._players_list[i].get_controlling_agent()} took {self._score_list[i]}\n")
+            data_file.write("\n")
+         print(f"Player {winning_index} won the game with agent type {self._players_list[winning_index].get_controlling_agent()}")
+         for i in range(4):
+            if self._agents_list[i] is not None:
+               print(f"Agent {self._agents_list[i]} took {self._score_list[i]}")
+            else:
+               print(f"Agent {self._players_list[i].get_controlling_agent()} took {self._score_list[i]}")
+      self._supress_write_to_winners_log = True #TODO Change this name!!
 
    def which_player_wins(self):
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.

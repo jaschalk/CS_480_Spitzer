@@ -3,12 +3,10 @@ from agents.LearningAgent import Agent
 from agents.CustomAgent import CustomAgent
 
 if __name__ == "__main__":
-    agent = Agent(gamma=0.99, epsilon=1, lr=1e-3, input_dims=[8], 
-                  epsilon_dec=1e-3, mem_size=100000, batch_size=64, eps_end=0.01,
-                  fc1_dims=128, fc2_dims=128, replace=100, n_actions=4)
+    agent = Agent()
     list_of_agents = [agent, CustomAgent(), CustomAgent(), CustomAgent()]
     active_game = Game(0, list_of_agents) #Initialization of a game
-    n_games = 400
+    n_games = 500
     
     scores, eps_history = [], []
 

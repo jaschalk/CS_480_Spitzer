@@ -9,6 +9,7 @@ def general_setup():
     '''
     list_of_agents = [None, None, None, None]
     active_game = Game(0, list_of_agents)
+    active_game._supress_write_to_winners_log = True
     game_deck = active_game.get_deck()
     list_of_players = []
     for i in range(4):

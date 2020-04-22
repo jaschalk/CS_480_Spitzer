@@ -17,6 +17,7 @@ import pickle
 import random
 import copy
 import sys
+import os
 import numpy as np
 from enums import *
 from contextlib import ExitStack
@@ -37,13 +38,14 @@ from contextlib import ExitStack
 
 class DuelingDeepQNetwork(keras.Model):
     # ^This is creating a custom model that will have the dueling deep Q behavior built into it
-    def __init__(self, n_actions, fc1_dims, fc2_dims): #TODO consider having this take the input dims as well
+    def __init__(self, n_actions, fc1_dims, fc2_dims, fc3_dims): #TODO consider having this take the input dims as well
         super(DuelingDeepQNetwork, self).__init__()
         # ^Do the keras.Model init
         self._valid_play_list = [1 for i in range(8)]
         self.dense1 = keras.layers.Dense(fc1_dims, activation="relu")
         # ^Add a first densely connected layer, I think this is the input layer, though it might actually not be
         self.dense2 = keras.layers.Dense(fc2_dims, activation="relu")
+        self.dense3 = keras.layers.Dense(fc3_dims, activation="relu")
         # ^add a second dense layer, this should be a hidden layer within the network
         self.V = keras.layers.Dense(1, activation=None)
         # This looks to be a "value" layer that compresses the output of the network to a single value
@@ -64,6 +66,7 @@ class DuelingDeepQNetwork(keras.Model):
         x = self.dense1(state)
         # dense1 would then be the 1st hidden layer
         x = self.dense2(x)
+        x = self.dense3(x)
         # dense2 the second hidden layer
         V = self.V(x)
         # V is the singular value layer
@@ -78,6 +81,7 @@ class DuelingDeepQNetwork(keras.Model):
     def advantage(self, state):
         x = self.dense1(state)
         x = self.dense2(x)
+        x = self.dense3(x)
         A = self.A(x)
         #By performing an element wise multiplication between actions and the valid play list, we can 
         #ensure that the action chosen is a valid action. 
@@ -137,10 +141,10 @@ class ReplayBuffer():
 
 class Agent():
     # This should be the actual agent that is making the decisions
-    def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
-                    input_dims, epsilon_dec=1e-3, epsilon_min=1e-3,
-                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128,
-                    fc2_dims=128, replace=100):
+    def __init__(self, lr=1e-3, gamma=.99, n_actions=8, epsilon=.9, batch_size=64,
+                    input_dims=[1228], epsilon_dec=1e-3, epsilon_min=1e-3,
+                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=512, 
+                    fc2_dims=256, fc3_dims=64, replace=250):
         self.score = 0
         # The action_space is the number of possible actions, for us I think this should be 8?
         self.action_space = [i for i in range(n_actions)]
@@ -164,19 +168,20 @@ class Agent():
         # memory is the buffer into which action-state transitions will be stored
         self.memory = ReplayBuffer(mem_size, input_dims)
         # q_eval is the network that will look across the current state of the game to make a prediction
-        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims)
+        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
         # q_next is the "target network that we use the generate the values for the cost function"
         # TODO get a better understanding of what that means; https://youtu.be/CoePrz751lg?t=1305
-        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims)
+        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
         # TODO I think this preps the network for use, but don't really know for sure
         self.q_eval.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         # this is just needed to make it work? don't really know why, the video didn't go into much depth here
         self.q_next.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         dummy_state = np.ones((1,1228), dtype=np.float32)
 
-        self.q_eval.advantage(dummy_state)
-        self.q_next.advantage(dummy_state)
-        self.load_model()
+        if os.path.isfile(fname):
+            self.q_eval.advantage(dummy_state)
+            self.q_next.advantage(dummy_state)
+            self.load_model()
 
     def store_transition(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
@@ -195,10 +200,12 @@ class Agent():
         action = self.choose_action(observation)
 #        print(f"Action is: {type(action)}")
 #        print(f"Action is: {type(np.int64())}")
-        if type(action) != type(np.int64()): # This check is needed because our game can have a single action outcome
-            observation_, reward, done = a_game.handle_action_for_player(action[0], a_player) #Currently shooting for the end of every trick.
+        if (type(action) == type(np.int64())) or (type(action) == type(np.int32())): # This check is needed because our game can have a single action outcome
+            observation_, reward, done = a_game.handle_action_for_player(action, a_player)
+            #Currently shooting for the end of every trick.
         else:
-            observation_, reward, done = a_game.handle_action_for_player(action, a_player) #Currently shooting for the end of every trick.
+            observation_, reward, done = a_game.handle_action_for_player(action[0], a_player)
+            #Currently shooting for the end of every trick.
         #self.score += reward
         self.store_transition(observation, action, reward, observation_, done) #This stores the result observation from the action. We aren't doing this yet either.
         observation = observation_ #The game's observation is reset to the observation after a specific action has been made and the env has been stepped.
