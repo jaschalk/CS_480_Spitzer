@@ -18,6 +18,7 @@ class Game:
    def __init__(self, a_game_id, list_of_agents): #initializes the deck, round, players list, and all three sets of rules.
       self._game_id = a_game_id
       self._players_list = [None, None, None, None]
+      self._agents_list = list_of_agents
       self._deck = Deck()
       for index in range(4):
          self._players_list[index] = Player(self, index, list_of_agents[index])
@@ -78,6 +79,14 @@ class Game:
    def get_game_state_for_player(self, a_player_id):
       return self._round.get_game_state_for_play_card(a_player_id)
 
+   def handle_winning_agent_information(self, winning_index):
+      print(f"Player {winning_index} won the game with agent type {self._players_list[winning_index].get_controlling_agent()}")
+      for i in range(4):
+         if self._agents_list[i] is not None:
+            print(f"Agent {self._agents_list[i]} took {self._score_list[i]}")
+         else:
+            print(f"Agent {self._players_list[i].get_controlling_agent()} took {self._score_list[i]}")
+
    def which_player_wins(self):
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
       num_of_winners = 0
@@ -90,6 +99,7 @@ class Game:
       if num_of_winners != 1:
          return -1
       else:
+         self.handle_winning_agent_information(winning_index)
          return winning_index
 
    def validate_card(self, a_card, a_player):

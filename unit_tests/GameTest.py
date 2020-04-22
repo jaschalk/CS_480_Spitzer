@@ -92,9 +92,16 @@ class GameTest(unittest.TestCase):
                                                 mem_size=100000, fname="network_test.h5", fc1_dims=128, 
                                                 fc2_dims=128, replace=100))
         for index in range(1,4):
-            self.temp_player_list[index].set_controlling_agent(CustomAgent())
+            self.temp_player_list[index].set_controlling_agent(RandomAgent())
         self.temp_game.play_game()
         self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
+
+    def test_play_multiple_games_with_learning_agent(self):
+        self.tearDown()
+        for i in range(20):
+#            print("Game number w/ learning " + str(i))
+            self.setUp()
+            self.test_play_with_learning_agent()
 
     def tearDown(self):
         del self.temp_game

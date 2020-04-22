@@ -7,9 +7,11 @@ config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
 # I suspect there exists a setting within TensorFlow to enable this behavior by default
 # but my searching has not yet found it.
-from keras.optimizers import Adam
+#from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from keras.models import load_model
-import keras
+#import keras
+import tensorflow.keras as keras # NOT the same as import keras!!
 import glob2
 import pickle
 import random
@@ -37,29 +39,24 @@ class DuelingDeepQNetwork(keras.Model):
     # ^This is creating a custom model that will have the dueling deep Q behavior built into it
     def __init__(self, n_actions, fc1_dims, fc2_dims): #TODO consider having this take the input dims as well
         super(DuelingDeepQNetwork, self).__init__()
-        #TODO We need to figure out why .inputs and .outputs ar
-#        self.output_names = ["loss"]
-#        self.outputs = tf.convert_to_tensor([0 for i in range(n_actions)])
-        self.inputs = []
-        self.outputs = []
-        self.output_names = []
-        self.loss_functions = []
-        self.loss_functions.append(tf.compat.v2.keras.losses.MeanSquaredError)
         # ^Do the keras.Model init
-        
+        self._valid_play_list = [1 for i in range(8)]
         self.dense1 = keras.layers.Dense(fc1_dims, activation="relu")
         # ^Add a first densely connected layer, I think this is the input layer, though it might actually not be
         self.dense2 = keras.layers.Dense(fc2_dims, activation="relu")
         # ^add a second dense layer, this should be a hidden layer within the network
         self.V = keras.layers.Dense(1, activation=None)
         # This looks to be a "value" layer that compresses the output of the network to a single value
-        self.A = keras.layers.Dense(n_actions, activation=None) # NOTE since this is activation=None the output can be -1 to 1, I think
+        #We use the sigmoid function to force all of the values contained within actions to be between 0 and 1.
+        self.A = keras.layers.Dense(n_actions, activation='sigmoid') # NOTE since this is activation=None the output can be -1 to 1, I think
         #TODO Consider adding the filtering layer into this network init
         # This is the layer that the action to be taken will be selected from
         # The way the call method below looks to work the values of the 2nd layer
         # feed into both the V and A layer
         # NOTE: Copied from https://github.com/tensorflow/tensorflow/issues/34199
 
+    def set_valid_play_list(self, a_valid_play_list):
+        self._valid_play_list = a_valid_play_list
 
     def call(self, state):
         
@@ -82,11 +79,15 @@ class DuelingDeepQNetwork(keras.Model):
         x = self.dense1(state)
         x = self.dense2(x)
         A = self.A(x)
+        #By performing an element wise multiplication between actions and the valid play list, we can 
+        #ensure that the action chosen is a valid action. 
+        actions = tf.math.multiply(A, self._valid_play_list)
         # here A is collection of advantages gained through each action-state transition
         # I've referenced A as the action layer elsewhere, that's slightly inacurate I think
-        return A
+        return actions
 
-    def compute_output_shape(self, input_shape):
+
+#    def compute_output_shape(self, input_shape):
         #Within keras.engine.base_layer, the following behavior was observed:
 
         #Computes the output shape given an input.
@@ -95,7 +96,7 @@ class DuelingDeepQNetwork(keras.Model):
                 #Shape tuples can include None for free dimensions,
                 #instead of an integer.
         #Output = An output shape tuple.
-        return (input_shape[0],self.layers[-1].units)
+#        return (input_shape[0],self.layers[-1].units)
         #return input_shape
 
 class ReplayBuffer():
@@ -171,26 +172,38 @@ class Agent():
         self.q_eval.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         # this is just needed to make it work? don't really know why, the video didn't go into much depth here
         self.q_next.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
+        dummy_state = np.ones((1,1228), dtype=np.float32)
+
+        self.q_eval.advantage(dummy_state)
+        self.q_next.advantage(dummy_state)
+        self.load_model()
 
     def store_transition(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
+
+    def set_valid_play_lists(self, a_valid_play_list):
+        self.q_next.set_valid_play_list(a_valid_play_list)
+        self.q_eval.set_valid_play_list(a_valid_play_list)
 
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
 
         self._valid_indices_list = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != False]
-        self._valid_play_list = tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32)
+#        self._valid_play_list = tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32)
+        self.set_valid_play_lists(tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32))
         observation = a_game.get_game_state_for_player(a_player.get_player_id())
         action = self.choose_action(observation)
-        #print(f"Action is: {type(action)}")
-        observation_, reward, done = a_game.handle_action_for_player(action[0], a_player) #Currently shooting for the end of every trick.
+#        print(f"Action is: {type(action)}")
+#        print(f"Action is: {type(np.int64())}")
+        if type(action) != type(np.int64()): # This check is needed because our game can have a single action outcome
+            observation_, reward, done = a_game.handle_action_for_player(action[0], a_player) #Currently shooting for the end of every trick.
+        else:
+            observation_, reward, done = a_game.handle_action_for_player(action, a_player) #Currently shooting for the end of every trick.
         #self.score += reward
         self.store_transition(observation, action, reward, observation_, done) #This stores the result observation from the action. We aren't doing this yet either.
         observation = observation_ #The game's observation is reset to the observation after a specific action has been made and the env has been stepped.
         self.learn() #Updates the weights of the network?
 
-        
-        # TODO makes sure this card is valid
 
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
@@ -200,21 +213,21 @@ class Agent():
         # Here is where the agent looks across the set of advantages and selects the highest one
             #For unknown reasons, we have to convert this to a tensor rather than a numpy array. (Research at future date)
             state = tf.convert_to_tensor(observation) 
-            actions = self.q_eval.advantage(state) 
-            #TODO Try packing the action filter behavior into the advantage function?
-            #We use the sigmoid function to force all of the values contained within actions to be between 0 and 1.
-            actions = tf.math.sigmoid(actions)
-            #By performing an element wise multiplication between actions and the valid play list, we can 
-            #ensure that the action chosen is a valid action. 
-            actions = tf.math.multiply(actions, self._valid_play_list)
+            actions = self.q_eval.advantage(state)
+            test = self.q_next.advantage(state)
+
             #argmax returns the index of the largest element in the tensor.
-            action = tf.math.argmax(actions, axis=-1)
+            action = tf.math.argmax(actions, axis=-1).numpy()[0]
             #We eval so we can actually get the value out of the tensor. For unknown reasons, we have to use
             #keras.backend.eval rather than tf.keras.backend.eval. We will research this at a later date.
-            action = keras.backend.eval(action)
+#            action = keras.backend.eval(action)
         return action
 
     def make_call(self, a_player):#TODO Expanded this method
+        # Take in a list of 32 numbers, 1's where the hand has that card
+        # have some hidden layers
+        # filter for valid calls
+        # output argmax(an 8 element output layer)
         return Calls.none.value
 
     def learn(self):
@@ -225,7 +238,9 @@ class Agent():
             # If replace many learning actions have been taken since the last time the
             # target network was updated, then update the target network
             # https://youtu.be/CoePrz751lg?t=1594
+            
             self.q_next.set_weights(self.q_eval.get_weights())
+            self.save_model()
 
         # the \ on the next line just lets python know that the line continues on the next line
         # TODO we might actually want to consier using the \ in other places in our code
@@ -259,7 +274,6 @@ class Agent():
             # https://youtu.be/CoePrz751lg?t=1819
             q_target[index, actions[index]] = rewards[index] + self.gamma*q_next[index]
         # TODO: Not really sure what this is doing
-        print("hi")
         states = keras.backend.eval(states)
         self.q_eval.train_on_batch(states, q_target)
         # decrement the epsilon value, make plays less randomly as tranining progresses
@@ -274,8 +288,11 @@ class Agent():
         next_path = "next_" + self.fname
         self.q_next.save_weights(next_path)
 
-#    def load_model(self):
-#        self.q_eval = load_model(self.model_file)
+    def load_model(self):
+        eval_path = "eval_" + self.fname
+        self.q_eval.save_weights(eval_path)
+        next_path = "next_" + self.fname
+        self.q_next.load_weights(next_path)
 
 # ^NOTE: This is the end of the transcribed sample code, I'm sure there's was we can modify it to suit our needs.
         
