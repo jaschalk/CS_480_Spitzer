@@ -87,14 +87,27 @@ class GameTest(unittest.TestCase):
 
     def test_play_with_learning_agent(self):
         
-        self.temp_player_list[0].set_controlling_agent(Agent(lr=0.001, gamma=0.9, n_actions=8, epsilon=0, batch_size=64,
+        self.temp_player_list[0].set_controlling_agent(Agent(lr=0.001, gamma=0.9, n_actions=8, epsilon=1, batch_size=64,
                                                 input_dims=[1228], epsilon_dec=1e-4, epsilon_min=1e-3,
-                                                mem_size=100000, fname="network_test.h5", fc1_dims=128, 
-                                                fc2_dims=128, replace=100))
+                                                mem_size=100000, fname="network_test.h5", fc1_dims=512,
+                                                fc2_dims=256, fc3_dims=64, replace=100))
         for index in range(1,4):
-            self.temp_player_list[index].set_controlling_agent(CustomAgent())
+            self.temp_player_list[index].set_controlling_agent(RandomAgent())
         self.temp_game.play_game()
         self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
+
+    def test_play_with_multiple_learning_agents(self):
+        for index in range(4):
+            self.temp_player_list[index].set_controlling_agent(Agent())
+        self.temp_game.play_game()
+        self.assertGreaterEqual(max(self.temp_game.get_score_list()), 42)
+
+    def test_play_multiple_games_with_learning_agent(self):
+        self.tearDown()
+        for i in range(self.number_of_games_to_be_played):
+            print("Game number w/ learning " + str(i))
+            self.setUp()
+            self.test_play_with_learning_agent()
 
     def tearDown(self):
         del self.temp_game

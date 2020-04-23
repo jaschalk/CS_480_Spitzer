@@ -1,55 +1,79 @@
 import random
 import tensorflow as tf
+# The following 3 lines of code are needed to permit TensorFlow to expand GPU memory
+# usage while running.
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
-from keras.optimizers import Adam
+# I suspect there exists a setting within TensorFlow to enable this behavior by default
+# but my searching has not yet found it.
+#from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from keras.models import load_model
-import keras
+#import keras
+import tensorflow.keras as keras # NOT the same as import keras!!
 import glob2
 import pickle
 import random
 import copy
 import sys
+import os
 import numpy as np
 from enums import *
 from contextlib import ExitStack
 
 # what are we computing loss against?
-# seperate training from running
+# seperate training from running?
 # different networks for different tasks? playing cards, predicting partners, making calls
 # Qt+1(st,at)=Qt(st,at)+αt[rt+1+γmaxaQ(st+1,a)−Qt(st,at)]
 
 # TODO Modify to fit our needs. This is mostly copied in to serve as a framework that we can learn from.
 # Code transcribed from https://www.youtube.com/watch?v=CoePrz751lg
+# github repo at https://github.com/philtabor/Youtube-Code-Repository
+# NOTE: It's currently feeling like there's two major issues complicating our adaption of this
+# code base to our desired behavior:
+#       1. The exact behavior of the OpenAI gym make evn. has not been established
+#       2. We can't be sure that we're running the same version of tensorflow/keras as orginal code
+#           2a. This seems like a non-issue since I can get the sample code running if cloned from the given repo.
+
 class DuelingDeepQNetwork(keras.Model):
     # ^This is creating a custom model that will have the dueling deep Q behavior built into it
-    def __init__(self, n_actions, fc1_dims, fc2_dims):
+    def __init__(self, n_actions, fc1_dims, fc2_dims, fc3_dims): #TODO consider having this take the input dims as well
         super(DuelingDeepQNetwork, self).__init__()
-        self.output_names = ["loss"]
         # ^Do the keras.Model init
+        self._valid_play_list = [1 for i in range(8)]
         self.dense1 = keras.layers.Dense(fc1_dims, activation="relu")
         # ^Add a first densely connected layer, I think this is the input layer, though it might actually not be
         self.dense2 = keras.layers.Dense(fc2_dims, activation="relu")
+        self.dense3 = keras.layers.Dense(fc3_dims, activation="relu")
         # ^add a second dense layer, this should be a hidden layer within the network
         self.V = keras.layers.Dense(1, activation=None)
         # This looks to be a "value" layer that compresses the output of the network to a single value
-        self.A = keras.layers.Dense(n_actions, activation=None)
+        #We use the sigmoid function to force all of the values contained within actions to be between 0 and 1.
+        self.A = keras.layers.Dense(n_actions, activation='sigmoid') # NOTE since this is activation=None the output can be -1 to 1, I think
+        #TODO Consider adding the filtering layer into this network init
         # This is the layer that the action to be taken will be selected from
         # The way the call method below looks to work the values of the 2nd layer
         # feed into both the V and A layer
+        # NOTE: Copied from https://github.com/tensorflow/tensorflow/issues/34199
+
+    def set_valid_play_list(self, a_valid_play_list):
+        self._valid_play_list = a_valid_play_list
 
     def call(self, state):
+        
         # I'm inclined to think that the state should be thought of as the input layer
         x = self.dense1(state)
         # dense1 would then be the 1st hidden layer
         x = self.dense2(x)
+        x = self.dense3(x)
         # dense2 the second hidden layer
         V = self.V(x)
         # V is the singular value layer
         A = self.A(x)
         # and A is the action output layer
-
+#        self.outputs = A
+#        tf.print(self.outputs)
         Q = (V + (A - tf.reduce_mean(A, axis=1, keepdims=True)))
         # The Q value is calculated by the above formula
         return Q
@@ -57,21 +81,14 @@ class DuelingDeepQNetwork(keras.Model):
     def advantage(self, state):
         x = self.dense1(state)
         x = self.dense2(x)
+        x = self.dense3(x)
         A = self.A(x)
+        #By performing an element wise multiplication between actions and the valid play list, we can 
+        #ensure that the action chosen is a valid action. 
+        actions = tf.math.multiply(A, self._valid_play_list)
         # here A is collection of advantages gained through each action-state transition
         # I've referenced A as the action layer elsewhere, that's slightly inacurate I think
-        return A
-
-    def compute_output_shape(self, input_shape):
-        #Within keras.engine.base_layer, the following behavior was observed:
-
-        #Computes the output shape given an input.
-        #Input = Shape tuple (tuple of integers)
-                #or list of shape tuples (one per output tensor of the layer).
-                #Shape tuples can include None for free dimensions,
-                #instead of an integer.
-        #Output = An output shape tuple.
-        return input_shape
+        return actions
 
 class ReplayBuffer():
     # This class is used to hold onto action-state collections and the reward associated with that transition
@@ -111,10 +128,10 @@ class ReplayBuffer():
 
 class Agent():
     # This should be the actual agent that is making the decisions
-    def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
-                    input_dims, epsilon_dec=1e-3, epsilon_min=1e-3,
-                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=128,
-                    fc2_dims=128, replace=100):
+    def __init__(self, lr=1e-3, gamma=.99, n_actions=8, epsilon=.9, batch_size=64,
+                    input_dims=[1228], epsilon_dec=1e-3, epsilon_min=1e-3,
+                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=512,
+                    fc2_dims=256, fc3_dims=64, replace=250):
         self.score = 0
         # The action_space is the number of possible actions, for us I think this should be 8?
         self.action_space = [i for i in range(n_actions)]
@@ -138,34 +155,55 @@ class Agent():
         # memory is the buffer into which action-state transitions will be stored
         self.memory = ReplayBuffer(mem_size, input_dims)
         # q_eval is the network that will look across the current state of the game to make a prediction
-        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims)
+        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
         # q_next is the "target network that we use the generate the values for the cost function"
         # TODO get a better understanding of what that means; https://youtu.be/CoePrz751lg?t=1305
-        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims)
+        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
         # TODO I think this preps the network for use, but don't really know for sure
+        self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),
+                                                        keras.layers.Dense(16, activation='relu'),
+                                                        keras.layers.Dense(8, activation='sigmoid')])
+        self.call_generator.compile(optimizer='adam',
+                                loss=tf.keras.losses.MeanSquaredError(),
+                                metrics=['accuracy'])
         self.q_eval.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         # this is just needed to make it work? don't really know why, the video didn't go into much depth here
         self.q_next.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
+        dummy_state = np.ones((1,1228), dtype=np.float32)
+
+        if os.path.isfile(fname):
+            self.q_eval.advantage(dummy_state)
+            self.q_next.advantage(dummy_state)
+            self.load_model()
 
     def store_transition(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
+
+    def set_valid_play_lists(self, a_valid_play_list):
+        self.q_next.set_valid_play_list(a_valid_play_list)
+        self.q_eval.set_valid_play_list(a_valid_play_list)
 
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
 
         self._valid_indices_list = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != False]
-        self._valid_play_list = tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32)
+#        self._valid_play_list = tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32)
+        self.set_valid_play_lists(tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32))
         observation = a_game.get_game_state_for_player(a_player.get_player_id())
         action = self.choose_action(observation)
-        #print(f"Action is: {type(action)}")
-        observation_, reward, done = a_game.handle_action_for_player(action[0], a_player) #Currently shooting for the end of every trick.
+#        print(f"Action is: {type(action)}")
+#        print(f"Action is: {type(np.int64())}")
+        if (type(action) == type(np.int64())) or (type(action) == type(np.int32())): # This check is needed because our game can have a single action outcome
+            observation_, reward, done = a_game.handle_action_for_player(action, a_player)
+            #Currently shooting for the end of every trick.
+        else:
+            observation_, reward, done = a_game.handle_action_for_player(action[0], a_player)
+            #Currently shooting for the end of every trick.
         #self.score += reward
         self.store_transition(observation, action, reward, observation_, done) #This stores the result observation from the action. We aren't doing this yet either.
         observation = observation_ #The game's observation is reset to the observation after a specific action has been made and the env has been stepped.
         self.learn() #Updates the weights of the network?
 
-        
-        # TODO makes sure this card is valid
 
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
@@ -175,20 +213,41 @@ class Agent():
         # Here is where the agent looks across the set of advantages and selects the highest one
             #For unknown reasons, we have to convert this to a tensor rather than a numpy array. (Research at future date)
             state = tf.convert_to_tensor(observation) 
-            actions = self.q_eval.advantage(state) 
-            #We use the sigmoid function to force all of the values contained within actions to be between 0 and 1.
-            actions = tf.math.sigmoid(actions)
-            #By performing an element wise multiplication between actions and the valid play list, we can 
-            #ensure that the action chosen is a valid action. 
-            actions = tf.math.multiply(actions, self._valid_play_list)
+            actions = self.q_eval.advantage(state)
+            _ = self.q_next.advantage(state)
+
             #argmax returns the index of the largest element in the tensor.
-            action = tf.math.argmax(actions, axis=-1)
+            action = tf.math.argmax(actions, axis=-1).numpy()[0]
             #We eval so we can actually get the value out of the tensor. For unknown reasons, we have to use
             #keras.backend.eval rather than tf.keras.backend.eval. We will research this at a later date.
-            action = keras.backend.eval(action)
+#            action = keras.backend.eval(action)
         return action
 
     def make_call(self, a_player):#TODO Expanded this method
+        # Take in a list of 32 numbers, 1's where the hand has that card
+        valid_call_tensor = tf.convert_to_tensor(a_player.get_valid_call_list(), dtype=tf.float32)
+        card_list = [0 for i in range(32)]
+        for card in a_player.get_cards_in_hand():
+            card_list[card.get_card_id()] = 1
+        # NOTE: When any other player has made a solo call don't learn from that round
+        #   This is to avoid strengthing the connection between a hand state and no call
+        #   when another player made a bad call.
+        # NOTE: Expressed concern about associating good hands with hard calls
+        #   The no call could get over-reinforced?
+        def call(input):
+            # have some hidden layers
+            result = self.call_generator.layers[0](input)
+            result = self.call_generator.layers[1](result)
+            result = self.call_generator.layers[2](result)
+            # filter for valid calls
+            result = tf.math.multiply(result, valid_call_tensor)
+            return result
+
+        self.call_generator.call = call
+        call_weights = self.call_generator(tf.reshape(tf.convert_to_tensor(card_list, dtype=tf.float32),(32,1)))
+        # output argmax(an 8 element output layer)
+        call = tf.math.argmax(call_weights, axis=-1).numpy()[0]
+#        print(call)
         return Calls.none.value
 
     def learn(self):
@@ -199,7 +258,9 @@ class Agent():
             # If replace many learning actions have been taken since the last time the
             # target network was updated, then update the target network
             # https://youtu.be/CoePrz751lg?t=1594
+            
             self.q_next.set_weights(self.q_eval.get_weights())
+            self.save_model()
 
         # the \ on the next line just lets python know that the line continues on the next line
         # TODO we might actually want to consier using the \ in other places in our code
@@ -208,12 +269,14 @@ class Agent():
         # Pull in information about a game from the buffer
 
         # TODO Don't quite know what this is doing
-        states = tf.convert_to_tensor(states)
+#        print(f"Inputs is: {self.q_eval.inputs}")
+#        print(f"Outputs is: {self.q_eval.outputs}")
+        states = tf.convert_to_tensor(states) #TODO Consider making a copy of states, since 2 places expect 2 different behaviors
         q_pred = self.q_eval(states)
         # This gets the value of the max future action
         states_ = tf.convert_to_tensor(states_)
         q_next = tf.math.reduce_max(self.q_next(states_), axis=1, keepdims=True)
-        q_next = keras.backend.eval(q_next)
+#        q_next = keras.backend.eval(q_next)
         # need to copy the prediction network because of the way keras handles calculating loss
         # https://youtu.be/CoePrz751lg?t=1698
         q_pred = keras.backend.eval(q_pred)
@@ -222,6 +285,7 @@ class Agent():
         # then we get this copied network that's called target. This seems confusing.
 
         #room for improvement here?
+        q_next = keras.backend.eval(q_next)
         for index, terminal in enumerate(dones):
             if terminal:
                 # terminal indicates that we've reached the end of a game, and as such
@@ -230,7 +294,7 @@ class Agent():
             # https://youtu.be/CoePrz751lg?t=1819
             q_target[index, actions[index]] = rewards[index] + self.gamma*q_next[index]
         # TODO: Not really sure what this is doing
-        print("hi")
+        states = keras.backend.eval(states)
         self.q_eval.train_on_batch(states, q_target)
         # decrement the epsilon value, make plays less randomly as tranining progresses
         self.epsilon = self.epsilon - self.epsilon_dec if self.epsilon > \
@@ -238,11 +302,17 @@ class Agent():
         # Increment the counter of how many training runs have been done
         self.learn_step_counter += 1
 
-#    def save_model(self):
-#        self.q_eval.save(self.model_file)
+    def save_model(self):
+        eval_path = "eval_" + self.fname
+        self.q_eval.save_weights(eval_path)
+        next_path = "next_" + self.fname
+        self.q_next.save_weights(next_path)
 
-#    def load_model(self):
-#        self.q_eval = load_model(self.model_file)
+    def load_model(self):
+        eval_path = "eval_" + self.fname
+        self.q_eval.save_weights(eval_path)
+        next_path = "next_" + self.fname
+        self.q_next.load_weights(next_path)
 
 # ^NOTE: This is the end of the transcribed sample code, I'm sure there's was we can modify it to suit our needs.
         

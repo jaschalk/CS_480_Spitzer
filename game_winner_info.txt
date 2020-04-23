@@ -1,0 +1,120 @@
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000001544DF8E688>
+Agent <agents.LearningAgent.Agent object at 0x000001544DF73748> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x000001544DF73788> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x000001544DF8E688> took 48
+Agent <agents.RandomAgent.RandomAgent object at 0x000001544DFA8588> took 21
+
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x0000015457E03F48>
+Agent <agents.LearningAgent.Agent object at 0x0000015457DEC5C8> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x0000015457E03D48> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x0000015457E03F48> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x0000015457DD4A88> took 39
+
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x0000015457E3ABC8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001545C851508> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x000001545C869FC8> took 45
+Agent <agents.LearningAgent.Agent object at 0x0000015457E3ABC8> took 48
+Agent <agents.LearningAgent.Agent object at 0x000001545C837948> took 45
+
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000001545E9FB248>
+Agent <agents.LearningAgent.Agent object at 0x000001545E9FB208> took 54
+Agent <agents.LearningAgent.Agent object at 0x000001545E9CC6C8> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000001545E9FB248> took 60
+Agent <agents.RandomAgent.RandomAgent object at 0x000001545F9FD508> took 12
+
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x000001545FA98408>
+Agent <agents.LearningAgent.Agent object at 0x000001545FA98408> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000001545FA7B8C8> took 39
+Agent <agents.LearningAgent.Agent object at 0x000001545FA61D88> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000001545FA98448> took 24
+
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002C9AC4DE408>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9AC4F8708> took 33
+Agent <agents.LearningAgent.Agent object at 0x000002C9AC4C28C8> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9AC4DE408> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9AC4DE808> took 33
+
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9B811DC88>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B8138408> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B811D888> took 51
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B811DC88> took 63
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B8104F08> took 48
+
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002C9B8178648>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B81AAF08> took 0
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B8178A48> took 0
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B81925C8> took 6
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B8178648> took 42
+
+Player 1 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9B82046C8>
+Agent <agents.LearningAgent.Agent object at 0x000002C9B81CFFC8> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B82046C8> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002C9B8204688> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B81E9748> took 21
+
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002C9BE2E5748>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9BE2CB808> took 9
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BE2CBC08> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BE2E5788> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002C9BE2E5748> took 51
+
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002C9BD12FC48>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B5620BC8> took 30
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BD144E88> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B56207C8> took 12
+Agent <agents.LearningAgent.Agent object at 0x000002C9BD12FC48> took 42
+
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002C9B57E7C48>
+Agent <agents.LearningAgent.Agent object at 0x000002C9B57CDA48> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B58017C8> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B57E7C48> took 45
+Agent <agents.LearningAgent.Agent object at 0x000002C9B5801B88> took 18
+
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9BD2C9848>
+Agent <agents.LearningAgent.Agent object at 0x000002C9BE342BC8> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9AD52DDC8> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BD2C9848> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9AD52D248> took 27
+
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9BCF8FD08>
+Agent <agents.LearningAgent.Agent object at 0x000002C9BCF7F108> took 39
+Agent <agents.LearningAgent.Agent object at 0x000002C9B810B288> took 15
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9BCF8F908> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BCF8FD08> took 45
+
+Player 1 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9EFE71DC8>
+Agent <agents.LearningAgent.Agent object at 0x000002C9EFE741C8> took 30
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9EFE71DC8> took 45
+Agent <agents.LearningAgent.Agent object at 0x000002C9EFE2EF08> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9EFE74208> took 39
+
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002C9BD299348>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B8115648> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9BD299388> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B81388C8> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002C9BD299348> took 60
+
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9B566AFC8>
+Agent <agents.LearningAgent.Agent object at 0x000002C9BE94D5C8> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B564E548> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B566AFC8> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002C9B564EC48> took 36
+
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002C9AD5068C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9B1C04FC8> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002C9BE339388> took 0
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9AD5068C8> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B1C04D48> took 27
+
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9BD18AA88>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9BD0E0408> took 24
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BD0E0D48> took 51
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BD18AA88> took 54
+Agent <agents.RandomAgent.RandomAgent object at 0x000002C9BD18AFC8> took 51
+
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002C9EF640808>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9BD2A0BC8> took 27
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9B55FDCC8> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x000002C9EF640808> took 45
+Agent <agents.LearningAgent.Agent object at 0x000002C9BCF43288> took 27
+
