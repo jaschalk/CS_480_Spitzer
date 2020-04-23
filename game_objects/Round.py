@@ -196,7 +196,10 @@ class Round:
                 call_index = [index for index in range(len(call_list)) if call_list[index] == 1][0]
                 
                 ML_player = self._players_list[ML_index]
-                self._players_list[ML_index].get_controlling_agent().store_call_mem_transition(ML_player.get_starting_cards(), call_index, ML_player.get_score_change_list()[-1])
+                reward = ML_player.get_score_change_list()[-1]
+                if reward == 0 and call_index > 4:
+                    reward = -1*self._players_list[(ML_index+1)%4].get_score_change_list()[-1]
+                self._players_list[ML_index].get_controlling_agent().store_call_mem_transition(ML_player.get_starting_cards(), call_index, reward)
                 self._players_list[ML_index].get_controlling_agent().train_call_generator()
 
     def on_round_end(self):

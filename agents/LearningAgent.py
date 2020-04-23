@@ -15,6 +15,7 @@ import tensorflow.keras as keras # NOT the same as import keras!!
 import random
 import os
 import numpy as np
+import math
 from enums import Calls
 
 # what are we computing loss against?
@@ -70,6 +71,9 @@ class DuelingDeepQNetwork(keras.Model):
         V = self.V(x)
         # V is the singular value layer
         A = self.A(x)
+        A = tf.math.multiply(A, self._valid_play_list)
+        A = tf.math.add(A, self._valid_play_list)
+        # NOTE: I think we might want to filter this A layer in the same manner we're doing for advantage
         # and A is the action output layer
 #        self.outputs = A
 #        tf.print(self.outputs)
@@ -85,6 +89,17 @@ class DuelingDeepQNetwork(keras.Model):
         #By performing an element wise multiplication between actions and the valid play list, we can 
         #ensure that the action chosen is a valid action. 
         actions = tf.math.multiply(A, self._valid_play_list)
+        actions = tf.math.add(actions, self._valid_play_list)
+        # TODO: There seems to be a bug here where there can be a single valid card to play
+        # but it tries to play card 0 instead.
+        # I suspect it's because the action value of that card is 0, so once the multiply is done all the values are 0
+        # It seems to occur more the longer it's been running.
+
+        # NOTE: Possible solution would be to use addition rather than multiplication
+        # since the sigmoid layer forces all the values to between (0, 1) adding the valid
+        # play list, with values [0, 1] should always force the valid cards to be above all 
+        # other cards
+
         # here A is collection of advantages gained through each action-state transition
         # I've referenced A as the action layer elsewhere, that's slightly inacurate I think
         return actions
@@ -153,6 +168,7 @@ class Agent():
         self.learn_step_counter = 0
         # memory is the buffer into which action-state transitions will be stored
         self.memory = ReplayBuffer(mem_size, input_dims)
+        self.call_generator_trained = False
         self._valid_call_list = tf.convert_to_tensor([0 for i in range(8)])
         self.call_memory = ReplayBuffer(mem_size, [32])
         # q_eval is the network that will look across the current state of the game to make a prediction
@@ -163,7 +179,7 @@ class Agent():
         # TODO I think this preps the network for use, but don't really know for sure
         self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),
                                                         keras.layers.Dense(16, activation='relu'),
-                                                        keras.layers.Dense(8, activation='exponential')])
+                                                        keras.layers.Dense(8, activation='sigmoid')])
         '''
         input1 = keras.layers.Input(shape=(32,))
         y1 = keras.layers.Dense(32, activation='relu')(input1)
@@ -211,7 +227,6 @@ class Agent():
     def store_call_mem_transition(self, state, action, reward):
 
         self.call_memory.store_transition(state, action, reward, None, True)
-
 
     def set_valid_play_lists(self, a_valid_play_list):
         self.q_next.set_valid_play_list(a_valid_play_list)
@@ -283,28 +298,45 @@ class Agent():
         call_weights = self.call_generator(card_list)
         # output argmax(an 8 element output layer)
         call = tf.math.argmax(call_weights, axis=-1).numpy()[0]
-#        print(call)
+        # NOTE: New insight the call generator seems to get 'stuck' into call states, it either
+        # makes many high calls in a game, or it makes mostly 0 calls for a game.
+        # This could mean that we're not reinfocing the behavior the way we want to be.
+        print(call)
         return call
 
     def train_call_generator(self):
         # We might want to consider logging and loading data for training this network
         # rather than training on the data generated while running.
-        if self.call_memory.mem_cntr < 2:
+        self.call_generator_trained = True
+        buffer_size = 16
+        if self.call_memory.mem_cntr < buffer_size:
             return
-
+#        print("Training call gen")
         states, actions, rewards, states_, dones = \
-                                            self.call_memory.sample_buffer(2)
+                                            self.call_memory.sample_buffer(buffer_size)
 
-        states = tf.reshape(tf.convert_to_tensor(states), (2,32))
+        states = tf.reshape(tf.convert_to_tensor(states), (buffer_size,32))
         rewards_list = []
         for index in range(len(actions)):
             action = actions[index]
             reward_list = [0 for i in range(8)]
-            reward_list[action] = rewards[index]
+            if reward_list[action] > 0:
+                reward_list[action] = 1
+            else:
+                reward_list[Calls.none.value] = 1
+                reward_list[action] = -.5
+
             rewards_list.append(reward_list)
+
         rewards_list = tf.convert_to_tensor(rewards_list)
-        rewards = tf.reshape(tf.convert_to_tensor(rewards), (2,1))
+
+        rewards = tf.reshape(tf.convert_to_tensor(rewards), (buffer_size,1))
+        
         self.call_generator.train_on_batch(states, rewards_list)
+        # NOTE: Given more time implementing a system similar to the custom agents threshold system
+        # where the thresholds or the hand strength would the the values learned by the network,
+        # rather than making a prediction about the exact call to be made
+        _ = 1
         # We think we want some memory set to pull batchs from, use memory buffer?
         # Train against the change in score for this round.
         # Filter based on other players solo calls.
@@ -368,16 +400,26 @@ class Agent():
         next_path = "next_" + self.fname
         self.q_next.save_weights(next_path)
         call_path = "call_" + self.fname
-        self.call_generator.save_weights(call_path)
+        if self.call_generator_trained:
+            self.call_generator.save_weights(call_path)
 
     def load_model(self):
-        self.epsilon = self.epsilon/2
+        self.epsilon = 0.1
         # TODO: Should we reduce the value of epsilon when loading the weights?
-        eval_path = "eval_" + self.fname
-        self.q_eval.load_weights(eval_path)
-        next_path = "next_" + self.fname
-        self.q_next.load_weights(next_path)
-        call_path = "call_" + self.fname
-        self.call_generator.load_weights(call_path)
+        try:
+            eval_path = "eval_" + self.fname
+            self.q_eval.load_weights(eval_path)
+        except:
+            print("Couldn't load weights for the eval network")
+        try:
+            next_path = "next_" + self.fname
+            self.q_next.load_weights(next_path)
+        except:
+            print("Couldn't load weights for the next network")
+        try:
+            call_path = "call_" + self.fname
+            self.call_generator.load_weights(call_path)
+        except:
+            print("Couldn't load weights for the call generator")
 
 # ^NOTE: This is the end of the transcribed sample code, I'm sure there's was we can modify it to suit our needs.
