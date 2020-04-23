@@ -7,6 +7,7 @@ from game_objects.PartnerRuleTree import PartnerRuleTree
 from random import randint
 from enums import CardIds
 
+
 class Game:
 
    _scoring_table = [["impossible", -9, -6, 3, 6, 9],
@@ -17,6 +18,8 @@ class Game:
 
    def __init__(self, a_game_id, list_of_agents): #initializes the deck, round, players list, and all three sets of rules.
       self._game_id = a_game_id
+      #TODO: Do we want to change this to a UUID?
+      # So that way we can associate data between the winners log and the other output files
       self._players_list = [None, None, None, None]
       self._agents_list = list_of_agents
       self._deck = Deck()
@@ -81,6 +84,7 @@ class Game:
       return self._round.get_game_state_for_play_card(a_player_id)
 
    def handle_winning_agent_information(self, winning_index):
+      # TODO: Would this be a good place to trigger the agent's call generator learning?
       # write information about the scores of the agents to a txt file for later use
       if not self._supress_write_to_winners_log:
          with open("game_winner_info.txt", 'a+') as data_file:
@@ -100,6 +104,7 @@ class Game:
       self._supress_write_to_winners_log = True #TODO Change this name!!
 
    def which_player_wins(self):
+
       #Check scores of all players and return the index of the winning player. If there is no winner, it should return -1.
       num_of_winners = 0
       winning_index = -1
@@ -208,6 +213,7 @@ class Game:
             raise Exception("Calling team round points didn't resolve to an index. " + str(calling_team_round_points) + "\r\n" + str([player.get_round_points() for player in self._players_list]))
 
       for player_index in range(4):
+         self._players_list[player_index].expand_score_change_list()
          value_to_add = self._scoring_table[call_index][point_value_index]
          if type(value_to_add) == type("string"):
             print("In unreachable state")

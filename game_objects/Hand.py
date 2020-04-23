@@ -6,12 +6,16 @@ class Hand:
 
     def __init__(self, a_player):
         self._my_player = a_player
+        self._starting_cards = [0 for i in range(32)]
         self.set_initial_values()
 
     def set_initial_values(self):
         self._cards_in_hand = []
         self._valid_play_list = [1, 1, 1, 1, 1, 1, 1, 1]
         self._binary_representation = 0
+
+    def get_starting_cards(self):
+        return self._starting_cards
 
     def get_cards_in_hand(self):
         return self._cards_in_hand
@@ -28,6 +32,7 @@ class Hand:
     def accept(self, a_card):
         self._cards_in_hand.append(a_card)
         card_id = a_card.get_card_id()
+        self._starting_cards[card_id] = 1
         self._binary_representation += 1<<card_id
 
     def determine_valid_play_list(self):

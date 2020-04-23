@@ -10,6 +10,7 @@ class Player:
         self._parent_game = a_game
         self._controlling_agent = an_agent
         self._total_score = 0
+        self._score_change_list = []
         self.set_initial_values()
 
     def set_initial_values(self):
@@ -25,6 +26,9 @@ class Player:
         self._is_leading = False
         self._cards_played = 0
 
+    def get_starting_cards(self):
+        return self._hand.get_starting_cards()
+
     def get_player_id(self):
         return self._player_id
 
@@ -37,12 +41,19 @@ class Player:
     def get_total_score(self):
         return self._total_score
 
+    def get_score_change_list(self):
+        return self._score_change_list
+
     def set_total_score(self, a_total_score):
         self._total_score = a_total_score
 
-    def update_total_score(self, a_score):
-        self._total_score += a_score
+    def expand_score_change_list(self):
+        self._score_change_list.append(0)
 
+    def update_total_score(self, a_score):
+        self._score_change_list[-1] = a_score
+        self._total_score += a_score
+        
     def get_round_points(self):
         return self._round_points
 
