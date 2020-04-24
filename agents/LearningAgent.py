@@ -393,7 +393,9 @@ class Agent():
             # If replace many learning actions have been taken since the last time the
             # target network was updated, then update the target network
             # https://youtu.be/CoePrz751lg?t=1594
-            _ = self.q_next(np.ones((1,1228), dtype=np.float32))
+            dummy_state = np.ones((1,1228), dtype=np.float32)
+            _ = self.q_next(dummy_state)
+            _ = self.q_next.advantage(dummy_state)
             self.q_next.set_weights(self.q_eval.get_weights())
             self.save_model()
 

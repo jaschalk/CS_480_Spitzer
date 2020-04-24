@@ -8,11 +8,12 @@ import random
 def run_training_batch(n_games):
     random.seed(time.localtime())
     # Do we want to balance the occurence rates of the agents? Yes
-    agent_types = [Agent, CustomAgent, RandomAgent]
-    agent_weights = [1/6, 5.0/9.0, 1]
+    agent = Agent()
+    agent_types = [agent, CustomAgent(), RandomAgent()]
+    agent_weights = [1/9, 5.0/9.0, 1]
     
     start = time.perf_counter()
-    agent = Agent()
+    
     for i in range(n_games):
         try:
             list_of_agents = []
@@ -21,7 +22,7 @@ def run_training_batch(n_games):
                 rolled_weight = random.random()
                 for index in range(len(agent_types)):
                     if rolled_weight <= agent_weights[index]:
-                        list_of_agents.append(agent_types[index]())
+                        list_of_agents.append(agent_types[index])
                         break
             random.shuffle(list_of_agents)
     #        print(list_of_agents)
