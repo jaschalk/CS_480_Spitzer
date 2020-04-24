@@ -41,7 +41,7 @@ class DuelingDeepQNetwork(keras.Model):
     def __init__(self, n_actions, fc1_dims, fc2_dims, fc3_dims): #TODO consider having this take the input dims as well
         super(DuelingDeepQNetwork, self).__init__()
         # ^Do the keras.Model init
-        self._valid_play_list = [1 for i in range(8)]
+        self._valid_actions_filter = [1 for i in range(8)]
         self.dense1 = keras.layers.Dense(fc1_dims, activation="relu")
         # ^Add a first densely connected layer, I think this is the input layer, though it might actually not be
         self.dense2 = keras.layers.Dense(fc2_dims, activation="relu")
@@ -57,11 +57,11 @@ class DuelingDeepQNetwork(keras.Model):
         # feed into both the V and A layer
         # NOTE: Copied from https://github.com/tensorflow/tensorflow/issues/34199
 
-    def set_valid_play_list(self, a_valid_play_list):
-        self._valid_play_list = a_valid_play_list
+    def set_valid_actions_filter(self, a_valid_actions_filter):
+        self._valid_actions_filter = a_valid_actions_filter
 
     def call(self, state):
-        
+
         # I'm inclined to think that the state should be thought of as the input layer
         x = self.dense1(state)
         # dense1 would then be the 1st hidden layer
@@ -71,8 +71,8 @@ class DuelingDeepQNetwork(keras.Model):
         V = self.V(x)
         # V is the singular value layer
         A = self.A(x)
-        A = tf.math.multiply(A, self._valid_play_list)
-        A = tf.math.add(A, self._valid_play_list)
+        A = tf.math.multiply(A, self._valid_actions_filter)
+        A = tf.math.add(A, self._valid_actions_filter)
         # NOTE: I think we might want to filter this A layer in the same manner we're doing for advantage
         # and A is the action output layer
 #        self.outputs = A
@@ -86,10 +86,10 @@ class DuelingDeepQNetwork(keras.Model):
         x = self.dense2(x)
         x = self.dense3(x)
         A = self.A(x)
-        #By performing an element wise multiplication between actions and the valid play list, we can 
-        #ensure that the action chosen is a valid action. 
-        actions = tf.math.multiply(A, self._valid_play_list)
-        actions = tf.math.add(actions, self._valid_play_list)
+        #By performing an element wise multiplication between actions and the valid play list, we can
+        #ensure that the action chosen is a valid action.
+        actions = tf.math.multiply(A, self._valid_actions_filter)
+        actions = tf.math.add(actions, self._valid_actions_filter)
         # TODO: There seems to be a bug here where there can be a single valid card to play
         # but it tries to play card 0 instead.
         # I suspect it's because the action value of that card is 0, so once the multiply is done all the values are 0
@@ -97,7 +97,7 @@ class DuelingDeepQNetwork(keras.Model):
 
         # NOTE: Possible solution would be to use addition rather than multiplication
         # since the sigmoid layer forces all the values to between (0, 1) adding the valid
-        # play list, with values [0, 1] should always force the valid cards to be above all 
+        # play list, with values [0, 1] should always force the valid cards to be above all
         # other cards
 
         # here A is collection of advantages gained through each action-state transition
@@ -168,6 +168,13 @@ class Agent():
         self.learn_step_counter = 0
         # memory is the buffer into which action-state transitions will be stored
         self.memory = ReplayBuffer(mem_size, input_dims)
+        self.__trump_strengths = [3.5, 3.25, 3.2, 3, 2.8, 2, 1.5, 1.25, 1.1, 1.25, 0.95, 0.8, 0.65, 0.65, 0.65]
+        self.__fail_strengths = [3, 0.25, 0.1, 0.02, 0.02, 0.02]
+        self._trump_strength = 100
+        self._clubs_strength = 100
+        self._spades_strength = 100
+        self._hearts_strength = 100
+        self._total_strength = 0
         self.call_generator_trained = False
         self._valid_call_list = tf.convert_to_tensor([0 for i in range(8)])
         self.call_memory = ReplayBuffer(mem_size, [32])
@@ -177,49 +184,46 @@ class Agent():
         # TODO get a better understanding of what that means; https://youtu.be/CoePrz751lg?t=1305
         self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
         # TODO I think this preps the network for use, but don't really know for sure
-        self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),
-                                                        keras.layers.Dense(16, activation='relu'),
-                                                        keras.layers.Dense(8, activation='sigmoid')])
+        self.call_generator = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=4)
+        self.score_predictor = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=4)
+#        self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),
+#                                                        keras.layers.Dense(16, activation='relu'),
+#                                                        keras.layers.Dense(8, activation='sigmoid')])
         '''
         input1 = keras.layers.Input(shape=(32,))
         y1 = keras.layers.Dense(32, activation='relu')(input1)
         x1 = keras.layers.Dense(8, activation='relu')(y1)
-
         input2 = keras.layers.Input(shape=(8,))
         x2 = keras.layers.Dense(8, activation='relu')(input2)
-
         Multiply = keras.layers.Multiply()([x1, input2])
-
         out = keras.layers.Dense(8)(Multiply)
         model = keras.models.Model(inputs=[input1, input2], outputs=out)
         self.call_generator = model
-        
         call_options = keras.layers.Input(shape=(8,))
         temp2 = keras.layers.Dense(8, activation='sigmoid')(call_options)
-
         cards = keras.layers.Input(shape=(32,))
 #        temp = keras.layers.Dense(16, activation='relu')(cards)
         temp = keras.layers.Dense(8, activation='relu')(cards)
-        
         multi = keras.layers.Multiply()([temp, temp2])
-
         out = keras.layers.Dense(8)(multi)
-        
         self.call_generator = keras.models.Model(inputs=[cards, call_options], outputs=out)
-        
         '''
-        self.call_generator.compile(optimizer='adam',
-                                loss=tf.keras.losses.MeanSquaredError(),
-                                metrics=['accuracy'])
+
+        self.call_generator.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
+        self.score_predictor.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         self.q_eval.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         # this is just needed to make it work? don't really know why, the video didn't go into much depth here
         self.q_next.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
-        
-        if os.path.isfile(fname):
+
+        try:
             dummy_state = np.ones((1,1228), dtype=np.float32)
             self.q_eval.advantage(dummy_state)
+            self.q_eval(dummy_state)
             self.q_next.advantage(dummy_state)
+            self.q_next(dummy_state)
             self.load_model()
+        except:
+            print("Falied to load the networks")
 
     def store_transition(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
@@ -229,8 +233,8 @@ class Agent():
         self.call_memory.store_transition(state, action, reward, None, True)
 
     def set_valid_play_lists(self, a_valid_play_list):
-        self.q_next.set_valid_play_list(a_valid_play_list)
-        self.q_eval.set_valid_play_list(a_valid_play_list)
+        self.q_next.set_valid_actions_filter(a_valid_play_list)
+        self.q_eval.set_valid_actions_filter(a_valid_play_list)
 
     # This play_card method is code we wrote to serve as an interface between the imported code and our existing code base
     def play_card(self, a_player, a_game):
@@ -260,7 +264,7 @@ class Agent():
         else:
         # Here is where the agent looks across the set of advantages and selects the highest one
             #For unknown reasons, we have to convert this to a tensor rather than a numpy array. (Research at future date)
-#            state = tf.convert_to_tensor(observation) 
+#            state = tf.convert_to_tensor(observation)
             state = np.array(observation) # using np.arry seems to run faster here
             actions = self.q_eval.advantage(state)
             _ = self.q_next.advantage(state)
@@ -272,9 +276,54 @@ class Agent():
 #            action = keras.backend.eval(action)
         return action
 
-    def make_call(self, a_player):#TODO Expanded this method
+    def __reset_default_strengths(self):
+        self._trump_strength = 100
+        self._clubs_strength = 100
+        self._spades_strength = 100
+        self._hearts_strength = 100
+        self._total_strength = 0
+
+    def gauge_hand_strength(self, a_hand):
+        for card in a_hand.get_cards_in_hand():
+            if card.get_card_suit() == "trump":
+                self._trump_strength *= self.__trump_strengths[card.get_card_rank()]
+            elif card.get_card_suit() == "clubs":
+                self._clubs_strength *= self.__fail_strengths[card.get_card_rank() - 9]
+            elif card.get_card_suit() == "spades":
+                self._spades_strength *= self.__fail_strengths[card.get_card_rank() - 9]
+            elif card.get_card_suit() == "hearts":
+                self._hearts_strength *= self.__fail_strengths[card.get_card_rank() - 9]
+        self._total_strength = self._trump_strength + self._clubs_strength + self._spades_strength + self._hearts_strength
+
+    def find_best_callable_ace_suit(self, a_player):
+        fail_strengths =[self._clubs_strength, self._spades_strength, self._hearts_strength]
+        callable_strengths = []
+        for i in range(3):
+            callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i])
+        return 1 + callable_strengths.index(max(callable_strengths))
+
+    def make_call(self, a_player):
+        call_index = -1
+        self.gauge_hand_strength(a_player.get_hand())
+        if self._total_strength > 42000:
+            call_index = Calls.zolo_s_s.value
+        elif self._total_strength > 28000:
+            call_index = Calls.zolo_s.value
+        elif self._total_strength > 9000:
+            call_index = Calls.zolo.value
+        elif self._total_strength < 2500 and a_player.get_valid_call_list()[Calls.first_trick.value] == 1:
+            call_index = Calls.first_trick.value
+        elif self._total_strength < 2300 and sum(a_player.get_valid_call_list()[Calls.ace_clubs.value:Calls.ace_hearts.value]) > 0: # the second condition means this block is only entered if an ace is callable
+            call_index = self.find_best_callable_ace_suit(a_player)
+        else:
+            call_index = Calls.none.value
+        self.__reset_default_strengths()
+        return call_index
+
+    def make_call_using_learning(self, a_player):
         # Take in a list of 32 numbers, 1's where the hand has that card
         valid_call_tensor = tf.reshape(tf.convert_to_tensor(a_player.get_valid_call_list(), dtype=tf.float32), (1,8))
+        self.call_generator.set_valid_actions_filter(valid_call_tensor)
         card_list = [0 for i in range(32)]
         for card in a_player.get_cards_in_hand():
             card_list[card.get_card_id()] = 1
@@ -285,71 +334,66 @@ class Agent():
         #   when another player made a bad call.
         # NOTE: Expressed concern about associating good hands with hard calls
         #   The no call could get over-reinforced?
-        def call(input, *args, **kwargs):
-            # have some hidden layers
-            r1 = self.call_generator.layers[0](input)
-            r2 = self.call_generator.layers[1](r1)
-            r3 = self.call_generator.layers[2](r2)
-            # filter for valid calls
-            call_index = tf.math.multiply(r3, valid_call_tensor)
-            return call_index
 
-        self.call_generator.call = call
-        call_weights = self.call_generator(card_list)
+        call_weights = self.call_generator.advantage(card_list)
+        print(call_weights)
         # output argmax(an 8 element output layer)
         call = tf.math.argmax(call_weights, axis=-1).numpy()[0]
         # NOTE: New insight the call generator seems to get 'stuck' into call states, it either
         # makes many high calls in a game, or it makes mostly 0 calls for a game.
         # This could mean that we're not reinfocing the behavior the way we want to be.
-        print(call)
+        print(f"Called: {call}")
         return call
 
     def train_call_generator(self):
-        # We might want to consider logging and loading data for training this network
-        # rather than training on the data generated while running.
-        self.call_generator_trained = True
-        buffer_size = 16
-        if self.call_memory.mem_cntr < buffer_size:
-            return
-#        print("Training call gen")
+        # Rewards are effecting the weights incorrectly
+        # Choosing the call seems to be incorrect right now.
+        # 
+        if self.call_memory.mem_cntr < self.batch_size:
+           return
+
+        if self.learn_step_counter % (self.replace * 8) == 0:
+            self.score_predictor.set_weights(self.call_generator.get_weights())
+
         states, actions, rewards, states_, dones = \
-                                            self.call_memory.sample_buffer(buffer_size)
+                        self.call_memory.sample_buffer(self.batch_size)
 
-        states = tf.reshape(tf.convert_to_tensor(states), (buffer_size,32))
-        rewards_list = []
-        for index in range(len(actions)):
+#        potential_calls = self.call_generator(states)
+#        call_prediction = tf.math.reduce_max(self.score_predictor(states), axis=1, keepdims=True)
+        # if the player failed the call: skew away from that call and toward all lower calls
+        # if they made: skew toward that call and all higher calls?
+        # Iterate across rewards to generate the call_target values?
+        call_targets = [[0 for i in range(8)] for i in range(self.batch_size)]
+        for index, reward in enumerate(rewards):
             action = actions[index]
-            reward_list = [0 for i in range(8)]
-            if reward_list[action] > 0:
-                reward_list[action] = 1
+            if reward > 0:
+                for i in range(8):
+                    if i >= action:
+                        call_targets[index][i] = reward/(reward*(i-action+1))
+                #   If reward is positive, skew towards action, and slightly toward the higher calls?
             else:
-                reward_list[Calls.none.value] = 1
-                reward_list[action] = -.5
-
-            rewards_list.append(reward_list)
-
-        rewards_list = tf.convert_to_tensor(rewards_list)
-
-        rewards = tf.reshape(tf.convert_to_tensor(rewards), (buffer_size,1))
-        
-        self.call_generator.train_on_batch(states, rewards_list)
-        # NOTE: Given more time implementing a system similar to the custom agents threshold system
-        # where the thresholds or the hand strength would the the values learned by the network,
-        # rather than making a prediction about the exact call to be made
+                for i in range(8):
+                    call_targets[index][i] = (-i + action - 2) * (1/(8 - action))
+                #   If reward is negative, skew away from the call made, which is the action
+        call_targets = np.array(call_targets)
+#        call_target = np.copy(potential_calls)
+#        call_prediction = np.array(call_prediction)
+#        for index in range(len(dones)):
+#            call_target[index, actions[index]] = rewards[index] + self.gamma*call_prediction[index]
+        self.call_generator.train_on_batch(states, call_targets)
         _ = 1
-        # We think we want some memory set to pull batchs from, use memory buffer?
-        # Train against the change in score for this round.
-        # Filter based on other players solo calls.
+#        print(self.call_generator.weights[-1])
+        self.call_generator_trained = True
 
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:
             return # TODO this might be good place for file reading
-        
+
         if self.learn_step_counter % self.replace == 0:
             # If replace many learning actions have been taken since the last time the
             # target network was updated, then update the target network
             # https://youtu.be/CoePrz751lg?t=1594
-            
+            _ = self.q_next(np.ones((1,1228), dtype=np.float32))
             self.q_next.set_weights(self.q_eval.get_weights())
             self.save_model()
 
@@ -358,25 +402,16 @@ class Agent():
         states, actions, rewards, states_, dones = \
                                             self.memory.sample_buffer(self.batch_size)
         # Pull in information about a game from the buffer
-
         # TODO Don't quite know what this is doing
-#        print(f"Inputs is: {self.q_eval.inputs}")
-#        print(f"Outputs is: {self.q_eval.outputs}")
-#        states = tf.convert_to_tensor(states) #TODO Consider making a copy of states, since 2 places expect 2 different behaviors
         q_pred = self.q_eval(states)
         # This gets the value of the max future action
-#        states_ = tf.convert_to_tensor(states_)
         q_next = tf.math.reduce_max(self.q_next(states_), axis=1, keepdims=True)
-#        q_next = keras.backend.eval(q_next)
         # need to copy the prediction network because of the way keras handles calculating loss
         # https://youtu.be/CoePrz751lg?t=1698
-#        q_pred = keras.backend.eval(q_pred)
         q_target = np.copy(q_pred)
         # NOTE: I don't like the naming here since there's a target network in use that's called next,
         # then we get this copied network that's called target. This seems confusing.
-
         #room for improvement here?
-#        q_next = keras.backend.eval(q_next)
         q_next = np.array(q_next)
         for index, terminal in enumerate(dones):
             if terminal:
@@ -386,7 +421,6 @@ class Agent():
             # https://youtu.be/CoePrz751lg?t=1819
             q_target[index, actions[index]] = rewards[index] + self.gamma*q_next[index]
         # TODO: Not really sure what this is doing
-#        states = keras.backend.eval(states)
         self.q_eval.train_on_batch(states, q_target)
         # decrement the epsilon value, make plays less randomly as tranining progresses
         self.epsilon = self.epsilon - self.epsilon_dec if self.epsilon > \
@@ -416,10 +450,10 @@ class Agent():
             self.q_next.load_weights(next_path)
         except:
             print("Couldn't load weights for the next network")
-        try:
-            call_path = "call_" + self.fname
-            self.call_generator.load_weights(call_path)
-        except:
-            print("Couldn't load weights for the call generator")
+#        try:
+#            call_path = "call_" + self.fname
+#            self.call_generator.load_weights(call_path)
+#        except:
+#            print("Couldn't load weights for the call generator")
 
 # ^NOTE: This is the end of the transcribed sample code, I'm sure there's was we can modify it to suit our needs.

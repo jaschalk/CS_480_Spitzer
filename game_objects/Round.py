@@ -183,7 +183,7 @@ class Round:
             instance["player_partners"] = self.__player_partners
 
     def inform_learning_agents_of_round_end(self):
-        learning_agent_indices = [index for index in range(len(self._players_list)) if isinstance(self._players_list[index].get_controlling_agent(), Agent)] 
+        learning_agent_indices = [index for index in range(len(self._players_list)) if isinstance(self._players_list[index].get_controlling_agent(), Agent)]
         for ML_index in learning_agent_indices:
             # this needs to figure out which agents are the learning agents
             # Filter out times where another player made a solo call
@@ -191,21 +191,22 @@ class Round:
             for i in range(4):
                 if i != ML_index:
                     other_players_calls.append(sum(self._call_matrix[i][5:]))
-            if sum(other_players_calls) == 0:
+            if sum(other_players_calls) == 0: # Filter out times where another player made a solo call
                 call_list = self._call_matrix[ML_index]
                 call_index = [index for index in range(len(call_list)) if call_list[index] == 1][0]
-                
+
                 ML_player = self._players_list[ML_index]
                 reward = ML_player.get_score_change_list()[-1]
                 if reward == 0 and call_index > 4:
                     reward = -1*self._players_list[(ML_index+1)%4].get_score_change_list()[-1]
                 self._players_list[ML_index].get_controlling_agent().store_call_mem_transition(ML_player.get_starting_cards(), call_index, reward)
-                self._players_list[ML_index].get_controlling_agent().train_call_generator()
+            self._players_list[ML_index].get_controlling_agent().train_call_generator()
+            #print(f"Score changed by: {self._players_list[ML_index].get_score_change_list()[-1]}")
 
     def on_round_end(self):
         self._parent_game.update_scores()
         self.inform_learning_agents_of_round_end()
-        self._file_out_name = str(datetime.datetime.now()).replace(":",";").replace(".",",") + "_game_id_" + str(self._parent_game.get_game_id()) + ".spzd" # files will the named with the date and time of creation and the game id number
+        self._file_out_name = str(self._parent_game.get_game_id()) + ".spzd"
         for i in range(4):
             self._players_list[i].set_initial_values()
         self._starting_player = self._players_list[(self._starting_player.get_player_id() + 1)%4]

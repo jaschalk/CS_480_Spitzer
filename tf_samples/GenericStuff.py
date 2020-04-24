@@ -4,6 +4,7 @@ import copy
 import sys
 import random
 import time
+import uuid
 from contextlib import ExitStack
 
 if False:
@@ -23,19 +24,5 @@ if False:
             # from the last file in the list, get the data from the last trick played, from that get the player_partner_prediction_history, then get the last element of that
 
 if __name__ == "__main__":
-    random.seed(time.localtime())
-    weights = [1.0/9.0, 5.0/9.0, 1]
-#    values = ['a', 'b', 'c']
-    totals = [0, 0, 0]
-    count = 2000
-    for i in range(count):
-        totals[0] += 1
-        for i in range(3):
-            rolled_weight = random.random()
-            for index in range(len(totals)):
-                if rolled_weight <= weights[index]:
-                    totals[index] += 1
-                    break
-    ratios = [value/(sum(totals)) for value in totals]
-    print(totals)
-    print(ratios)
+    test = uuid.uuid1()
+    print(test)

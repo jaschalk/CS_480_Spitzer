@@ -6,7 +6,7 @@ from game_objects.CallRules import CallRules
 from game_objects.PartnerRuleTree import PartnerRuleTree
 from random import randint
 from enums import CardIds
-
+import uuid
 
 class Game:
 
@@ -17,7 +17,7 @@ class Game:
                      [-42, -42, -39, -33, -27, 42]]
 
    def __init__(self, a_game_id, list_of_agents): #initializes the deck, round, players list, and all three sets of rules.
-      self._game_id = a_game_id
+      self._game_id = uuid.uuid1()
       #TODO: Do we want to change this to a UUID?
       # So that way we can associate data between the winners log and the other output files
       self._players_list = [None, None, None, None]
@@ -88,6 +88,7 @@ class Game:
       # write information about the scores of the agents to a txt file for later use
       if not self._supress_write_to_winners_log:
          with open("game_winner_info.txt", 'a+') as data_file:
+            data_file.write(f"Associated file: {self._game_id}.spzd\n")
             data_file.write(f"Player {winning_index} won the game with agent type {self._players_list[winning_index].get_controlling_agent()}\n")
             for i in range(4):
                if self._agents_list[i] is not None:

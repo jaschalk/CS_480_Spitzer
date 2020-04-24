@@ -9,7 +9,7 @@ def run_training_batch(n_games):
     random.seed(time.localtime())
     # Do we want to balance the occurence rates of the agents? Yes
     agent_types = [Agent, CustomAgent, RandomAgent]
-    agent_weights = [1.0/9.0, 5.0/9.0, 1]
+    agent_weights = [1/6, 5.0/9.0, 1]
     
     start = time.perf_counter()
     agent = Agent()
@@ -35,7 +35,6 @@ def run_training_batch(n_games):
 
 if __name__ == "__main__":
     while True:
-        batch_result = run_training_batch(125)
+        batch_result = run_training_batch(250)
         print("-------------Finished Batch-------------")
-        if not batch_result:
-            time.sleep(5)
+    
