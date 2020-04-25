@@ -29,8 +29,7 @@ if False:
                 print(data["player_score_history"])
             # from the last file in the list, get the data from the last trick played, from that get the player_partner_prediction_history, then get the last element of that
 
-if __name__ == "__main__":
-
+def graph_results():
     matches = []
     winners = []
     game_count = 0.0
@@ -40,6 +39,7 @@ if __name__ == "__main__":
     random_agent_graph_data = [[],[]]
     custom_agent_graph_data = [[],[]]
     learning_agent_graph_data = [[],[]]
+    learning_average_trick_points_graph_data = [[],[]]
     random_x = np.linspace(0, 1, 100)
     print(random_x)
 
@@ -77,12 +77,14 @@ if __name__ == "__main__":
                     ml_agent_player_number = (index-4)//2
 
 #            print(f"Agent id: {ml_agent_player_number}")
-#            with open(associated_file_name, 'rb') as data_file:
-#                file_data = pickle.load(data_file)
-#                trick_point_history = file_data[-1]["trick_point_history"]
-#                for trick_points in trick_point_history[ml_agent_player_number]:
-#                    total_points_taken += trick_points
-#                    total_tricks_played += 1.0
+            with open(associated_file_name, 'rb') as data_file:
+                file_data = pickle.load(data_file)
+                trick_point_history = file_data[-1]["trick_point_history"]
+                for trick_points in trick_point_history[ml_agent_player_number]:
+                    total_points_taken += trick_points
+                    total_tricks_played += 1.0
+                    learning_average_trick_points_graph_data[0].append(total_tricks_played)
+                    learning_average_trick_points_graph_data[1].append(total_points_taken/total_tricks_played)
 #            print(f"average points/trick: {total_points_taken/total_tricks_played}")
             #print(f"Winning agent is: {i.group(3)}")
             #print(f"Player 0's agent: {i.group(4)}")
@@ -100,6 +102,9 @@ if __name__ == "__main__":
     fig.add_trace(go.Scatter(x=custom_agent_graph_data[0], y=custom_agent_graph_data[1], name='Custom Agent'))
     fig.add_trace(go.Scatter(x=random_agent_graph_data[0], y=random_agent_graph_data[1], name='Random Agent'))
     fig.show()
+    trick_average_graph = go.Figure()
+    trick_average_graph.add_trace(go.Scatter(x=learning_average_trick_points_graph_data[0], y=learning_average_trick_points_graph_data[1], name='Average Points per Trick'))
+    trick_average_graph.show()
 #        file_name_matcher.findall()
 #        for file_name in file_name_matcher.findall(line):
 #            matches.append(file_name)
@@ -108,3 +113,5 @@ if __name__ == "__main__":
 #            file_data = pickle.load(input) # file_data should now be a list of dictionaries
 #            print(file_data[-1]["trick_point_history"])
 
+if __name__ == "__main__":
+    graph_results()

@@ -42,15 +42,18 @@ class DuelingDeepQNetwork(keras.Model):
         super(DuelingDeepQNetwork, self).__init__()
         # ^Do the keras.Model init
         self._valid_actions_filter = [1 for i in range(8)]
-        self.dense1 = keras.layers.Dense(fc1_dims, activation="relu")
+        self.dense1 = keras.layers.Dense(fc1_dims, activation="selu")
         # ^Add a first densely connected layer, I think this is the input layer, though it might actually not be
-        self.dense2 = keras.layers.Dense(fc2_dims, activation="relu")
-        self.dense3 = keras.layers.Dense(fc3_dims, activation="relu")
+        self.dense2 = keras.layers.Dense(fc2_dims, activation="exponential")
+        self.dense3 = keras.layers.Dense(fc3_dims, activation="selu")
+        self.dense4 = keras.layers.Dense(fc3_dims, activation="selu")
+        self.dense5 = keras.layers.Dense(fc3_dims, activation="selu")
+        self.dense6 = keras.layers.Dense(fc3_dims, activation="selu")
         # ^add a second dense layer, this should be a hidden layer within the network
         self.V = keras.layers.Dense(1, activation=None)
         # This looks to be a "value" layer that compresses the output of the network to a single value
         #We use the sigmoid function to force all of the values contained within actions to be between 0 and 1.
-        self.A = keras.layers.Dense(n_actions, activation='sigmoid') # NOTE since this is activation=None the output can be -1 to 1, I think
+        self.A = keras.layers.Dense(n_actions, activation='softplus') # NOTE since this is activation=None the output can be -1 to 1, I think
         #TODO Consider adding the filtering layer into this network init
         # This is the layer that the action to be taken will be selected from
         # The way the call method below looks to work the values of the 2nd layer
@@ -67,6 +70,9 @@ class DuelingDeepQNetwork(keras.Model):
         # dense1 would then be the 1st hidden layer
         x = self.dense2(x)
         x = self.dense3(x)
+        x = self.dense4(x)
+        x = self.dense5(x)
+        x = self.dense6(x)
         # dense2 the second hidden layer
         V = self.V(x)
         # V is the singular value layer
@@ -85,11 +91,15 @@ class DuelingDeepQNetwork(keras.Model):
         x = self.dense1(state)
         x = self.dense2(x)
         x = self.dense3(x)
+        x = self.dense4(x)
+        x = self.dense5(x)
+        x = self.dense6(x)
         A = self.A(x)
         #By performing an element wise multiplication between actions and the valid play list, we can
         #ensure that the action chosen is a valid action.
         actions = tf.math.multiply(A, self._valid_actions_filter)
         actions = tf.math.add(actions, self._valid_actions_filter)
+        _ = 1
         # TODO: There seems to be a bug here where there can be a single valid card to play
         # but it tries to play card 0 instead.
         # I suspect it's because the action value of that card is 0, so once the multiply is done all the values are 0
@@ -142,10 +152,10 @@ class ReplayBuffer():
 
 class Agent():
     # This should be the actual agent that is making the decisions
-    def __init__(self, lr=1e-3, gamma=.99, n_actions=8, epsilon=.9, batch_size=64,
-                    input_dims=[1228], epsilon_dec=1e-3, epsilon_min=1e-3,
-                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=512,
-                    fc2_dims=256, fc3_dims=64, replace=250):
+    def __init__(self, lr=1e-7, gamma=.55, n_actions=8, epsilon=.99, batch_size=64,
+                    input_dims=[1228], epsilon_dec=1e-4, epsilon_min=1e-3,
+                    mem_size=100000, fname='dueling_dqn.h5', fc1_dims=1228,
+                    fc2_dims=1228, fc3_dims=1228, fc4_dims=1024, fc5_dims=512, fc6_dims=256, replace=500):
         self.score = 0
         # The action_space is the number of possible actions, for us I think this should be 8?
         self.action_space = [i for i in range(n_actions)]
@@ -268,13 +278,19 @@ class Agent():
             state = np.array(observation) # using np.arry seems to run faster here
             actions = self.q_eval.advantage(state)
             _ = self.q_next.advantage(state)
-
             #argmax returns the index of the largest element in the tensor.
             action = tf.math.argmax(actions, axis=-1).numpy()[0]
+#            if action == 0:
+#                print(actions.numpy()[0])
+            _ = 1
+
             #We eval so we can actually get the value out of the tensor. For unknown reasons, we have to use
             #keras.backend.eval rather than tf.keras.backend.eval. We will research this at a later date.
 #            action = keras.backend.eval(action)
         return action
+
+    def make_call(self, a_player):
+        return self.make_call_custom(a_player)
 
     def __reset_default_strengths(self):
         self._trump_strength = 100
@@ -302,7 +318,7 @@ class Agent():
             callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i])
         return 1 + callable_strengths.index(max(callable_strengths))
 
-    def make_call(self, a_player):
+    def make_call_custom(self, a_player):
         call_index = -1
         self.gauge_hand_strength(a_player.get_hand())
         if self._total_strength > 42000:

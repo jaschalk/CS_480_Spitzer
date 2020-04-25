@@ -140,7 +140,6 @@ class Round:
             if player.get_player_id() not in players_already_played:
                 player.determine_valid_play_list()
 
-
     def on_trick_end(self, winning_player, points_on_trick, card_list): #winning player is the player object here
         if self._winner_of_first_trick is None:
             self._winner_of_first_trick = winning_player
