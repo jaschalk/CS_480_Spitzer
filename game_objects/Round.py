@@ -156,6 +156,7 @@ class Round:
         for i in range(len(self._players_list)):
             self._players_list[i].determine_potential_partners()
             self._player_point_history[i][self._trick_count] = self._players_list[i].get_round_points()
+            self._players_list[i].initialze_valid_play_list()
         self.update_player_partner_prediction_history()
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
         # by making a copy of the data we'll have a history of how it's changed with each trick

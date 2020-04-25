@@ -23,6 +23,9 @@ class Card():
             from game_objects import FailCard
             return FailCard.FailCard(a_rank, a_suit)
 
+    def __str__(self):
+        return str(self._card_id)
+
     def get_card_id(self): #Getters. Shouldn't ever need to set the id, suit, or rank of a card.
         return self._card_id
 

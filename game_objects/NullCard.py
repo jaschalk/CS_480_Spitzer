@@ -7,6 +7,8 @@ class NullCard(Card.Card):
             pass
         def accept(self, a_card):
             return False
+        def __str__(self):
+            return "None"
     instance = None
     def __new__(cls, a_rank, a_suit):
         if not NullCard.instance:

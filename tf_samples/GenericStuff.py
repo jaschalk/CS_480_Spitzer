@@ -7,6 +7,11 @@ import time
 import uuid
 import re
 from contextlib import ExitStack
+import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas as pd
+import plotly.graph_objects as go
+import numpy as np
 
 if False:
         training_data = glob2.glob("*.spzd") # creates a list of all files ending in .spzd
@@ -25,12 +30,20 @@ if False:
             # from the last file in the list, get the data from the last trick played, from that get the player_partner_prediction_history, then get the last element of that
 
 if __name__ == "__main__":
+
     matches = []
     winners = []
     game_count = 0.0
     total_points_taken = 0
     total_tricks_played = 0.0
     agent_win_counts = [0.0, 0.0, 0.0]
+    random_agent_graph_data = [[],[]]
+    custom_agent_graph_data = [[],[]]
+    learning_agent_graph_data = [[],[]]
+    random_x = np.linspace(0, 1, 100)
+    print(random_x)
+
+
     with open('game_winner_info.txt', 'r') as input:
         line = input.read()
         file_name_matcher = re.compile(r'file: (.+\.spzd)\n\w+ (\d).+\.(\w+)\..+\n.+\.(\w+)\..+k (\d+)\n.+\.(\w+)\..+k (\d+)\n.+\.(\w+)\..+k (\d+)\n.+\.(\w+)\..+k (\d+)\n')
@@ -48,6 +61,15 @@ if __name__ == "__main__":
                 agent_win_counts[2] += 1.0
             # This is finding the win ratios of the random agent, custom agent, and learning agent across a set of games
 #            print(f"{agent_win_counts[0]/game_count}  {agent_win_counts[1]/game_count}  {agent_win_counts[2]/game_count}")
+            random_agent_win_ratio = agent_win_counts[0]/game_count
+            random_agent_graph_data[0].append(game_count)
+            random_agent_graph_data[1].append(random_agent_win_ratio)
+            custom_agent_win_ratio = agent_win_counts[1]/game_count
+            custom_agent_graph_data[0].append(game_count)
+            custom_agent_graph_data[1].append(custom_agent_win_ratio)
+            learning_agent_win_ratio = agent_win_counts[2]/game_count
+            learning_agent_graph_data[0].append(game_count)
+            learning_agent_graph_data[1].append(learning_agent_win_ratio)
             # Get the player number of the learning agent:
             ml_agent_player_number = -1
             for index in range(4, 11, 2):
@@ -55,12 +77,12 @@ if __name__ == "__main__":
                     ml_agent_player_number = (index-4)//2
 
 #            print(f"Agent id: {ml_agent_player_number}")
-            with open(associated_file_name, 'rb') as data_file:
-                file_data = pickle.load(data_file)
-                trick_point_history = file_data[-1]["trick_point_history"]
-                for trick_points in trick_point_history[ml_agent_player_number]:
-                    total_points_taken += trick_points
-                    total_tricks_played += 1.0
+#            with open(associated_file_name, 'rb') as data_file:
+#                file_data = pickle.load(data_file)
+#                trick_point_history = file_data[-1]["trick_point_history"]
+#                for trick_points in trick_point_history[ml_agent_player_number]:
+#                    total_points_taken += trick_points
+#                    total_tricks_played += 1.0
 #            print(f"average points/trick: {total_points_taken/total_tricks_played}")
             #print(f"Winning agent is: {i.group(3)}")
             #print(f"Player 0's agent: {i.group(4)}")
@@ -71,7 +93,13 @@ if __name__ == "__main__":
             #print(f"Scored: {i.group(9)}")
             #print(f"Player 3's agent: {i.group(10)}")
             #print(f"Scored: {i.group(11)}")
-    print(total_tricks_played)
+#    print(graph_data)
+#    print(random_agent_graph_data[0])
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=learning_agent_graph_data[0], y=learning_agent_graph_data[1], name='Learning Agent'))
+    fig.add_trace(go.Scatter(x=custom_agent_graph_data[0], y=custom_agent_graph_data[1], name='Custom Agent'))
+    fig.add_trace(go.Scatter(x=random_agent_graph_data[0], y=random_agent_graph_data[1], name='Random Agent'))
+    fig.show()
 #        file_name_matcher.findall()
 #        for file_name in file_name_matcher.findall(line):
 #            matches.append(file_name)

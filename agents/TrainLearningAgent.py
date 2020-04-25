@@ -2,6 +2,7 @@ from game_objects.Game import Game
 from agents.LearningAgent import Agent
 from agents.CustomAgent import CustomAgent
 from agents.RandomAgent import RandomAgent
+from agents.HumanAgent import HumanAgent
 import time
 import random
 
@@ -38,4 +39,6 @@ if __name__ == "__main__":
     while True:
         batch_result = run_training_batch(250)
         print("-------------Finished Batch-------------")
-    
+#    agent_types = [HumanAgent(), Agent(), CustomAgent(), RandomAgent()]
+#    active_game = Game(0, agent_types)
+#    active_game.play_game()

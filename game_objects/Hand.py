@@ -11,7 +11,7 @@ class Hand:
 
     def set_initial_values(self):
         self._cards_in_hand = []
-        self._valid_play_list = [1, 1, 1, 1, 1, 1, 1, 1]
+        self._valid_play_list = [True for i in range(8)]
         self._binary_representation = 0
 
     def get_starting_cards(self):
@@ -25,6 +25,11 @@ class Hand:
 
     def get_valid_play_list(self):  #Setting the valid play list is only done through the determine valid play list method.
         return self._valid_play_list
+
+    def initialze_valid_play_list(self):
+        self._valid_play_list = [False for i in range(8)]
+        for i in range(len(self._cards_in_hand)):
+            self._valid_play_list[i] = True
 
     def get_my_player(self):
         return self._my_player

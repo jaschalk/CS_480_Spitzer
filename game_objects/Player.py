@@ -93,6 +93,9 @@ class Player:
     def get_valid_play_list(self):
         return self.get_hand().get_valid_play_list()
 
+    def initialze_valid_play_list(self):
+        self._hand.initialze_valid_play_list()
+
     def get_controlling_agent(self):
         return self._controlling_agent
 
