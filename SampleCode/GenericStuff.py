@@ -85,15 +85,19 @@ def graph_results():
                     random_agent_player_numbers.append((index-4)//2)
             agent_numbers_lists = [ml_agent_player_numbers, custom_agent_player_numbers, random_agent_player_numbers]
 
+            agent_average_trick_points_graph_data = [learning_average_trick_points_graph_data, custom_average_trick_points_graph_data, random_average_trick_points_graph_data]
             with open(associated_file_name, 'rb') as data_file:
                 file_data = pickle.load(data_file)
-                total_tricks_played += 1.0
                 trick_point_history = file_data[-1]["trick_point_history"]
-                for i in range(4):
-                    for k in range(3):
-                        if i in agent_numbers_lists[k]:
-                            total_points_taken[i] += trick_point_history[i]
-                            agent_type_point_taken_lists[k] += total_points_taken[i]/total_tricks_played
+                for trick_index in range(8):
+                    total_tricks_played += 1.0
+                    for player_id in range(4):
+                        for agent_type_index in range(3):
+                            if player_id in agent_numbers_lists[agent_type_index]:
+                                agent_average_trick_points_graph_data[agent_type_index][0].append(total_tricks_played)
+                                total_points_taken[player_id] += trick_point_history[player_id]
+                                agent_type_point_taken_lists[agent_type_index] += total_points_taken[player_id]
+                                agent_average_trick_points_graph_data[agent_type_index][1].append(agent_type_point_taken_lists[agent_type_index]/total_tricks_played)
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=learning_agent_graph_data[0], y=learning_agent_graph_data[1], name='Learning Agent'))
@@ -103,9 +107,7 @@ def graph_results():
 
     trick_average_graph = go.Figure()
     for i in range(3):
-        trick_average_graph.add_trace(go.Scatter(x=learning_average_trick_points_graph_data[0], y=total_points_taken[i], name='Learning Agent Points/Trick'))
-    trick_average_graph.add_trace(go.Scatter(x=custom_average_trick_points_graph_data[0], y=custom_average_trick_points_graph_data[1], name='Custom Agent Points/Trick'))
-    trick_average_graph.add_trace(go.Scatter(x=random_average_trick_points_graph_data[0], y=random_average_trick_points_graph_data[1], name='Random Agent Points/Trick'))
+        trick_average_graph.add_trace(go.Scatter(x=agent_average_trick_points_graph_data[i][0], y=agent_average_trick_points_graph_data[i][1], name='Agent Points/Trick'))
     trick_average_graph.show()
 
 if __name__ == "__main__":
