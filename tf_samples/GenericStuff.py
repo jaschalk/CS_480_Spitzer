@@ -36,6 +36,10 @@ def graph_results():
     total_points_taken = [0, 0, 0]
     total_tricks_played = 0.0
     agent_win_counts = [0.0, 0.0, 0.0]
+    ml_agent_player_numbers = []
+    agent_type_point_taken_lists = [0, 0, 0]
+    custom_agent_player_numbers = []
+    random_agent_player_numbers = []
     random_agent_graph_data = [[],[]]
     custom_agent_graph_data = [[],[]]
     learning_agent_graph_data = [[],[]]
@@ -44,7 +48,6 @@ def graph_results():
     random_average_trick_points_graph_data = [[],[]]
     random_x = np.linspace(0, 1, 100)
     print(random_x)
-
 
     with open('game_winner_info.txt', 'r') as input:
         line = input.read()
@@ -72,64 +75,51 @@ def graph_results():
             learning_agent_win_ratio = agent_win_counts[2]/game_count
             learning_agent_graph_data[0].append(game_count)
             learning_agent_graph_data[1].append(learning_agent_win_ratio)
-            # Get the player number of the learning agent:
-            ml_agent_player_number = -1
-            custom_agent_player_number = -1
-            random_agent_player_number = -1
+
             for index in range(4, 11, 2):
                 if i.group(index) == "LearningAgent":
-                    ml_agent_player_number = (index-4)//2
+                    ml_agent_player_numbers.append((index-4)//2)
                 if i.group(index) == "CustomAgent":
-                    custom_agent_player_number = (index-4)//2
+                    custom_agent_player_numbers.append((index-4)//2)
                 if i.group(index) == "RandomAgent":
-                    random_agent_player_number = (index-4)//2
+                    random_agent_player_numbers.append((index-4)//2)
+            agent_numbers_lists = [ml_agent_player_numbers, custom_agent_player_numbers, random_agent_player_numbers]
 
-#            print(f"Agent id: {ml_agent_player_number}")
             with open(associated_file_name, 'rb') as data_file:
                 file_data = pickle.load(data_file)
                 total_tricks_played += 1.0
                 trick_point_history = file_data[-1]["trick_point_history"]
-                for trick_points in trick_point_history[ml_agent_player_number]:
-                    total_points_taken[0] += trick_points
-                    learning_average_trick_points_graph_data[0].append(total_tricks_played)
-                    learning_average_trick_points_graph_data[1].append(total_points_taken[0]/total_tricks_played)
-                for trick_points in trick_point_history[custom_agent_player_number]:
-                    total_points_taken[1] += trick_points
-                    custom_average_trick_points_graph_data[0].append(total_tricks_played)
-                    custom_average_trick_points_graph_data[1].append(total_points_taken[1]/total_tricks_played)
-                for trick_points in trick_point_history[random_agent_player_number]:
-                    total_points_taken[2] += trick_points
-                    random_average_trick_points_graph_data[0].append(total_tricks_played)
-                    random_average_trick_points_graph_data[1].append(total_points_taken[2]/total_tricks_played)
-#            print(f"average points/trick: {total_points_taken/total_tricks_played}")
-            #print(f"Winning agent is: {i.group(3)}")
-            #print(f"Player 0's agent: {i.group(4)}")
-            #print(f"Scored: {i.group(5)}")
-            #print(f"Player 1's agent: {i.group(6)}")
-            #print(f"Scored: {i.group(7)}")
-            #print(f"Player 2's agent: {i.group(8)}")
-            #print(f"Scored: {i.group(9)}")
-            #print(f"Player 3's agent: {i.group(10)}")
-            #print(f"Scored: {i.group(11)}")
-#    print(graph_data)
-#    print(random_agent_graph_data[0])
+                for i in range(4):
+                    for k in range(3):
+                        if i in agent_numbers_lists[k]:
+                            total_points_taken[i] += trick_point_history[i]
+                            agent_type_point_taken_lists[k] += total_points_taken[i]/total_tricks_played
+
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=learning_agent_graph_data[0], y=learning_agent_graph_data[1], name='Learning Agent'))
     fig.add_trace(go.Scatter(x=custom_agent_graph_data[0], y=custom_agent_graph_data[1], name='Custom Agent'))
     fig.add_trace(go.Scatter(x=random_agent_graph_data[0], y=random_agent_graph_data[1], name='Random Agent'))
     fig.show()
+
     trick_average_graph = go.Figure()
-    trick_average_graph.add_trace(go.Scatter(x=learning_average_trick_points_graph_data[0], y=learning_average_trick_points_graph_data[1], name='Learning Agent Points/Trick'))
+    for i in range(3):
+        trick_average_graph.add_trace(go.Scatter(x=learning_average_trick_points_graph_data[0], y=total_points_taken[i], name='Learning Agent Points/Trick'))
     trick_average_graph.add_trace(go.Scatter(x=custom_average_trick_points_graph_data[0], y=custom_average_trick_points_graph_data[1], name='Custom Agent Points/Trick'))
     trick_average_graph.add_trace(go.Scatter(x=random_average_trick_points_graph_data[0], y=random_average_trick_points_graph_data[1], name='Random Agent Points/Trick'))
     trick_average_graph.show()
-#        file_name_matcher.findall()
-#        for file_name in file_name_matcher.findall(line):
-#            matches.append(file_name)
-#    for match in matches:
-#        with open(match, 'rb') as input:
-#            file_data = pickle.load(input) # file_data should now be a list of dictionaries
-#            print(file_data[-1]["trick_point_history"])
 
 if __name__ == "__main__":
     graph_results()
+#    test = [0.3333333333, 1]
+#    totals = [0.0, 0.0]
+#    count = 5000
+#    for i in range(count):
+#        totals[0] += 1
+#        for x in range(3):
+#            r = random.random()
+#            for k in range(2):
+#                if r < test[k]:
+#                    totals[k] += 1
+#                    break
+
+#    print(totals[0]/sum(totals), totals[1]/sum(totals))

@@ -9,11 +9,12 @@ from tf_samples.GenericStuff import graph_results
 
 def run_training_batch(n_games):
     random.seed(time.localtime())
-    # Do we want to balance the occurence rates of the agents? Yes
     agent = Agent()
     agent_types = [agent, CustomAgent(), RandomAgent()]
-    agent_weights = [1/9, 5.0/9.0, 1]
-    
+#    agent_weights = [1.0/3.0, 1.0/3.0, 1]
+    agent_weights = [1.0/3.0, 1, 1]
+    #agent_weights = [1.0/9.0, 4.0/9.0, 1]
+
     start = time.perf_counter()
     
     for i in range(n_games):
@@ -27,8 +28,7 @@ def run_training_batch(n_games):
                         list_of_agents.append(agent_types[index])
                         break
             random.shuffle(list_of_agents)
-    #        print(list_of_agents)
-            active_game = Game(i, list_of_agents) #Initialization of a game
+            active_game = Game(i, list_of_agents)
             active_game.play_game()
         except Exception as err:
             print(f"well that didn't work... {err}")
