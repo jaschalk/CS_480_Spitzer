@@ -44,7 +44,7 @@ class DuelingDeepQNetwork(keras.Model):
         self._valid_actions_filter = [1 for i in range(8)]
         self.dense1 = keras.layers.Dense(fc1_dims, activation="selu")
         # ^Add a first densely connected layer, I think this is the input layer, though it might actually not be
-        self.dense2 = keras.layers.Dense(fc2_dims, activation="exponential")
+        self.dense2 = keras.layers.Dense(fc2_dims, activation="selu")
         self.dense3 = keras.layers.Dense(fc3_dims, activation="selu")
         self.dense4 = keras.layers.Dense(fc3_dims, activation="selu")
         self.dense5 = keras.layers.Dense(fc3_dims, activation="selu")
