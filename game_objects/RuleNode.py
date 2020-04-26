@@ -2,6 +2,10 @@ from game_objects.RuleNodeTrue import RuleNodeTrue
 from game_objects.RuleNodeFalse import RuleNodeFalse
 from game_objects.RuleNodeUnknown import RuleNodeUnknown
 class RuleNode:
+    '''
+    The Rule Node class is used to hold onto a boolean evaluator function
+    whos return value will direct travel within the tree.
+    '''
 
     def __init__(self, description, a_boolean_return_function):
         self._description = description

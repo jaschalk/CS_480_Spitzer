@@ -7,20 +7,20 @@ from enums import *
 from game_objects.Trick import Trick
 from agents.LearningAgent import Agent
 
-#TODO: Check leading player is being updated properly.
-
 class Round:
+    '''
+    The Round class is used to coordinates communication between the trick and the players,
+    notify other objects of game state changes, and log game data to output files.
+    '''
 
     def __init__(self, a_game):
         self._parent_game = a_game
         self._players_list = a_game.get_players_list()
         self._leading_player = a_game.get_leading_player()
         self._starting_player = self._leading_player
-        self.__file_out_data =[] # This is updated every trick!
+        self.__file_out_data =[]
         #^ This needs to not be reset between rounds, since it's tracking data between rounds! So it doesn't go in the set_initial_values_method
         self._player_score_history = []
-        #^ This is a list to which the list of scores for each player at the end of each round will be appended
-        # Not using numpy arrays here because the number of rounds/game is nondeterministic
         # NOTE: The score history will be pushed to file at the end of every trick, but only updated on each round
         self.set_initial_values()
 
@@ -34,11 +34,8 @@ class Round:
             self._call_matrix[player_index][Calls.none.value] = 1
         self._trick_winners_list = np.zeros((8),dtype=np.int8)
         self.__player_cards_in_hand_history = np.zeros((4,8,32), dtype=np.int8)
-        # ^This tracks which player had which cards in their hand for each trick in the round
         self.__player_partners = np.zeros((4,4),dtype=np.int8)
-        # ^This is needed to provide the ML Agent a correct value to train the partner prediction against
         self.__player_partner_prediction_history = np.zeros((4,4,8),dtype=np.float64)
-        #^ This tracks asking_players analyisis of the likelyhood of target player being their partner across each trick
         self.__trick_point_history = np.zeros((4,8),dtype=np.int8)
         #^ This tracks the change in points per player
         self._player_point_history = np.zeros((4,8),dtype=np.int8)
@@ -56,13 +53,10 @@ class Round:
         self._cards_played_binary = 0
 
     def get_player_binary_card_state(self, a_player_id):
-        #This method should return the binary card state of the cards the player
-        #with the matching player id has played
-        return self.get_players_list()[a_player_id].get_cards_played() #This is a binary number representing the cards a player has played
+        #This is a binary number representing the cards a player has played
+        return self.get_players_list()[a_player_id].get_cards_played() 
 
     def get_cards_played(self):
-        #This method should return a binary number representing the cards played in the round.
-        #Can I use the trick history to somehow do this?
         return self._cards_played_binary
 
     def _get_player_partners(self):
@@ -86,7 +80,7 @@ class Round:
     def set_current_trick(self, trick):
         self._current_trick = trick
 
-    def get_trick_history(self): #the trick history should only be set by actually playing tricks out
+    def get_trick_history(self):
         return self._trick_history
 
     def get_parent_game(self):
@@ -158,8 +152,6 @@ class Round:
             self._players_list[i].initialze_valid_play_list()
         self.update_player_partner_prediction_history()
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
-        # by making a copy of the data we'll have a history of how it's changed with each trick
-        # using deep copy here to actually duplicate the data and not just link to it's location in memory
         self._trick_count += 1
         self._leading_player = winning_player
         if self._trick_count == 8:
@@ -173,25 +165,24 @@ class Round:
 
     def update_player_partner_prediction_history(self):
         for player_number in range(4):
-            for target_player in range(4): # this nested loop will query each player for their prediction about their partner status with the target player
-                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] = self._players_list[player_number].get_potential_partners_list()[target_player]
+            for target_player in range(4):
+                self.__player_partner_prediction_history[player_number][target_player][self._trick_count] \
+                    = self._players_list[player_number].get_potential_partners_list()[target_player]
 
     def update_player_partners_history(self):
-        # Since this data is only used in training the ML Agent it can be retroactively updated to the correct values
         self.__player_partners = self.__player_partner_prediction_history[-1]
         for instance in self.__file_out_data:
             instance["player_partners"] = self.__player_partners
 
     def inform_learning_agents_of_round_end(self):
-        learning_agent_indices = [index for index in range(len(self._players_list)) if isinstance(self._players_list[index].get_controlling_agent(), Agent)]
+        learning_agent_indices = [index for index in range(len(self._players_list)) 
+                                    if isinstance(self._players_list[index].get_controlling_agent(), Agent)]
         for ML_index in learning_agent_indices:
-            # this needs to figure out which agents are the learning agents
-            # Filter out times where another player made a solo call
             other_players_calls = []
             for i in range(4):
                 if i != ML_index:
                     other_players_calls.append(sum(self._call_matrix[i][5:]))
-            if sum(other_players_calls) == 0: # Filter out times where another player made a solo call
+            if sum(other_players_calls) == 0:
                 call_list = self._call_matrix[ML_index]
                 call_index = [index for index in range(len(call_list)) if call_list[index] == 1][0]
 
@@ -201,7 +192,6 @@ class Round:
                     reward = -1*self._players_list[(ML_index+1)%4].get_score_change_list()[-1]
                 self._players_list[ML_index].get_controlling_agent().store_call_mem_transition(ML_player.get_starting_cards(), call_index, reward)
             self._players_list[ML_index].get_controlling_agent().train_call_generator()
-            #print(f"Score changed by: {self._players_list[ML_index].get_score_change_list()[-1]}")
 
     def on_round_end(self):
         self._parent_game.update_scores()
@@ -211,20 +201,19 @@ class Round:
             self._players_list[i].set_initial_values()
         self._starting_player = self._players_list[(self._starting_player.get_player_id() + 1)%4]
 
-    def push_data_to_file(self): #need to think about this more to know what info will be needed by the learned agent TODO
+    def push_data_to_file(self):
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
         self.update_player_partners_history()
         if not os.path.isfile(self._file_out_name):
             with open(self._file_out_name, 'wb+') as data_file:
                 pickle.dump(self.__file_out_data, data_file)
-            # TODO Make sure this contains all the data that we want it to
 
     def update_call(self, player_id, call_index):
         for index in range(8):
             self._call_matrix[player_id][index] = 0
         self._call_matrix[player_id][call_index] = 1
 
-    def begin_play(self): #this method should start asking players to play cards to the active trick while they can do so
+    def begin_play(self):
         for i in range(4):
             self._players_list[i].ask_for_call()
             if sum(self._call_matrix[i][1:]) != 0:
@@ -233,61 +222,59 @@ class Round:
             self.play_trick()
 
     def play_trick(self):
-        play_order_list = [self._players_list[(index+self._leading_player.get_player_id())%4] for index in range(len(self._players_list))]
+        play_order_list = [self._players_list[(index+self._leading_player.get_player_id())%4] 
+                            for index in range(len(self._players_list))]
         for player in play_order_list:
             player.play_card_to(self._current_trick)
 
-    def get_game_state_for_player(self, a_player_index): #this method should return the current game state from the given players prespective for use in the ML agent
+    def get_game_state_for_player(self, a_player_index):
         a_game_state = {}
         a_game_state["trick_history"] = self._trick_history
         a_game_state["trick_point_history"] = self.__trick_point_history
         a_game_state["call_matrix"] = self._call_matrix
         a_game_state["current_trick"] = self._current_trick
-        a_game_state["current_player"] = self._players_list[a_player_index] # used for getting info about the players cards from their hand
+        a_game_state["current_player"] = self._players_list[a_player_index]
         return a_game_state
-        #TODO Consider what else need to go in here
 
     def get_game_state_for_play_card(self, a_player_index):
-        # We want:
-        #   The cards in hand, (This would be a 32 element list) DONE?
-        #   The cards played to the trick so far, (4*32 element list) Done?
-        #   The players potential partners list, (4 element list) Done?
-        #   The list of cards played so far, (4*8*32 elements) Done?
-        #   The call state of the game, (This would be a 4*8 element list)
-        #   The normalized list of points taken by each player (4 elements) NOTE: [pl_1_points, pl_2_points...]
-        #   The normailzed score list for each player (4 elements) NOTE: handle the same way as points
-        #   32 + 4*32  + 4 + 4*8*32 + 4*8 + 4 + 4 = 1228
         game_state = np.zeros((1, 1228), dtype=np.float32)
         index_of_write = 0
+        #   The cards in hand, (This would be a 32 element list)
         for card in self._players_list[a_player_index].get_cards_in_hand(): # this isn't filtering by valid or not
             game_state[0][card.get_card_id()] = 1
         index_of_write = 32
 
+        #   The cards played to the trick so far, (4*32 element list)
         for card in self._current_trick.get_played_cards_list():
             if card is not None:
                 game_state[0][index_of_write + card.get_card_id()] = 1
             index_of_write += 32
 
+        #   The players potential partners list, (4 element list)
         for i in range(4):
             game_state[0][index_of_write] = self._players_list[a_player_index].get_potential_partners_list()[i]
             index_of_write += 1
 
+        #   The list of cards played so far, (4*8*32 elements)
         for player_num in range(4):
             for trick_num in range(8):
                 for card_num in range(32):
                     game_state[0][index_of_write] = self._trick_history[player_num][trick_num][card_num]
                     index_of_write += 1
 
+        #   The call state of the game, (This would be a 4*8 element list)
         for player_num in range(4):
             for call_num in range(8):
                 game_state[0][index_of_write] = self._call_matrix[player_num][call_num]
                 index_of_write += 1
 
+        #   The normalized list of points taken by each player (4 elements)
         normalized_player_point_list = [player.get_round_points()/120 for player in self._players_list]
         for player_num in range(4):
             game_state[0][index_of_write] = normalized_player_point_list[player_num]
             index_of_write += 1
 
+        #   The normailzed score list for each player (4 elements)
         normalized_player_score_list = [player.get_total_score()/120 for player in self._players_list]
         for player_num in range(4):
             game_state[0][index_of_write] = normalized_player_score_list[player_num]

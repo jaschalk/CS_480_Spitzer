@@ -1,11 +1,12 @@
 from game_objects.Hand import Hand
-import numpy as np
-#from agents import agent
 
 class Player:
+    '''
+    The Player class is used to provide an interface for an agent to interact with the game
+    and hold onto information about their personal game state.
+    '''
 
     def __init__(self, a_game, player_id, an_agent):
-        #initializes the hand object and sets the potential partners list to correct values.
         self._player_id = player_id
         self._parent_game = a_game
         self._controlling_agent = an_agent
@@ -14,7 +15,9 @@ class Player:
         self.set_initial_values()
 
     def set_initial_values(self):
-        self._potential_partners_list = [0, 0, 0, 0] #initialized to all zeroes when created because we don't know the id of the player
+        #When a new round starts this method is called and is used
+        #to reset the player's game state to its initial status.
+        self._potential_partners_list = [0, 0, 0, 0]
         self._potential_partners_list[self._player_id] = 1
         for index in range(4):
             if index != self._player_id:
@@ -103,13 +106,12 @@ class Player:
         self._controlling_agent = an_agent
 
     def accept(self, a_card):
-        #This method should send the card to the hand when a player is dealt a card
         a_card.set_owning_player(self.get_player_id())
-        self._hand.accept(a_card)
+        a_card.visit(self._hand)
 
     def play_card_to(self, a_trick):
-        #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the inex returned to the trick.
-        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game) #This is the index of the card to be played in the player's hand
+        #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the index returned to the trick.
+        card_to_play_index = self._controlling_agent.play_card(self, self._parent_game)
         if card_to_play_index is not None:
             self._hand.play_card_at_index(a_trick, card_to_play_index)
 
@@ -117,17 +119,15 @@ class Player:
         self._hand.play_card_at_index(a_trick, card_to_play_index)
 
     def validate_card(self, a_card):
-        #Ask the game to run its validate card method on the card passed in. Return this information to the hand.
         return self._parent_game.validate_card(a_card, self)
 
     def determine_valid_play_list(self):
         self._hand.determine_valid_play_list()
 
     def determine_potential_partners(self):
-        #Asks the parent game to use its validate partners method to modify the potential partners list based on the returned string.
         _results = [None, None, None, None]
-        # The goal here is to store all the return strings so we know the full partner state before we update anything
         _unknowns = 0
+        # The goal here is to store all the return strings so we know the full partner state before we update anything
         for index in range(4):
             if index != self._player_id:
                 _result = self._parent_game.validate_partners(self, index)
@@ -152,11 +152,9 @@ class Player:
         self._parent_game.update_call(self._player_id, index_of_call_made)
 
     def determine_valid_calls(self):
-        #Asks the parent game to return the legal calls based on the information in the hand.
         self._valid_call_list = self._parent_game.validate_calls(self._hand)
 
     def does_play_continue(self):
-        #If there are no more cards in the hand, play should not continue.
         if len(self._hand.get_cards_in_hand()) == 0:
             return False
         else:

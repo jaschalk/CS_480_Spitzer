@@ -8,8 +8,7 @@ class RuleNodeFalse:
         def validate(self, *args):
             return False
     instance = None
-    def __new__(cls): #when a new object of this class is requested it will instead see if the
-        #instance already exists and either create it and return, or just return that instance
+    def __new__(cls):
         if not RuleNodeFalse.instance:
             RuleNodeFalse.instance = RuleNodeFalse.__FalseNode()
         return RuleNodeFalse.instance

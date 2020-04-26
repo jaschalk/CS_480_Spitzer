@@ -1,5 +1,8 @@
 from enums import Calls, CardBinary
 class CallRules:
+    '''
+    The Call Rule class is used to evaluate and generate players' valid calls lists.
+    '''
 
     def __init__(self): #setup singleton behavior for the rules
         self._call_filter = [(1<<Calls.ace_clubs.value, CardBinary.ace_clubs.value), #remember to ~ the hand first

@@ -3,6 +3,10 @@ from game_objects.RuleNodeTrue import RuleNodeTrue
 from game_objects.RuleNodeFalse import RuleNodeFalse
 
 class CardRuleTree:
+    '''
+    The Card Rule Tree class is used to determine if a given card is 
+    valid to play under current circumstances.
+    '''
 
     _root = None
 
@@ -21,8 +25,7 @@ class CardRuleTree:
                     if(call_state[player_num][call_num] == 1):
                         which_call = call_num
                         break
-            # the ace will be card # 14 + 6*(call_index - 1)
-            return 14 + 6*(which_call - 1)
+            return 14 + 6*(which_call - 1) #This will be the id number of the ace that was called
 
         def get_suit_binary_representation(suit):
             if suit == "trump":
@@ -37,7 +40,7 @@ class CardRuleTree:
                 # raise an error if the suit requested isn't in the valid set, to prevent silent errors, this is mostly to catch typos
                 raise RuntimeError("Get suit binary representation received a request for an invalid suit. " + suit)
 
-        def is_player_leading(*args):
+        def is_player_leading(*args):#all *args should be: a_card, a_player, a_round in that order
             return args[2].get_leading_player() == args[1]
 
         def has_one_card(*args):
@@ -80,7 +83,7 @@ class CardRuleTree:
             suit_lead_binary_representation = get_suit_binary_representation(suit_lead)
             return (suit_lead_binary_representation & called_ace_id) == 0
 
-        def is_card_trump(*args): #all *args should be: a_card, a_player, a_round in that order
+        def is_card_trump(*args): 
             trump_binary_representation = get_suit_binary_representation("trump")
             return (trump_binary_representation & 1<<args[0].get_card_id()) != 0
 
@@ -109,7 +112,6 @@ class CardRuleTree:
         __root_RRLL.set_left(__root_RRLLL)
         __root_RRRR.set_left(__root_RRRRL)
         __root_RRRR.set_right(RuleNodeTrue())
-        #this is pretty confusing right now, maybe we can think of a way to clean it up.
 
     def validate_card(self, a_card, a_player, a_round):
         return self._root.validate(a_card, a_player, a_round)

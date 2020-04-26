@@ -11,9 +11,6 @@ class Deck:
         self.populate_deck()
 
     def populate_deck(self):
-        '''
-        Populating the deck will clear the contents of the cardlist and refill it with the proper collection of cards to play the game with.
-        '''
         self._card_list.clear()
         for i in range(15):
             if i < 14:
@@ -25,9 +22,6 @@ class Deck:
         shuffle(self._card_list)
 
     def deal_cards_to(self, targetPlayer):
-        '''
-        This method results in 8 cards being dealt from the deck out to each player.
-        '''
         for i in range(8):
             self._card_list.pop().visit(targetPlayer)
 

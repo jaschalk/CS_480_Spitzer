@@ -1,6 +1,9 @@
 from game_objects.Card import Card
 
 class FailCard(Card):
+    '''
+    The Fail Card class is used to represent cards of the fail suits.
+    '''
 
     def __init__(self, a_rank, a_suit):
         self._card_suit = a_suit
@@ -12,9 +15,9 @@ class FailCard(Card):
         elif self._card_suit == "hearts":
             self._card_id = (self._card_rank + 17)
         self.set_point_value(a_rank)
+        self._owning_player_index = -1
 
-    def __new__(cls, a_rank, a_suit):
-        #know we need to do this, unsure of what goes here. 
+    def __new__(cls, a_rank, a_suit): 
         return object.__new__(cls)
 
     def accept(self, a_card):

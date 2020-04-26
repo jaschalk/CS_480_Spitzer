@@ -1,6 +1,9 @@
 from game_objects import Card
 
 class NullCard(Card.Card):
+    '''
+    The Null Card class is used to represent the absence of a card.
+    '''
 
     class __NullCard:
         def __init__(self, a_rank, a_suit):
