@@ -10,7 +10,7 @@ from agents.LearningAgent import Agent
 
 class GameTest(unittest.TestCase):
 
-    number_of_games_to_be_played = 1
+    number_of_games_to_be_played = 5
 
     def setUp(self):
         setup_results = general_setup()

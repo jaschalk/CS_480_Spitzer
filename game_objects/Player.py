@@ -147,6 +147,7 @@ class Player:
 
     def ask_for_call(self):
         #Player asks agent to make a call. The value returned from the agent is then used to update the round based on the index of the call made.
+        self.determine_valid_calls()
         index_of_call_made = self._controlling_agent.make_call(self)
         self._parent_game.update_call(self._player_id, index_of_call_made)
 

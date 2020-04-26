@@ -130,7 +130,7 @@ class Game:
 
    def validate_calls(self, a_hand):
       #Accesses the call rules and returns the list of valid calls to the player.
-      return self._call_rules.validate_calls(a_hand.get_binary_representation())
+      return self._call_rules.validate_calls(a_hand)
 
    def update_call(self, player_id, index_of_call_index):
       self._round.update_call(player_id, index_of_call_index)
