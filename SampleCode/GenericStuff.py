@@ -33,7 +33,7 @@ def graph_results():
     matches = []
     winners = []
     game_count = 0.0
-    total_points_taken = [0, 0, 0]
+    points_taken = 0.0
     total_tricks_played = 0.0
     agent_win_counts = [0.0, 0.0, 0.0]
     ml_agent_player_numbers = []
@@ -95,8 +95,8 @@ def graph_results():
                         for agent_type_index in range(3):
                             if player_id in agent_numbers_lists[agent_type_index]:
                                 agent_average_trick_points_graph_data[agent_type_index][0].append(total_tricks_played)
-                                total_points_taken[player_id] += trick_point_history[player_id]
-                                agent_type_point_taken_lists[agent_type_index] += total_points_taken[player_id]
+                                points_taken = trick_point_history[player_id][trick_index]
+                                agent_type_point_taken_lists[agent_type_index] += points_taken
                                 agent_average_trick_points_graph_data[agent_type_index][1].append(agent_type_point_taken_lists[agent_type_index]/total_tricks_played)
 
     fig = go.Figure()
@@ -106,8 +106,9 @@ def graph_results():
     fig.show()
 
     trick_average_graph = go.Figure()
+    graph_labels =["Learing Agent", "Custom Agent", "Random Agent"]
     for i in range(3):
-        trick_average_graph.add_trace(go.Scatter(x=agent_average_trick_points_graph_data[i][0], y=agent_average_trick_points_graph_data[i][1], name='Agent Points/Trick'))
+        trick_average_graph.add_trace(go.Scatter(x=agent_average_trick_points_graph_data[i][0], y=agent_average_trick_points_graph_data[i][1], name=graph_labels[i]))
     trick_average_graph.show()
 
 if __name__ == "__main__":
