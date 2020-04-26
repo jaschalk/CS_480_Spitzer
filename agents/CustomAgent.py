@@ -38,7 +38,7 @@ class CustomAgent:
         fail_strengths =[self._clubs_strength, self._spades_strength, self._hearts_strength]
         callable_strengths = []
         for i in range(3):
-            callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i])
+            callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i+1])
         return 1 + callable_strengths.index(max(callable_strengths))
 
 

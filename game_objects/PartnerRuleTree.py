@@ -2,8 +2,13 @@ from game_objects.RuleNode import RuleNode
 from game_objects.RuleNodeUnknown import RuleNodeUnknown
 from game_objects.RuleNodeFalse import RuleNodeFalse
 from game_objects.RuleNodeTrue import RuleNodeTrue
+from enums import CardBinary
 
 class PartnerRuleTree:
+    '''
+    The Partner Rule Tree class is used to determine whether or not a player
+    should update their potential partners list.
+    '''
 
     _root = None
 
@@ -14,7 +19,10 @@ class PartnerRuleTree:
 
         #args should be aPlayer, aPlayer, and aRound in that order.
 
+        both_queens_value = CardBinary.queen_clubs.value + CardBinary.queen_spades.value
+
         def get_ace_called_id(*args):
+            # this assumes that an ace has been called
             # need to go through the call matrix to see what ace was called
             call_state = args[2].get_call_matrix()
             which_call = -1
@@ -23,8 +31,7 @@ class PartnerRuleTree:
                     if(call_state[player_num][call_num] == 1):
                         which_call = call_num
                         break
-            # the ace will be card # 14 + 6*(call_index - 1)
-            return 14 + 6*(which_call - 1)
+            return 14 + 6*(which_call - 1)#This will be the id number of the ace that was called
 
         def get_player_took_first_trick(*args):
             return args[2].get_first_trick_winner().get_player_id()
@@ -85,7 +92,7 @@ class PartnerRuleTree:
 
         def does_asking_player_have_ace(*args):
             ace_called = get_ace_called_id(*args)
-            cards_in_player_hand_binary_state = args[0].get_hand().get_binary_representation()
+            cards_in_player_hand_binary_state = args[0].get_hand_binary_representation()
             cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
             return ((cards_asking_has_played + cards_in_player_hand_binary_state) & 1<<ace_called == 1<<ace_called)
 
@@ -106,31 +113,30 @@ class PartnerRuleTree:
             return target_cards_played & 1<<ace_called
 
         def does_asking_player_have_a_queen(*args):
-            player_hand_binary_representation = args[0].get_hand().get_binary_representation()
+            player_hand_binary_representation = args[0].get_hand_binary_representation()
             cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
-            return ((player_hand_binary_representation + cards_asking_has_played) & 0b1 == 0b1) or ((player_hand_binary_representation + cards_asking_has_played) & 0b100 == 0b100)
+            return ((player_hand_binary_representation + cards_asking_has_played) & CardBinary.queen_clubs.value == CardBinary.queen_clubs.value) or ((player_hand_binary_representation + cards_asking_has_played) & CardBinary.queen_spades.value == CardBinary.queen_spades.value)
 
         def does_asking_player_have_both_queens(*args):
-            #Maybe make a method to take care of the first two lines and return the number.
-            player_hand_binary_representation = args[0].get_hand().get_binary_representation()
+            player_hand_binary_representation = args[0].get_hand_binary_representation()
             cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
-            return ((player_hand_binary_representation + cards_asking_has_played) & 0b101 == 0b101)
+            return ((player_hand_binary_representation + cards_asking_has_played) & both_queens_value == both_queens_value)
 
         def does_target_player_have_a_queen(*args):
             cards_target_has_played = args[2].get_player_binary_card_state(args[1].get_player_id())
-            return ((cards_target_has_played & 0b1 == 0b1) or (cards_target_has_played & 0b100 == 0b100))
+            return ((cards_target_has_played & CardBinary.queen_clubs.value == CardBinary.queen_clubs.value) or (cards_target_has_played & CardBinary.queen_spades.value == CardBinary.queen_spades.value))
 
         def did_asking_player_play_a_queen(*args):
             cards_asking_has_played = args[2].get_player_binary_card_state(args[0].get_player_id())
-            return ((cards_asking_has_played & 0b1 == 0b1) or (cards_asking_has_played & 0b100 == 0b100))
+            return ((cards_asking_has_played & CardBinary.queen_clubs.value == CardBinary.queen_clubs.value) or (cards_asking_has_played & CardBinary.queen_spades.value == CardBinary.queen_spades.value))
 
         def have_both_queens_been_played(*args):
             cards_played = args[2].get_cards_played()
-            return (cards_played & 0b101 == 0b101)
+            return (cards_played & both_queens_value == both_queens_value)
 
         def has_one_queen_been_played(*args):
             cards_played = args[2].get_cards_played()
-            return (cards_played & 0b1 == 0b1 or cards_played & 0b100 == 0b100)
+            return (cards_played & CardBinary.queen_clubs.value == CardBinary.queen_clubs.value or cards_played & CardBinary.queen_spades.value == CardBinary.queen_spades.value)
 
         self._root = RuleNode("Returns true if a call has been made.", has_call_been_made)
         __root_R = RuleNode("Returns true if the asking player has a queen.", does_asking_player_have_a_queen)

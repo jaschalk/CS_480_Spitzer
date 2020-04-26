@@ -110,7 +110,7 @@ class RoundTest(unittest.TestCase):
             for i in range(len(file_data)):
                 self.assertTrue(self.test_round._get_file_out_data()[i]["trick_history"].all() == file_data[i]["trick_history"].all())
                 self.assertGreater(self.test_round._get_file_out_data()[i]["trick_history"].sum(), 0)
-                self.assertTrue(self.test_round._get_file_out_data()[i]["trick_point_history"].all() == file_data[i]["trick_history"].all())
+                self.assertTrue(self.test_round._get_file_out_data()[i]["trick_point_history"].all() == file_data[i]["trick_point_history"].all())
                 self.assertGreaterEqual(self.test_round._get_file_out_data()[i]["trick_point_history"].sum(), 0)
                 self.assertTrue(self.test_round._get_file_out_data()[i]["player_partners"].all() == file_data[i]["player_partners"].all())
                 self.assertGreater(self.test_round._get_file_out_data()[i]["player_partners"].sum(), 0)
