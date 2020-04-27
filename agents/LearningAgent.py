@@ -152,11 +152,11 @@ class Agent():
         self._valid_call_list = tf.convert_to_tensor([0 for i in range(8)])
         self.call_memory = ReplayBuffer(mem_size, [32])
         # q_eval is the network that will look across the current state of the game to make a prediction
-        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
+        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims)
         # q_next is the "target network that we use the generate the values for the cost function"
-        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
-        self.call_generator = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=4)
-        self.score_predictor = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=4)
+        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims)
+        self.call_generator = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
+        self.score_predictor = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
 #        self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),
 #                                                        keras.layers.Dense(16, activation='relu'),
 #                                                        keras.layers.Dense(8, activation='sigmoid')])
