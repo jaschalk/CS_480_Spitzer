@@ -106,8 +106,9 @@ def graph_results():
     fig.show()
 
     trick_average_graph = go.Figure()
+    graph_labels =["Learing Agent", "Custom Agent", "Random Agent"]
     for i in range(3):
-        trick_average_graph.add_trace(go.Scatter(x=agent_average_trick_points_graph_data[i][0], y=agent_average_trick_points_graph_data[i][1], name='Agent Points/Trick'))
+        trick_average_graph.add_trace(go.Scatter(x=agent_average_trick_points_graph_data[i][0], y=agent_average_trick_points_graph_data[i][1], name=graph_labels[i]))
     trick_average_graph.show()
 
 if __name__ == "__main__":
