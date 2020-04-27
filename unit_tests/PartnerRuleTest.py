@@ -42,11 +42,11 @@ class PartnerRuleTest(unittest.TestCase):
                 self.temp_player_list[3].accept(self.card_list[index]) #give the fourth player the last 8 cards, skipping any aces
             else:
                 continue
-        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 4) #this method asks the round to update the call made based on the player id and call index made
-        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 6) #AS -- index = 20
-        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 7) #9D -- index 12 player 2 wins the trick
-        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 7) #KS -- index 22
-        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #9S -- index 23
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 4)
+        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 6) #AS
+        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 7) #9D -- player 2 wins the trick
+        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 7) #KS
+        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #9S
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,1,0,0])
@@ -69,16 +69,16 @@ class PartnerRuleTest(unittest.TestCase):
             self.temp_player_list[2].accept(Card(index, "trump")) #give player 3 a bunch of random trump cards
         self.temp_player_list[2].accept(self.card_list[1]) #spitzer
         self.temp_player_list[2].accept(self.card_list[11]) #KD
-        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 1) #this method has the round update the call based on the player id and call index passed in.
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 1)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
-        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0]) #Only update the potential partners list of the player with the ace matching the one called.
+        self.assertEqual(self.temp_player_list[1].get_potential_partners_list(), [1,1,0,0])
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list()[0], 1)
         for index in range(1,4):
             self.assertAlmostEqual(self.temp_player_list[0].get_potential_partners_list()[index], 1/3)
 
     def test_solo_called(self):
-        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 5) #this method tells the round to update the call made for t player and call index passed in.
+        self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 5)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
@@ -99,10 +99,10 @@ class PartnerRuleTest(unittest.TestCase):
         self.temp_player_list[1].accept(self.card_list[1]) #7D
         self.temp_player_list[2].accept(self.card_list[30]) #8H
         self.temp_player_list[3].accept(self.card_list[31]) #7H
-        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 0) #QC -- index 0
-        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
-        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
-        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
+        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 0) #QC
+        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D
+        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H
+        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H
         self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
@@ -128,10 +128,10 @@ class PartnerRuleTest(unittest.TestCase):
         self.temp_player_list[2].accept(self.card_list[29])
         self.temp_player_list[3].accept(self.card_list[31])
         self.temp_player_list[3].accept(self.card_list[28])
-        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 1) #QH -- index 3
-        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D -- index 1
-        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H -- index 30
-        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H -- index 31
+        self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 1) #QH
+        self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D
+        self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H
+        self.temp_player_list[3].get_hand().play_card_at_index(self.current_trick, 0) #7H
         self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()

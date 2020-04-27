@@ -20,20 +20,17 @@ class TrickTest(unittest.TestCase):
             self.assertIsNone(card)
         self.assertIsNone(self.testTrick.get_suit_lead())
         self.assertIsNotNone(self.testTrick.get_parent_round())
-#        self.assertIsNone(self.testTrick.get_leading_player())
         self.assertIsNone(self.testTrick.get_winning_player())
         self.assertEqual(self.testTrick.get_points_on_trick(), 0)
 
-    #TODO consider writing more tests to break the on accept behaivor into smaller tests
-
     def test_on_accept_card(self):
         card_is_none_count = 0
-        self.tempPlayers[2].get_hand().get_cards_in_hand().pop() # Need to remove the heart card so they can play trump later
+        self.tempPlayers[2].get_hand().get_cards_in_hand().pop()
         self.tempPlayers[2].accept(Card(0, "trump"))
         self.tempPlayers[0].get_hand().play_card_at_index(self.testTrick, 0)
         self.assertIsNotNone(self.testTrick.get_played_cards_list()[0])
         self.assertEqual(self.testTrick.get_suit_lead(), "hearts")
-        self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0]) # for reasons unknown these are different player objects that have the same id# setup/tear down behavior is suspected; For further unknown reaons it's started working now...
+        self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0])
         self.tempPlayers[1].get_hand().play_card_at_index(self.testTrick, 0)
         for card in self.testTrick.get_played_cards_list():
             if card is None:

@@ -1,3 +1,7 @@
+from game_objects.Game import Game
+from agents.RandomAgent import RandomAgent
+from agents.CustomAgent import CustomAgent
+from agents.LearningAgent import Agent
 
 class HumanAgent:
 
@@ -27,3 +31,8 @@ class HumanAgent:
         for index in range(len(cards_in_hand_list)):
             if card_to_play == cards_in_hand_list[index]:
                 return index
+
+if __name__ == "__main__":
+    agent_types = [HumanAgent(), Agent(), CustomAgent(), RandomAgent()]
+    active_game = Game(0, agent_types)
+    active_game.play_game()

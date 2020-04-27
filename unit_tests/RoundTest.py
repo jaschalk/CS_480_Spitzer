@@ -29,12 +29,11 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(len(trick_history),4)
         self.assertEqual(len(trick_history[0]),8)
         self.assertEqual(len(trick_history[0][0]),32)
-        #32 cards in order: QC,7D,QS,QH,QD,JC,JS,JH,JD,AD,10D,KD,9D,8D,(A,10,K,9,8,7)C,(A,10,K,9,8,7)S,(A,10,K,9,8,7)H
         self.assertEqual(len(self.test_round.get_players_list()), 4)
-        self.assertEqual(len(self.test_round._get_player_partners()), 4) #4x4 for each players relation to all other players
+        self.assertEqual(len(self.test_round._get_player_partners()), 4)
         self.assertEqual(len(self.test_round._get_player_partners()[0]), 4)
         self.assertEqual(len(self.test_round.get_call_matrix()), 4)
-        self.assertEqual(len(self.test_round.get_call_matrix()[0]), 8) #4x8 for each players call state of: no call, first trick, AC call, AS call, AH call, and 3 solo calls
+        self.assertEqual(len(self.test_round.get_call_matrix()[0]), 8)
         for row in range(4):
             for col in range(8):
                 if col == 0:
@@ -54,20 +53,17 @@ class RoundTest(unittest.TestCase):
         for i in range(4):
             post_trick_card_count += len(self.temp_players[i].get_hand().get_cards_in_hand())
         self.assertEqual(initial_card_count, post_trick_card_count+4)
-        #Now the trick should be finished and we can test accordingly
-#        temp_PlayerTrickScore = copy.copy(self.temp_players[3].trickScore) # don't remember what this was for?
         for i in range(4):
-            self.assertEqual(self.test_round.get_trick_history()[i][0][Card(12-i, "clubs").get_card_id()], 1) # this is testing the wrong location
+            self.assertEqual(self.test_round.get_trick_history()[i][0][Card(12-i, "clubs").get_card_id()], 1)
             #The 3rd player will have played the Ace of Clubs, the 2nd player the 10 of Clubs, the 1st the King of Clubs, the 0th the 9 of Clubs
         self.assertEqual(self.test_round.get_leading_player(), self.temp_players[3])
-        self.assertEqual(self.test_round._get_point_history()[3][0], 25)#Check if the Trick Point history has updated properly
+        self.assertEqual(self.test_round._get_point_history()[3][0], 25)
 
-    def test_potential_partners_history(self): #Check if the Potential Partners history has been updated properly
+    def test_potential_partners_history(self):
         for i in range(4):
             self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
-        #               self.test_round.potential_partners_history[player_num][potential_partner_num][trick_depth]
         self.assertEqual(self.test_round._get_potential_partners_history()[0][2][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[1][3][0], 1)
         self.assertEqual(self.test_round._get_potential_partners_history()[2][0][0], 1)
@@ -79,10 +75,7 @@ class RoundTest(unittest.TestCase):
             player.set_controlling_agent(RandomAgent())
             self.temp_deck.deal_cards_to(player)
             initial_player_points.append(player.get_round_points())
-            #player.get_hand().determine_valid_play_list()
-        #On Round finish:
-        #tell players to update total scores, tell the game to repopulate the deck, if the game has not ended (make a new deck)
-        self.test_round.begin_play() #Need to use a method to run a round to completion here, not manually step through
+        self.test_round.begin_play()
         self.assertEqual(len(self.temp_deck.get_card_list()), 0)
 
     def test_update_trick_winners_list(self):
@@ -90,21 +83,19 @@ class RoundTest(unittest.TestCase):
             self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
-        self.assertEqual(self.test_round.get_trick_winners_list()[0], 0) # the 1st player, zero indexed, should be the winner of the 1st, zero indexed, trick
+        self.assertEqual(self.test_round.get_trick_winners_list()[0], 0)
         for i in range(4):
             self.temp_players[i].set_initial_values()
         for i in range(4):
-            self.temp_players[i].accept(Card(12-i, "hearts")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+            self.temp_players[i].accept(Card(12-i, "hearts"))
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
-        self.assertEqual(self.test_round.get_trick_winners_list()[1], 3) # the 4th player, zero indexed, should be the winner of the 2nd, zero indexed, trick
+        self.assertEqual(self.test_round.get_trick_winners_list()[1], 3)
 
     def test_file_out_behavior(self):
         for player in self.temp_players:
             player.set_controlling_agent(RandomAgent())
         self.temp_game.play_game()
-
-        #have some sort of file out happen. Assert that the data read back in from the file equals the data that was stored
         with open(self.test_round.get_file_out_name(), 'rb') as input:
             file_data = pickle.load(input)
             for i in range(len(file_data)):

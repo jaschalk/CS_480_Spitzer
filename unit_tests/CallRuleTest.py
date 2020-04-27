@@ -8,7 +8,7 @@ class CallRuleTest(unittest.TestCase):
     def setUp(self):
         self.test_call_rule_tree = CallRules()
         self.temp_player = Player(None, 0, None)
-        self.temp_player.rule_tree = self.test_call_rule_tree #how should we let the player know about the rules?
+        self.temp_player.rule_tree = self.test_call_rule_tree
 
     def test_can_call_first_trick(self):
         self.temp_player.accept(Card(0, "trump")) #give the player the QC
@@ -16,7 +16,7 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.accept(Card(9, "hearts")) #give the player the AH
         self.temp_player.accept(Card(9, "spades")) #give the player the AS
         self.temp_player.accept(Card(9, "clubs")) #give the player the AC
-        self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand()) #can validate even check one call at a time? do we care?
+        self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,0,0,1,1,1,1])
 
     def test_can_call_ace_of_clubs(self):
