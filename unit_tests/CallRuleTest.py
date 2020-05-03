@@ -11,35 +11,35 @@ class CallRuleTest(unittest.TestCase):
         self.temp_player.rule_tree = self.test_call_rule_tree
 
     def test_can_call_first_trick(self):
-        self.temp_player.accept(Card(0, "trump")) #give the player the QC
-        self.temp_player.accept(Card(2, "trump")) #give the player the QS
-        self.temp_player.accept(Card(9, "hearts")) #give the player the AH
-        self.temp_player.accept(Card(9, "spades")) #give the player the AS
-        self.temp_player.accept(Card(9, "clubs")) #give the player the AC
+        Card(0, "trump").visit(self.temp_player) #give the player the QC
+        Card(2, "trump").visit(self.temp_player) #give the player the QS
+        Card(9, "hearts").visit(self.temp_player) #give the player the AH
+        Card(9, "spades").visit(self.temp_player) #give the player the AS
+        Card(9, "clubs").visit(self.temp_player) #give the player the AC
         self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,0,0,1,1,1,1])
 
     def test_can_call_ace_of_clubs(self):
-        self.temp_player.accept(Card(0, "trump")) #give the player the QC
-        self.temp_player.accept(Card(2, "trump")) #give the player the QS
-        self.temp_player.accept(Card(9, "hearts")) #give the player the AH
-        self.temp_player.accept(Card(9, "spades")) #give the player the AS
+        Card(0, "trump").visit(self.temp_player) #give the player the QC
+        Card(2, "trump").visit(self.temp_player) #give the player the QS
+        Card(9, "hearts").visit(self.temp_player) #give the player the AH
+        Card(9, "spades").visit(self.temp_player) #give the player the AS
         self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,1,0,0,0,1,1,1])
 
     def test_can_call_ace_of_spades(self):
-        self.temp_player.accept(Card(0, "trump")) #give the player the QC
-        self.temp_player.accept(Card(2, "trump")) #give the player the QS
-        self.temp_player.accept(Card(9, "hearts")) #give the player the AH
-        self.temp_player.accept(Card(9, "clubs")) #give the player the AS
+        Card(0, "trump").visit(self.temp_player) #give the player the QC
+        Card(2, "trump").visit(self.temp_player) #give the player the QS
+        Card(9, "hearts").visit(self.temp_player) #give the player the AH
+        Card(9, "clubs").visit(self.temp_player) #give the player the AS
         self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,1,0,0,1,1,1])
 
     def test_can_call_ace_of_hearts(self):
-        self.temp_player.accept(Card(0, "trump")) #give the player the QC
-        self.temp_player.accept(Card(2, "trump")) #give the player the QS
-        self.temp_player.accept(Card(9, "clubs")) #give the player the AH
-        self.temp_player.accept(Card(9, "spades")) #give the player the AS
+        Card(0, "trump").visit(self.temp_player) #give the player the QC
+        Card(2, "trump").visit(self.temp_player) #give the player the QS
+        Card(9, "clubs").visit(self.temp_player) #give the player the AH
+        Card(9, "spades").visit(self.temp_player) #give the player the AS
         self.temp_player._valid_call_list = self.test_call_rule_tree.validate_calls(self.temp_player.get_hand())
         self.assertEqual(self.temp_player.get_valid_call_list(), [1,0,0,1,0,1,1,1])
 

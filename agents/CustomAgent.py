@@ -107,7 +107,7 @@ class CustomAgent:
          #^ this will generate a list containing all the indices that are valid cards to play
         valid_binary_value = sum([1<<players_card_list[index].get_card_id() for index in valid_indices]) # NOTE: This might be useful for the ML agent
          #^ this will generate a number whos binary representation has 1's in the locations of the id numbers of the cards that are valid to play
-        winning_card_indecies = [index for index in range(len(players_card_list)) if (not current_winning_card.accept(players_card_list[index]))]
+        winning_card_indecies = [index for index in range(len(players_card_list)) if (not players_card_list[index].visit(current_winning_card))]
          #^ this will generate a list of all the indecies of cards that can be played to take the trick with, can be empty
         reversed_binary_value = int(format(valid_binary_value, '#034b')[:2:-1], 2)
         #^ reversing the binary value so the weakest card can be picked out

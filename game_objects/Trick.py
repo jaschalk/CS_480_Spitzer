@@ -31,11 +31,10 @@ class Trick:
     def get_played_cards_list(self):
         return self._played_cards_list
 
-    def accept(self, a_card):
-
+    def accept_a_card(self, a_card):
         if self._winning_card == Card(-1,"null"):
             self._suit_lead = a_card.get_card_suit()
-        if self._winning_card.accept(a_card) is False:
+        if a_card.visit(self._winning_card) is False:
             self._winning_player = self._parent_round.get_players_list()[a_card.get_owning_player()]
             self._winning_card = a_card
         self._parent_round.notify_players_of_played_card()

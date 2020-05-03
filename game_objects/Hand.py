@@ -38,7 +38,7 @@ class Hand:
     def get_my_player(self):
         return self._my_player
 
-    def accept(self, a_card):
+    def accept_a_card(self, a_card):
         self._cards_in_hand.append(a_card)
         card_id = a_card.get_card_id()
         self._starting_cards[card_id] = 1

@@ -105,7 +105,7 @@ class Player:
     def set_controlling_agent(self, an_agent):
         self._controlling_agent = an_agent
 
-    def accept(self, a_card):
+    def accept_a_card(self, a_card):
         a_card.set_owning_player(self.get_player_id())
         a_card.visit(self._hand)
 

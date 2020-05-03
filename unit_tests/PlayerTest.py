@@ -27,7 +27,7 @@ class PlayerTest(unittest.TestCase):
     def test_trick_complete(self):
         current_round_points = self.temp_player_zero.get_round_points()
         for index in range(4):
-            self.temp_player_list[index].accept(Card(index, "trump"))
+            Card(index, "trump").visit(self.temp_player_list[index])
         for index in range(4):
             self.temp_player_list[index].get_hand().play_card_at_index(self.current_trick, 0)
         self.assertEqual(self.temp_player_zero.get_round_points(), 9)
@@ -41,7 +41,7 @@ class PlayerTest(unittest.TestCase):
         temp_card = None
         for index in range(5):
             temp_card = Card(index, "trump")
-            self.temp_player_zero.accept(temp_card)
+            temp_card.visit(self.temp_player_zero)
         self.assertEqual(self.temp_player_zero.get_hand().get_cards_in_hand()[4], temp_card)
 
     def test_no_call_is_made(self):

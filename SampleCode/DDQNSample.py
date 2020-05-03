@@ -4,6 +4,7 @@ from keras.optimizers import Adam
 import numpy as np
 import gym
 
+# github repo at https://github.com/philtabor/Youtube-Code-Repository
 class DuelingDeepQNetwork(keras.Model):
     def __init__(self, n_actions, fc1_dims, fc2_dims):
         super(DuelingDeepQNetwork, self).__init__()

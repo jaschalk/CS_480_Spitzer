@@ -2,7 +2,6 @@ import unittest
 import copy
 import numpy as np
 import pickle
-from agents.agent import Agent
 from agents.RandomAgent import RandomAgent
 from unit_tests.Setup import general_setup
 from game_objects.Round import Round
@@ -45,7 +44,7 @@ class RoundTest(unittest.TestCase):
         self.test_round.set_leading_player(self.temp_players[3])
         initial_card_count = 0
         for i in range(4):
-            self.temp_players[i].accept(Card(12-i, "clubs"))
+            Card(12-i, "clubs").visit(self.temp_players[i])
             initial_card_count += len(self.temp_players[i].get_hand().get_cards_in_hand())
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
@@ -60,8 +59,8 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(self.test_round._get_point_history()[3][0], 25)
 
     def test_potential_partners_history(self):
-        for i in range(4):
-            self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+        for i in range(4): # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+            Card(i, "trump").visit(self.temp_players[i])
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         self.assertEqual(self.test_round._get_potential_partners_history()[0][2][0], 1)
@@ -79,15 +78,15 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(len(self.temp_deck.get_card_list()), 0)
 
     def test_update_trick_winners_list(self):
-        for i in range(4):
-            self.temp_players[i].accept(Card(i, "trump")) # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+        for i in range(4): # (P0, QC), (P1, 7D), (P2, QS), (P3, QH)
+            Card(i, "trump").visit(self.temp_players[i])
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         self.assertEqual(self.test_round.get_trick_winners_list()[0], 0)
         for i in range(4):
             self.temp_players[i].set_initial_values()
         for i in range(4):
-            self.temp_players[i].accept(Card(12-i, "hearts"))
+            Card(12-i, "hearts").visit(self.temp_players[i])
         for i in range(4):
             self.temp_players[i].get_hand().play_card_at_index(self.temp_trick, 0)
         self.assertEqual(self.test_round.get_trick_winners_list()[1], 3)

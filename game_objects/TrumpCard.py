@@ -15,7 +15,7 @@ class TrumpCard(Card):
     def __new__(cls, a_rank, a_suit):
        return object.__new__(cls) 
 
-    def accept(self, a_card):
+    def accept_a_card(self, a_card):
         if a_card._card_suit == "trump":
             if self.get_card_rank() < a_card.get_card_rank():
                 return True

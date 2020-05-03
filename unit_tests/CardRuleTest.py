@@ -32,9 +32,9 @@ class CardRuleTest(unittest.TestCase):
             self.assertTrue(self.temp_player.validate_card(card))
 
     def test_can_follow_suit(self):
-        self.temp_trick.accept(self.card_list[15]) # put the Ace of Clubs on the trick
+        self.card_list[15].visit(self.temp_trick) # put the Ace of Clubs on the trick
         for i in range(16,25): # give the player 8 cards: 10C, KC, 9C, 8C, 7C, AS, 10S, KS
-            self.temp_player.accept(self.card_list[i])
+            self.card_list[i].visit(self.temp_player)
         self.assertTrue(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[0]))
         self.assertTrue(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[1]))
         self.assertTrue(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[2]))
@@ -50,9 +50,9 @@ class CardRuleTest(unittest.TestCase):
                 self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[i]))
 
     def test_cannot_follow_suit_has_trump(self):
-        self.temp_trick.accept(self.card_list[31]) # put the 7H on the trick
+        self.card_list[31].visit(self.temp_trick) # put the 7H on the trick
         for i in range(11,19): # give 8 cards to the player: KD, 9D, 8D, AC, 10C, KC, 9C, 8C
-            self.temp_player.accept(self.card_list[i])
+            self.card_list[i].visit(self.temp_player)
         for i in range(len(self.temp_player.get_hand().get_cards_in_hand())):
             if i < 3: # the first 3 cards in the players hand are trump and should be playable
                 self.assertTrue(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[i]))
@@ -60,9 +60,9 @@ class CardRuleTest(unittest.TestCase):
                 self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[i]))
 
     def test_cannot_follow_suit_has_no_trump(self):
-        self.temp_trick.accept(self.card_list[31]) # put the 7H on the trick
+        self.card_list[31].visit(self.temp_trick) # put the 7H on the trick
         for i in range(16,24): # give the player 8 cards: 10C, KC, 9C, 8C, 7C, AS, 10S, KS
-            self.temp_player.accept(self.card_list[i])
+            self.card_list[i].visit(self.temp_player)
         self.assertTrue(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[0]))
         self.assertTrue(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[1]))
         self.assertTrue(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[2]))
@@ -76,9 +76,9 @@ class CardRuleTest(unittest.TestCase):
 
     def test_ace_called_and_player_has_called_ace_with_suit_lead(self):
         self.temp_round._call_matrix[1][3] = 1 # force the round to have the second player have called the ace of hearts
-        self.temp_trick.accept(self.card_list[31]) # put the 7H on the trick
+        self.card_list[31].visit(self.temp_trick) # put the 7H on the trick
         for i in range(22,30): # give the player 8 cards: KS,9S,8S,7S,AH,10H,KH,9H
-            self.temp_player.accept(self.card_list[i])
+            self.card_list[i].visit(self.temp_player)
         self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[0]))
         self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[1]))
         self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[2]))
@@ -95,9 +95,9 @@ class CardRuleTest(unittest.TestCase):
 
     def test_ace_called_and_player_has_called_ace_with_suit_not_lead(self): 
         self.temp_round.get_call_matrix()[1][3] = 1 # force the round to have the second player have called the ace of hearts
-        self.temp_trick.accept(self.card_list[14]) # put the AC on the trick
+        self.card_list[14].visit(self.temp_trick) # put the AC on the trick
         for i in range(22,30): # give the player 8 cards: KS,9S,8S,7S,AH,10H,KH,9H
-            self.temp_player.accept(self.card_list[i])
+            self.card_list[i].visit(self.temp_player)
         for i in range(len(self.temp_player.get_hand().get_cards_in_hand())):
             if i == 5: # since the player has the ace called and that suit was not lead that ace is not a valid card to play
                 self.assertFalse(self.temp_player.validate_card(self.temp_player.get_hand().get_cards_in_hand()[i]))

@@ -4,6 +4,11 @@ class Card():
     The Card class is used as a generator for its subclasses.
     '''
 
+    def __init__(self, a_rank, a_suit):
+        self._card_id = -1
+        self._card_suit = None
+        self._card_rank = -1
+
     def __new__(cls, a_rank, a_suit):
         if a_suit == "trump":
             from game_objects import TrumpCard #If these are up at the top, they cause circulat import depednencies
@@ -50,8 +55,8 @@ class Card():
         else:
             self._point_value = 0
 
-    def accept(self, a_card):
+    def accept_a_card(self, a_card):
         pass
 
     def visit(self, an_object):
-        an_object.accept(self)
+        return an_object.accept_a_card(self)

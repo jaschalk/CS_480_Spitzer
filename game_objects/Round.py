@@ -269,6 +269,7 @@ class Round:
                 index_of_write += 1
 
         #   The normalized list of points taken by each player (4 elements)
+        # TODO: Can we change this to the points taken by each team?
         normalized_player_point_list = [player.get_round_points()/120 for player in self._players_list]
         for player_num in range(4):
             game_state[0][index_of_write] = normalized_player_point_list[player_num]

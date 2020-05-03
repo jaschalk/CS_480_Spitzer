@@ -11,19 +11,19 @@ class CardTest(unittest.TestCase):
         self.testCardFailThree = Card.Card(12, "hearts")
 
     def test_fail_receives_trump(self):
-        self.assertFalse(self.testCardFailOne.accept(self.testCardTrumpOne))
+        self.assertFalse(self.testCardTrumpOne.visit(self.testCardFailOne))
 
     def test_trump_receives_fail(self):
-        self.assertTrue(self.testCardTrumpOne.accept(self.testCardFailOne))
+        self.assertTrue(self.testCardFailOne.visit(self.testCardTrumpOne))
 
     def test_trump_receives_trump(self):
-        self.assertTrue(self.testCardTrumpOne.accept(self.testCardTrumpTwo))
+        self.assertTrue(self.testCardTrumpTwo.visit(self.testCardTrumpOne))
     
     def test_fail_receives_fail_same(self):
-        self.assertTrue(self.testCardFailOne.accept(self.testCardFailTwo))
+        self.assertTrue(self.testCardFailTwo.visit(self.testCardFailOne))
 
     def test_fail_receives_fail_different(self):
-        self.assertTrue(self.testCardFailOne.accept(self.testCardFailThree))
+        self.assertTrue(self.testCardFailThree.visit(self.testCardFailOne))
 
 if __name__ == "__main__":
     unittest.main()

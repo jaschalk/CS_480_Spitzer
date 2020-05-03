@@ -12,7 +12,7 @@ class TrickTest(unittest.TestCase):
         self.testTrick = setup_results["current_trick"]
         self.tempPlayers = setup_results["list_of_players"]
         for i in range(4):
-            self.tempPlayers[i].accept(Card(9+i, "hearts"))
+            Card(9+i, "hearts").visit(self.tempPlayers[i])
         del setup_results
 
     def test_on_init(self):
@@ -25,8 +25,8 @@ class TrickTest(unittest.TestCase):
 
     def test_on_accept_card(self):
         card_is_none_count = 0
-        self.tempPlayers[2].get_hand().get_cards_in_hand().pop()
-        self.tempPlayers[2].accept(Card(0, "trump"))
+        self.tempPlayers[2].get_hand().get_cards_in_hand().pop() # This is currently making the hand binary value incorrect
+        Card(0, "trump").visit(self.tempPlayers[2])
         self.tempPlayers[0].get_hand().play_card_at_index(self.testTrick, 0)
         self.assertIsNotNone(self.testTrick.get_played_cards_list()[0])
         self.assertEqual(self.testTrick.get_suit_lead(), "hearts")

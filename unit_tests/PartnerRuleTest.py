@@ -25,21 +25,21 @@ class PartnerRuleTest(unittest.TestCase):
 
     def test_first_trick_called(self):
         for index in range(5):
-            self.temp_player_list[0].accept(self.card_list[index]) #give the first player the first 5 trump cards (includes both queens)
-        self.temp_player_list[0].accept(self.card_list[14]) #give the first player all 3 fail aces
-        self.temp_player_list[0].accept(self.card_list[20])
-        self.temp_player_list[0].accept(self.card_list[26])
+            self.card_list[index].visit(self.temp_player_list[0]) #give the first player the first 5 trump cards ,includes both queens
+        self.card_list[14].visit(self.temp_player_list[0]) #give the first player all 3 fail aces
+        self.card_list[20].visit(self.temp_player_list[0])
+        self.card_list[26].visit(self.temp_player_list[0])
         for index in range(5, 13):
-            self.temp_player_list[1].accept(self.card_list[index]) #give the second player the next 8 trump cards
+            self.card_list[index].visit(self.temp_player_list[1]) #give the second player the next 8 trump cards
         for index in range(13, 23):
             if index != 14:
                 if index != 20:
-                    self.temp_player_list[2].accept(self.card_list[index]) #give the third player the next 8 cards, skipping any aces
+                    self.card_list[index].visit(self.temp_player_list[2]) #give the third player the next 8 cards, skipping any aces
                 else:
                     continue
         for index in range(23, 32):
             if index != 26:
-                self.temp_player_list[3].accept(self.card_list[index]) #give the fourth player the last 8 cards, skipping any aces
+                self.card_list[index].visit(self.temp_player_list[3]) #give the fourth player the last 8 cards, skipping any aces
             else:
                 continue
         self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 4)
@@ -55,20 +55,20 @@ class PartnerRuleTest(unittest.TestCase):
         self.assertEqual(self.temp_player_list[3].get_potential_partners_list(), [0,0,1,1])
 
     def test_ace_called(self):
-        self.temp_player_list[0].accept(self.card_list[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
-        self.temp_player_list[0].accept(self.card_list[2])
+        self.card_list[0].visit(self.temp_player_list[0]) #give player 1 both black queens and 7, 8, 9 of spades and hearts
+        self.card_list[2].visit(self.temp_player_list[0])
         for index in range(12, 15):
-            self.temp_player_list[0].accept(Card(index, "spades"))
-            self.temp_player_list[0].accept(Card(index, "hearts"))
+            Card(index, "spades").visit(self.temp_player_list[0])
+            Card(index, "hearts").visit(self.temp_player_list[0])
         for index in range(9, 11):
-            self.temp_player_list[1].accept(Card(index, "trump")) #give player 2 all aces and 10s
-            self.temp_player_list[1].accept(Card(index, "clubs"))
-            self.temp_player_list[1].accept(Card(index, "spades"))
-            self.temp_player_list[1].accept(Card(index, "hearts"))
+            Card(index, "trump").visit(self.temp_player_list[1]) #give player 2 all aces and 10s
+            Card(index, "clubs").visit(self.temp_player_list[1])
+            Card(index, "spades").visit(self.temp_player_list[1])
+            Card(index, "hearts").visit(self.temp_player_list[1])
         for index in range(3, 9):
-            self.temp_player_list[2].accept(Card(index, "trump")) #give player 3 a bunch of random trump cards
-        self.temp_player_list[2].accept(self.card_list[1]) #spitzer
-        self.temp_player_list[2].accept(self.card_list[11]) #KD
+            Card(index, "trump").visit(self.temp_player_list[2]) #give player 3 a bunch of random trump cards
+        self.card_list[1].visit(self.temp_player_list[2]) #spitzer
+        self.card_list[11].visit(self.temp_player_list[2]) #KD
         self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 1)
         for index in range(4):
             self.temp_player_list[index].determine_potential_partners()
@@ -88,17 +88,17 @@ class PartnerRuleTest(unittest.TestCase):
 
     def test_no_call_both_queens(self):
         for index in range(8):
-            self.temp_player_list[0].accept(self.card_list[index]) #Give player 1 the first 8 cards
+            self.card_list[index].visit(self.temp_player_list[0]) #Give player 1 the first 8 cards
         self.temp_round.update_call(self.temp_player_list[0].get_player_id(), 0)
         self.temp_player_list[0].determine_potential_partners()
         self.assertEqual(self.temp_player_list[0].get_potential_partners_list(), [1,0,0,0])
 
     def test_no_call_one_queen_played(self):
-        self.temp_player_list[0].accept(self.card_list[0]) #QC
-        self.temp_player_list[1].accept(self.card_list[2]) #QS
-        self.temp_player_list[1].accept(self.card_list[1]) #7D
-        self.temp_player_list[2].accept(self.card_list[30]) #8H
-        self.temp_player_list[3].accept(self.card_list[31]) #7H
+        self.card_list[0].visit(self.temp_player_list[0]) #QC
+        self.card_list[2].visit(self.temp_player_list[1]) #QS
+        self.card_list[1].visit(self.temp_player_list[1]) #7D
+        self.card_list[30].visit(self.temp_player_list[2]) #8H
+        self.card_list[31].visit(self.temp_player_list[3]) #7H
         self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 0) #QC
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H
@@ -120,14 +120,14 @@ class PartnerRuleTest(unittest.TestCase):
         self.assertEqual(self.temp_player_list[3].get_potential_partners_list()[3], 1)
 
     def test_no_call_no_queen_played(self):
-        self.temp_player_list[0].accept(self.card_list[0])
-        self.temp_player_list[0].accept(self.card_list[3])
-        self.temp_player_list[1].accept(self.card_list[2])
-        self.temp_player_list[1].accept(self.card_list[1])
-        self.temp_player_list[2].accept(self.card_list[30])
-        self.temp_player_list[2].accept(self.card_list[29])
-        self.temp_player_list[3].accept(self.card_list[31])
-        self.temp_player_list[3].accept(self.card_list[28])
+        self.card_list[0].visit(self.temp_player_list[0])
+        self.card_list[3].visit(self.temp_player_list[0])
+        self.card_list[2].visit(self.temp_player_list[1])
+        self.card_list[1].visit(self.temp_player_list[1])
+        self.card_list[30].visit(self.temp_player_list[2])
+        self.card_list[29].visit(self.temp_player_list[2])
+        self.card_list[31].visit(self.temp_player_list[3])
+        self.card_list[28].visit(self.temp_player_list[3])
         self.temp_player_list[0].get_hand().play_card_at_index(self.current_trick, 1) #QH
         self.temp_player_list[1].get_hand().play_card_at_index(self.current_trick, 1) #7D
         self.temp_player_list[2].get_hand().play_card_at_index(self.current_trick, 0) #8H
