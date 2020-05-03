@@ -10,6 +10,8 @@ class NullCard(Card.Card):
             pass
         def accept_a_card(self, a_card):
             return False
+        def get_owning_player(self):
+            return None
         def __str__(self):
             return "None"
     instance = None

@@ -6,6 +6,7 @@ import datetime
 from enums import *
 from game_objects.Trick import Trick
 from agents.LearningAgent import Agent
+from game_objects.Card import Card
 
 class Round:
     '''
@@ -246,7 +247,7 @@ class Round:
 
         #   The cards played to the trick so far, (4*32 element list)
         for card in self._current_trick.get_played_cards_list():
-            if card is not None:
+            if card is not Card(-1,"null"):
                 game_state[0][index_of_write + card.get_card_id()] = 1
             index_of_write += 32
 

@@ -84,7 +84,6 @@ class GameTest(unittest.TestCase):
             self.test_play_with_custom_agent()
 
     def test_play_with_learning_agent(self):
-        
         self.temp_player_list[0].set_controlling_agent(Agent())
         for index in range(1,4):
             self.temp_player_list[index].set_controlling_agent(RandomAgent())

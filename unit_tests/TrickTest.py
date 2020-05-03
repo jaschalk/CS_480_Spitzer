@@ -17,7 +17,7 @@ class TrickTest(unittest.TestCase):
 
     def test_on_init(self):
         for card in self.testTrick.get_played_cards_list():
-            self.assertIsNone(card)
+            self.assertIs(card, Card(-1,"null"))
         self.assertIsNone(self.testTrick.get_suit_lead())
         self.assertIsNotNone(self.testTrick.get_parent_round())
         self.assertIsNone(self.testTrick.get_winning_player())
@@ -33,7 +33,7 @@ class TrickTest(unittest.TestCase):
         self.assertEqual(self.testTrick.get_winning_player(), self.tempPlayers[0])
         self.tempPlayers[1].get_hand().play_card_at_index(self.testTrick, 0)
         for card in self.testTrick.get_played_cards_list():
-            if card is None:
+            if card is Card(-1,"null"):
                 card_is_none_count += 1
         self.assertEqual(card_is_none_count, 2)
         
@@ -48,12 +48,10 @@ class TrickTest(unittest.TestCase):
             self.tempPlayers[i].get_hand().play_card_at_index(self.testTrick, 0)
         self.assertEqual(self.testTrick.get_winning_card(), Card(-1, "null"))
         for i in range(4):
-            self.assertIsNone(self.testTrick.get_played_cards_list()[i])
+            self.assertIs(self.testTrick.get_played_cards_list()[i], Card(-1,"null"))
         self.assertEqual(self.testTrick.get_points_on_trick(), 0)
 
     def tearDown(self):
-        self.testTrick._winning_card = Card(-1, "null")
-        self.testTrick._played_cards_list = [None, None, None, None]
         for player in self.tempPlayers:
             del player
         del self.tempPlayers

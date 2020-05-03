@@ -7,10 +7,13 @@ class Trick:
 
     def __init__(self, a_round):
         self._parent_round = a_round
+        self.set_intial_values()
+
+    def set_intial_values(self):
+        self._winning_player = None
         self._winning_card = Card(-1,"null")
         self._suit_lead = None
-        self._winning_player = None
-        self._played_cards_list = [None, None, None, None]
+        self._played_cards_list = [Card(-1, "null") for i in range(4)]
         self._points_on_trick = 0
 
     def get_parent_round(self):
@@ -41,12 +44,10 @@ class Trick:
         self._played_cards_list[a_card.get_owning_player()] = a_card
         self._points_on_trick += a_card.get_point_value()
         for card in self._played_cards_list:
-            if card is None:
+            if card is Card(-1,"null"):
                 return
         self.on_trick_fill()
 
     def on_trick_fill(self):
         self._parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)
-        self._played_cards_list = [None, None, None, None]
-        self._winning_card = Card(-1, "null")
-        self._points_on_trick = 0
+        self.set_intial_values()

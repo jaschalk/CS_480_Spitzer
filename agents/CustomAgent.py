@@ -1,5 +1,6 @@
 import random
 from enums import *
+from game_objects.Card import Card
 class CustomAgent:
 
     # Should be able to gauge the strength of a hand and act accordingly
@@ -102,7 +103,7 @@ class CustomAgent:
         current_trick = a_game.get_trick()
         current_winning_card = current_trick.get_winning_card()
         players_card_list = a_player.get_cards_in_hand()
-        number_of_cards_on_trick = sum([1 for i in range(4) if current_trick.get_played_cards_list()[i] is not None])
+        number_of_cards_on_trick = sum([1 for i in range(4) if current_trick.get_played_cards_list()[i] is not Card(-1, "null")])
         valid_indices = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != 0]
          #^ this will generate a list containing all the indices that are valid cards to play
         valid_binary_value = sum([1<<players_card_list[index].get_card_id() for index in valid_indices]) # NOTE: This might be useful for the ML agent
