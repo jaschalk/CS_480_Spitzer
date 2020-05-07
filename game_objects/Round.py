@@ -22,6 +22,7 @@ class Round:
         self.__file_out_data =[]
         #^ This needs to not be reset between rounds, since it's tracking data between rounds! So it doesn't go in the set_initial_values_method
         self._player_score_history = []
+        self._current_trick = Trick(self)
         # NOTE: The score history will be pushed to file at the end of every trick, but only updated on each round
         self.set_initial_values()
 
@@ -30,7 +31,12 @@ class Round:
         self._winner_of_first_trick = None
         self._trick_history = np.zeros((4,8,32),dtype=np.int8)
         self._call_matrix = np.zeros((4,8),dtype=np.int8)
-        self._current_trick = Trick(self)
+    #NOTE publish subscribe code spike
+        self._current_trick.subscribe_to(self, "print_test")
+        self._current_trick.subscribe_to(self, "print_message")
+        self._current_trick.notify_subscribers()
+        self._current_trick.notifiy_print_message()
+    #NOTE publish subscribe code spike
         for player_index in range(4):
             self._call_matrix[player_index][Calls.none.value] = 1
         self._trick_winners_list = np.zeros((8),dtype=np.int8)
@@ -56,6 +62,14 @@ class Round:
     def get_player_binary_card_state(self, a_player_id):
         #This is a binary number representing the cards a player has played
         return self.get_players_list()[a_player_id].get_cards_played() 
+        
+#NOTE publish subscribe code spike
+    def print_test(self, a_message):
+        print("test")
+
+    def print_message(self, a_message):
+        print(a_message)
+#NOTE publish subscribe code spike
 
     def get_cards_played(self):
         return self._cards_played_binary
