@@ -35,7 +35,6 @@ class Round:
         self._current_trick.subscribe_to(self, "print_test")
         self._current_trick.subscribe_to(self, "print_message")
         self._current_trick.notify_subscribers()
-        _ = 1
         self._current_trick.notifiy_print_message()
     #NOTE publish subscribe code spike
         for player_index in range(4):
