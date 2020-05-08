@@ -1,4 +1,5 @@
 from game_objects.Card import Card
+from functools import wraps
 class Trick:
     '''
     The Trick class is used to hold onto the cards players have played
@@ -25,6 +26,8 @@ class Trick:
         # So does this mean that all the subscribed messages should take no prams?
         # or do we also store the prams in the subscription as well?
 
+# I think this can get removed now? Since the _notifier can be used, or modified to be used
+
     def notify_subscribers(self): # It might be better to split this up into a method for each message
         for message in self.__subscribers.keys(): # Message is expected to be a string
             for subscriber in self.__subscribers[message]:
@@ -33,16 +36,28 @@ class Trick:
                 else:
                     raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {message}")
 
-    def print_message(self, message):
-        if "print_test" in self.__subscribers.keys():
-            for subscriber in self.__subscribers["print_test"]:
-                if hasattr(subscriber, "print_message"):
-                    getattr(subscriber, "print_message")(message) # Setting it up this way we can pass in a known message for each subscription
-                else:
-                    raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {message}")
+    # This _notifier method should be usable as a generic decorator to provide automatic subscriber
+    # notification to any method that is wrapped by it.
+    def _notifier(): # pylint: disable=no-method-argument
+        def decorator(func):
+            @wraps(func)
+            def wrapper(self, *args, **kwargs):
+                print("Wrapper getting used")
+                func(self, *args, **kwargs) 
+                func_name = func.__name__ 
+                if func_name in self.__subscribers.keys():
+                    for subscriber in self.__subscribers[func_name]:
+                        if hasattr(subscriber, func_name):
+                            getattr(subscriber, func_name)(*args, **kwargs)
+                        else:
+                            raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {func_name}")
+            return wrapper
+        return decorator
 
-    def notifiy_print_message(self):
-        self.print_message("This is a test")
+    @_notifier() # This needs the empty () because it implicitly takes self as an argument otherwise
+    def print_message(self, message):
+        print("Notification sent")
+
 #NOTE publish subscribe code spike
 
     def get_parent_round(self):
@@ -72,11 +87,9 @@ class Trick:
         self._parent_round.notify_players_of_played_card()
         self._played_cards_list[a_card.get_owning_player()] = a_card
         self._points_on_trick += a_card.get_point_value()
-        for card in self._played_cards_list:
-            if card is Card(-1,"null"):
-                return
-        self.on_trick_fill()
+        if Card(-1,"null") not in self._played_cards_list:
+            self.on_trick_end()
 
-    def on_trick_fill(self):
+    def on_trick_end(self):
         self._parent_round.on_trick_end(self._winning_player, self._points_on_trick, self._played_cards_list)
         self.set_intial_values()

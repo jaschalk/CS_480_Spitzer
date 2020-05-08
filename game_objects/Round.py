@@ -35,7 +35,7 @@ class Round:
         self._current_trick.subscribe_to(self, "print_test")
         self._current_trick.subscribe_to(self, "print_message")
         self._current_trick.notify_subscribers()
-        self._current_trick.notifiy_print_message()
+        self._current_trick.print_message("This is the message")
     #NOTE publish subscribe code spike
         for player_index in range(4):
             self._call_matrix[player_index][Calls.none.value] = 1
@@ -65,10 +65,11 @@ class Round:
         
 #NOTE publish subscribe code spike
     def print_test(self, a_message):
-        print("test")
+        pass
+        #print("test")
 
     def print_message(self, a_message):
-        print(a_message)
+        print(f"The Round is printing: {a_message}")
 #NOTE publish subscribe code spike
 
     def get_cards_played(self):
