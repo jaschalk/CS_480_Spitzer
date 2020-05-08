@@ -2,7 +2,7 @@ from functools import wraps
 
 class Test:
     
-    def log_decorator():
+    def log_decorator(): # pylint: disable=no-method-argument
         def actual_decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):

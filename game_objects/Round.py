@@ -3,7 +3,7 @@ import numpy as np
 import copy
 import os
 import datetime
-from enums import *
+from enums import Calls
 from game_objects.Trick import Trick
 from agents.LearningAgent import Agent
 from game_objects.Card import Card

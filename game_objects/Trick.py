@@ -1,5 +1,7 @@
 from game_objects.Card import Card
 from functools import wraps
+from game_objects import NotificationDecorator
+
 class Trick:
     '''
     The Trick class is used to hold onto the cards players have played
@@ -16,21 +18,21 @@ class Trick:
         self._suit_lead = None
         self._played_cards_list = [Card(-1, "null") for i in range(4)]
         self._points_on_trick = 0
-        self.__subscribers = {}
+        self._subscribers = {}
 
 #NOTE publish subscribe code spike
     def subscribe_to(self, a_subscriber, a_message):
-        if a_message not in self.__subscribers.keys():
-            self.__subscribers[a_message] = []
-        self.__subscribers[a_message].append(a_subscriber)
+        if a_message not in self._subscribers.keys():
+            self._subscribers[a_message] = []
+        self._subscribers[a_message].append(a_subscriber)
         # So does this mean that all the subscribed messages should take no prams?
         # or do we also store the prams in the subscription as well?
 
 # I think this can get removed now? Since the _notifier can be used, or modified to be used
 
     def notify_subscribers(self): # It might be better to split this up into a method for each message
-        for message in self.__subscribers.keys(): # Message is expected to be a string
-            for subscriber in self.__subscribers[message]:
+        for message in self._subscribers.keys(): # Message is expected to be a string
+            for subscriber in self._subscribers[message]:
                 if hasattr(subscriber, message):
                     getattr(subscriber, message)(self) # For now I'm going to assume it's passing in itself
                 else:
@@ -39,19 +41,7 @@ class Trick:
     # This _notifier method should be usable as a generic decorator to provide automatic subscriber
     # notification to any method that is wrapped by it.
     def _notifier(): # pylint: disable=no-method-argument
-        def decorator(func):
-            @wraps(func)
-            def wrapper(self, *args, **kwargs):
-                print("Wrapper getting used")
-                func(self, *args, **kwargs) 
-                func_name = func.__name__ 
-                if func_name in self.__subscribers.keys():
-                    for subscriber in self.__subscribers[func_name]:
-                        if hasattr(subscriber, func_name):
-                            getattr(subscriber, func_name)(*args, **kwargs)
-                        else:
-                            raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {func_name}")
-            return wrapper
+        decorator = NotificationDecorator.decorator
         return decorator
 
     @_notifier() # This needs the empty () because it implicitly takes self as an argument otherwise
