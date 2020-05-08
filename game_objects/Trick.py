@@ -38,8 +38,7 @@ class Trick:
                 else:
                     raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {message}")
 
-    # This _notifier method should be usable as a generic decorator to provide automatic subscriber
-    # notification to any method that is wrapped by it.
+    # This _notifier method serves as a holder for the generic decorator located elsewhere
     def _notifier(): # pylint: disable=no-method-argument
         decorator = NotificationDecorator.decorator
         return decorator
