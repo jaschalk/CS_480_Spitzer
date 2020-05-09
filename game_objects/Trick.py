@@ -21,22 +21,23 @@ class Trick:
         self._subscribers = {}
 
 #NOTE publish subscribe code spike
-    def subscribe_to(self, a_subscriber, a_message):
+    def log_subscriber_to_message(self, a_subscriber, a_message):
         if a_message not in self._subscribers.keys():
             self._subscribers[a_message] = []
         self._subscribers[a_message].append(a_subscriber)
         # So does this mean that all the subscribed messages should take no prams?
         # or do we also store the prams in the subscription as well?
+        # For now the NotificationDecorator.decorator behavior is to pass along all parameters
+        # that were passed into the triggering function
 
 # I think this can get removed now? Since the _notifier can be used, or modified to be used
-
-    def notify_subscribers(self): # It might be better to split this up into a method for each message
-        for message in self._subscribers.keys(): # Message is expected to be a string
-            for subscriber in self._subscribers[message]:
-                if hasattr(subscriber, message):
-                    getattr(subscriber, message)(self) # For now I'm going to assume it's passing in itself
-                else:
-                    raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {message}")
+#    def notify_subscribers(self): # It might be better to split this up into a method for each message
+#        for message in self._subscribers.keys(): # Message is expected to be a string
+#            for subscriber in self._subscribers[message]:
+#                if hasattr(subscriber, message):
+#                    getattr(subscriber, message)(self) # For now I'm going to assume it's passing in itself
+#                else:
+#                    raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {message}")
 
     # This _notifier method serves as a holder for the generic decorator located elsewhere
     def _notifier(): # pylint: disable=no-method-argument

@@ -1,11 +1,8 @@
-from functools import wraps
 
 # This method should be usable as a generic decorator to provide automatic subscriber
 # notification to any method that is wrapped by it.
 def decorator(func):
-    @wraps(func)
     def wrapper(self, *args, **kwargs):
-        print("Wrapper getting used")
         func(self, *args, **kwargs) 
         func_name = func.__name__
         if func_name in self._subscribers.keys():
