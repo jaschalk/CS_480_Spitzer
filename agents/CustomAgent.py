@@ -42,7 +42,7 @@ class CustomAgent:
             callable_strengths.append(fail_strengths[i] * a_player.get_valid_call_list()[i+1])
         return 1 + callable_strengths.index(max(callable_strengths))
 
-
+    # This might be able to be made into a rule tree/chain, that way we could reuse it without coping code.
     def make_call(self, a_player):
         call_index = -1
         self.gauge_hand_strength(a_player.get_hand())
@@ -67,8 +67,6 @@ class CustomAgent:
             if a_card_list[i].get_card_id() == a_card_id:
                 return i
         raise Exception("Couldn't find an expected card in the hand. " + str([card.get_card_id() for card in a_card_list]) + " Was looking for: " + str(a_card_id))
-
-
 
     def play_card(self, a_player, a_game):
         def can_play_a_card_in_id_list(an_id_list, index_filter_list):
@@ -103,6 +101,10 @@ class CustomAgent:
         current_trick = a_game.get_trick()
         current_winning_card = current_trick.get_winning_card()
         players_card_list = a_player.get_cards_in_hand()
+
+        # Create tree here!
+        #print("Falling through to old format")
+
         number_of_cards_on_trick = sum([1 for i in range(4) if current_trick.get_played_cards_list()[i] is not Card(-1, "null")])
         valid_indices = [index for index in range(len(a_player.get_valid_play_list())) if a_player.get_valid_play_list()[index] != 0]
          #^ this will generate a list containing all the indices that are valid cards to play
