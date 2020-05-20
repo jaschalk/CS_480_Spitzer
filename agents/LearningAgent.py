@@ -211,6 +211,7 @@ class Agent():
         self.set_valid_play_lists(tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32))
         observation = a_game.get_game_state_for_player(a_player.get_player_id())
         action = self.choose_action(observation)
+        # TODO: Can we make use of a yield statement here to suspend this method while the rest of the game plays out?
         if (type(action) == type(np.int64())) or (type(action) == type(np.int32())): 
             # This check is needed because our game can have a single action outcome
             observation_, reward, done = a_game.handle_action_for_player(action, a_player)
