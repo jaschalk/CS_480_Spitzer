@@ -1,0 +1,665 @@
+Associated file: 6b0a762c-9bc0-11ea-ba93-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x000001A9C5918A48>
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 51
+Agent <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 36
+
+Associated file: 6ba84f26-9bc0-11ea-83ab-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 18
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 60
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 60
+Agent <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08> took 69
+
+Associated file: 6c4a5aa4-9bc0-11ea-a6ac-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 18
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 42
+
+Associated file: 6ca7e68a-9bc0-11ea-a513-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000001A9C5918A48>
+Agent <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08> took 24
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 36
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08> took 30
+
+Associated file: 6de86934-9bc0-11ea-b115-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 42
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 6
+Agent <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08> took 48
+
+Associated file: 6e54b35c-9bc0-11ea-a0d2-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 9
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x000001A9BA4C1E08> took 42
+
+Associated file: 6e8fe22e-9bc0-11ea-bee5-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000001A9C5918A48>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x000001A9BA4B27C8> took 27
+Agent <agents.LearningAgent.Agent object at 0x000001A9C5918A48> took 45
+
+Associated file: a4b09664-9bc0-11ea-bfc8-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 36
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 24
+
+Associated file: a5056da2-9bc0-11ea-b978-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 36
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 33
+
+Associated file: a57a1c90-9bc0-11ea-b79a-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 21
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 36
+
+Associated file: a5e77758-9bc0-11ea-b007-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000002CA89DA2B48>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 39
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 39
+
+Associated file: a67014d8-9bc0-11ea-8fe0-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 12
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 15
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 24
+
+Associated file: a6ebe126-9bc0-11ea-9172-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002CA89DA2B48>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 36
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 45
+
+Associated file: a77122fe-9bc0-11ea-b52f-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08>
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 42
+
+Associated file: a812ccae-9bc0-11ea-a6f3-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 9
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 24
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 51
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 30
+
+Associated file: a89fffa6-9bc0-11ea-b2af-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 30
+Agent <agents.CustomAgent.CustomAgent object at 0x000002CAB0C1C7C8> took 48
+Agent <agents.LearningAgent.Agent object at 0x000002CA89DA2B48> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x000002CAB0C12D08> took 45
+
+Associated file: 1f976edc-9bc1-11ea-96b3-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 39
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 33
+
+Associated file: 2047624a-9bc1-11ea-b84f-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 30
+
+Associated file: 20bac514-9bc1-11ea-afdd-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 15
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+
+Associated file: 2118edb6-9bc1-11ea-82fb-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 18
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 27
+
+Associated file: 21de8f22-9bc1-11ea-81c7-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 66
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 54
+
+Associated file: 2288ee7e-9bc1-11ea-bd00-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 39
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 27
+
+Associated file: 23457948-9bc1-11ea-b4bb-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 6
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 33
+
+Associated file: 23c07f9c-9bc1-11ea-b5e1-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 6
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 30
+
+Associated file: 242e14e2-9bc1-11ea-85d4-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 48
+
+Associated file: 24d096fa-9bc1-11ea-8303-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 21
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 15
+
+Associated file: 259ca30c-9bc1-11ea-8947-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 48
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 36
+
+Associated file: 26657902-9bc1-11ea-a61e-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 39
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 15
+
+Associated file: 26ea5854-9bc1-11ea-bf95-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 45
+
+Associated file: 27e35f5c-9bc1-11ea-b002-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 9
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 6
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 6
+
+Associated file: 28371124-9bc1-11ea-b828-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 27
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 36
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+
+Associated file: 29117812-9bc1-11ea-9f4e-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 48
+
+Associated file: 2a21926e-9bc1-11ea-9236-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 48
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 30
+
+Associated file: 2a8ab9ba-9bc1-11ea-8190-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 12
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 27
+
+Associated file: 2b7ea3e4-9bc1-11ea-b483-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+
+Associated file: 2bef6e1c-9bc1-11ea-b64b-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 51
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 66
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 63
+
+Associated file: 2c499e7a-9bc1-11ea-803e-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 42
+
+Associated file: 2cad1f1c-9bc1-11ea-a2ee-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 24
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 30
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 18
+
+Associated file: 2e29cba2-9bc1-11ea-a975-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 30
+
+Associated file: 2eb045b6-9bc1-11ea-aa86-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 24
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 9
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+
+Associated file: 2f376f7e-9bc1-11ea-8843-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 24
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 15
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+
+Associated file: 2fe713ae-9bc1-11ea-bbbd-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 27
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 39
+
+Associated file: 3092245c-9bc1-11ea-8f19-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 30
+
+Associated file: 31122130-9bc1-11ea-9b0b-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 6
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 45
+
+Associated file: 315a9b14-9bc1-11ea-bafd-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 45
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+
+Associated file: 31c9caee-9bc1-11ea-8a84-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 48
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 54
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 45
+
+Associated file: 3203ad1a-9bc1-11ea-9e79-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 39
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 12
+
+Associated file: 32471c24-9bc1-11ea-b2fa-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 33
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 39
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 24
+
+Associated file: 3386033a-9bc1-11ea-abf0-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 33
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 27
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+
+Associated file: 33eb809c-9bc1-11ea-938f-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 27
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 33
+
+Associated file: 34d88c3a-9bc1-11ea-920a-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 9
+
+Associated file: 364d84cc-9bc1-11ea-b237-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 42
+
+Associated file: 380d3134-9bc1-11ea-b523-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 30
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 39
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 27
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+
+Associated file: 3a44f7a2-9bc1-11ea-b82b-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 39
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 21
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 21
+
+Associated file: 3bba8a82-9bc1-11ea-bfea-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 24
+
+Associated file: 3d3ca7b4-9bc1-11ea-b68b-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 54
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 48
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 45
+
+Associated file: 3ecc835e-9bc1-11ea-b888-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x000002E4F3DCE988>
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 18
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 39
+
+Associated file: 40ae4d98-9bc1-11ea-9398-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08>
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 42
+Agent <agents.LearningAgent.Agent object at 0x000002E4F3DCE988> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x000002E4E6C987C8> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x000002E4ECD97E08> took 27
+
+Associated file: 4faf4a70-9bc1-11ea-8c0d-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 6
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 15
+
+Associated file: 5164b53e-9bc1-11ea-b7e4-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 12
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 33
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 45
+
+Associated file: 54472a7a-9bc1-11ea-85cc-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 51
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+
+Associated file: 556e9f74-9bc1-11ea-8e8e-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 39
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 3
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+
+Associated file: 56a6f568-9bc1-11ea-af4d-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 15
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 27
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 57
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 33
+
+Associated file: 58e8d2ee-9bc1-11ea-90fe-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 45
+
+Associated file: 5a389a80-9bc1-11ea-9e38-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 33
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 45
+
+Associated file: 5bc67758-9bc1-11ea-a40b-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 30
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 9
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 42
+
+Associated file: 5d3c20a4-9bc1-11ea-b09a-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 15
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+
+Associated file: 60cf732c-9bc1-11ea-a904-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 30
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 33
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 15
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 42
+
+Associated file: 64285a40-9bc1-11ea-8cb4-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 39
+
+Associated file: 656087be-9bc1-11ea-89ac-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 36
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 12
+
+Associated file: 679c95ac-9bc1-11ea-af73-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 9
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 33
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 30
+
+Associated file: 69d18928-9bc1-11ea-9d49-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 36
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 45
+
+Associated file: 6adfdf10-9bc1-11ea-9a2a-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 45
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 18
+
+Associated file: 6c440a48-9bc1-11ea-b36e-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 42
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 27
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 30
+
+Associated file: 6eb1d0f6-9bc1-11ea-91de-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 48
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 18
+
+Associated file: 6fd0cd2c-9bc1-11ea-9e01-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 27
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 27
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 15
+
+Associated file: 714f1736-9bc1-11ea-a471-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 45
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 9
+
+Associated file: 72de54a4-9bc1-11ea-a9b2-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 15
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 48
+
+Associated file: 73f2a14a-9bc1-11ea-9770-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 30
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 51
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 3
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 12
+
+Associated file: 74ece2cc-9bc1-11ea-b091-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 42
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 21
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 24
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 21
+
+Associated file: 776334dc-9bc1-11ea-9e1c-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 48
+
+Associated file: 7a24366e-9bc1-11ea-adb6-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 48
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 51
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 9
+
+Associated file: 7b9c6752-9bc1-11ea-af79-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 15
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 27
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 42
+
+Associated file: 7e14b5d8-9bc1-11ea-9e8b-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 57
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 48
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 63
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 51
+
+Associated file: 8069cee8-9bc1-11ea-8d44-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 33
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 24
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 21
+
+Associated file: 81a956e4-9bc1-11ea-81c2-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88>
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 45
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 30
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 12
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 33
+
+Associated file: 82d8f7b4-9bc1-11ea-9771-309c23854ca1.spzd
+Player 2 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 9
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 60
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 33
+
+Associated file: 84103bf0-9bc1-11ea-86b9-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x00000194F5EFF988>
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 30
+Agent <agents.LearningAgent.Agent object at 0x00000194F5EFF988> took 48
+Agent <agents.CustomAgent.CustomAgent object at 0x00000194EB00AC88> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x00000194E8DE1E48> took 33
+
+Associated file: 9283883e-9bc1-11ea-8897-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.LearningAgent.Agent object at 0x00000183DE840988>
+Agent <agents.LearningAgent.Agent object at 0x00000183DE840988> took 51
+Agent <agents.CustomAgent.CustomAgent object at 0x00000183D390AD48> took 45
+Agent <agents.RandomAgent.RandomAgent object at 0x00000183D1D92F08> took 45
+Agent <agents.CustomAgent.CustomAgent object at 0x00000183D390AD48> took 36
+
+Associated file: a86e4690-9bc1-11ea-90a1-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.LearningAgent.Agent object at 0x000001F204BC0988>
+Agent <agents.CustomAgent.CustomAgent object at 0x000001F29865BD88> took 36
+Agent <agents.LearningAgent.Agent object at 0x000001F204BC0988> took 42
+Agent <agents.CustomAgent.CustomAgent object at 0x000001F29865BD88> took 39
+Agent <agents.RandomAgent.RandomAgent object at 0x000001F294C32F48> took 3
+
+Associated file: a8f6210c-9bc1-11ea-9ee4-309c23854ca1.spzd
+Player 1 won the game with agent type <agents.CustomAgent.CustomAgent object at 0x000001F29865BD88>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001F294C32F48> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000001F29865BD88> took 45
+Agent <agents.LearningAgent.Agent object at 0x000001F204BC0988> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x000001F294C32F48> took 27
+
+Associated file: 1782ed90-9bc2-11ea-9ed1-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88> took 42
+Agent <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88> took 24
+Agent <agents.LearningAgent.Agent object at 0x000001E049590A48> took 39
+Agent <agents.CustomAgent.CustomAgent object at 0x000001E04043EE48> took 39
+
+Associated file: 1aab1c6e-9bc2-11ea-bfa2-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.LearningAgent.Agent object at 0x000001E049590A48>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88> took 18
+Agent <agents.CustomAgent.CustomAgent object at 0x000001E04043EE48> took 30
+Agent <agents.CustomAgent.CustomAgent object at 0x000001E04043EE48> took 24
+Agent <agents.LearningAgent.Agent object at 0x000001E049590A48> took 42
+
+Associated file: 20fcea3e-9bc2-11ea-b80b-309c23854ca1.spzd
+Player 3 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88>
+Agent <agents.LearningAgent.Agent object at 0x000001E049590A48> took 12
+Agent <agents.CustomAgent.CustomAgent object at 0x000001E04043EE48> took 21
+Agent <agents.CustomAgent.CustomAgent object at 0x000001E04043EE48> took 21
+Agent <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88> took 42
+
+Associated file: 2614efd4-9bc2-11ea-808d-309c23854ca1.spzd
+Player 0 won the game with agent type <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88>
+Agent <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88> took 45
+Agent <agents.LearningAgent.Agent object at 0x000001E049590A48> took 33
+Agent <agents.CustomAgent.CustomAgent object at 0x000001E04043EE48> took 36
+Agent <agents.RandomAgent.RandomAgent object at 0x000001E03C904D88> took 15
+

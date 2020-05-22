@@ -134,7 +134,13 @@ class Game:
       self._round.update_call(player_id, index_of_call_index)
 
    def handle_action_for_player(self, an_action, a_player):
-      a_player.play_card_at_index(self._round.get_current_trick(), an_action)
+#      a_player.play_card_at_index(self._round.get_current_trick(), an_action)
+      updated_game_state = self.get_game_state_for_player(a_player.get_player_id())
+      player_reward = a_player.get_trick_points()
+      has_ended = (self.which_player_wins() != -1)
+      return updated_game_state, player_reward, has_ended
+
+   def get_updated_game_state_for_player(self, a_player):
       updated_game_state = self.get_game_state_for_player(a_player.get_player_id())
       player_reward = a_player.get_trick_points()
       has_ended = (self.which_player_wins() != -1)

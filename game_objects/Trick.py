@@ -36,8 +36,9 @@ class Trick:
         return decorator
 
     @_notifier() # This needs the empty () because it implicitly takes self as an argument otherwise
-    def print_message(self, message):
-        print("Notification sent")
+    def print_message(self, message):\
+        pass
+#        print("Notification sent")
 
 #NOTE publish subscribe code spike
 

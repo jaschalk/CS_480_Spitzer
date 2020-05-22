@@ -65,10 +65,12 @@ class Round:
         
 #NOTE publish subscribe code spike
     def print_test(self, a_message):
-        print("test")
+        pass
+#        print("test")
 
     def print_message(self, a_message):
-        print(f"The Round is printing: {a_message}")
+        pass
+#        print(f"The Round is printing: {a_message}")
 #NOTE publish subscribe code spike
 
     def get_cards_played(self):
@@ -168,6 +170,8 @@ class Round:
         self.update_player_partner_prediction_history()
         self.__file_out_data.append(copy.deepcopy(self.__file_out_data_instance))
         self._trick_count += 1
+        for player in self._players_list:
+            player.learn()
         self._leading_player = winning_player
         if self._trick_count == 8:
             self.on_round_end()
@@ -206,7 +210,8 @@ class Round:
                 if reward == 0 and call_index > 4:
                     reward = -1*self._players_list[(ML_index+1)%4].get_score_change_list()[-1]
                 self._players_list[ML_index].get_controlling_agent().store_call_mem_transition(ML_player.get_starting_cards(), call_index, reward)
-            self._players_list[ML_index].get_controlling_agent().train_call_generator()
+#            self._players_list[ML_index].get_controlling_agent().train_call_generator()
+            # This got commented out since we're not using the learning call method right now.
 
     def on_round_end(self):
         self._parent_game.update_scores()

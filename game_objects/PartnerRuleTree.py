@@ -3,7 +3,6 @@ from game_objects.RuleNodeUnknown import RuleNodeUnknown
 from game_objects.RuleNodeFalse import RuleNodeFalse
 from game_objects.RuleNodeTrue import RuleNodeTrue
 from enums import CardBinary
-import RuleTreeFunctions as rtf
 
 class PartnerRuleTree:
     '''

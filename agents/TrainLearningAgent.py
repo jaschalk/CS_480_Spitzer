@@ -5,7 +5,7 @@ from agents.RandomAgent import RandomAgent
 from agents.HumanAgent import HumanAgent
 import time
 import random
-from tf_samples.GenericStuff import graph_results
+from SampleCode.GenericStuff import graph_results
 
 def run_training_batch(n_games):
     random.seed(time.localtime())
@@ -40,7 +40,7 @@ def run_training_batch(n_games):
     return True
 
 if __name__ == "__main__":
-    for i in range(27):
+    for i in range(2):
         batch_result = run_training_batch(250)
         print("-------------Finished Batch-------------")
     graph_results()

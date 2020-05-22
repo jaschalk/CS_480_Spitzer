@@ -1,4 +1,5 @@
 from game_objects.Hand import Hand
+from agents.LearningAgent import Agent
 
 class Player:
     '''
@@ -112,8 +113,11 @@ class Player:
     def play_card_to(self, a_trick):
         #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the index returned to the trick.
         card_to_play_index = self._controlling_agent.play_card(self, self._parent_game)
-        if card_to_play_index is not None:
-            self._hand.play_card_at_index(a_trick, card_to_play_index)
+        self._hand.play_card_at_index(a_trick, card_to_play_index)
+
+    def learn(self):
+        if isinstance(self._controlling_agent, Agent):
+            self._controlling_agent.learn(self, self._parent_game)
 
     def play_card_at_index(self, a_trick, card_to_play_index):
         self._hand.play_card_at_index(a_trick, card_to_play_index)

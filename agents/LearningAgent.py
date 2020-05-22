@@ -7,9 +7,9 @@ config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
 # I suspect there exists a setting within TensorFlow to enable this behavior by default
 # but my searching has not yet found it.
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam # pylint: disable=import-error 
 from keras.models import load_model
-import tensorflow.keras as keras # NOT the same as import keras!!
+import tensorflow.keras as keras # NOT the same as import keras!! pylint: disable=import-error
 import random
 import os
 import numpy as np
@@ -141,6 +141,8 @@ class Agent():
         self.learn_step_counter = 0
         # memory is the buffer into which action-state transitions will be stored
         self.memory = ReplayBuffer(mem_size, input_dims)
+        self._last_seen_state = None
+        self._last_taken_action = None
         self.__trump_strengths = [3.5, 3.25, 3.2, 3, 2.8, 2, 1.5, 1.25, 1.1, 1.25, 0.95, 0.8, 0.65, 0.65, 0.65]
         self.__fail_strengths = [3, 0.25, 0.1, 0.02, 0.02, 0.02]
         self._trump_strength = 100
@@ -211,15 +213,13 @@ class Agent():
         self.set_valid_play_lists(tf.convert_to_tensor(a_player.get_valid_play_list(), dtype=tf.float32))
         observation = a_game.get_game_state_for_player(a_player.get_player_id())
         action = self.choose_action(observation)
-        # TODO: Can we make use of a yield statement here to suspend this method while the rest of the game plays out?
-        if (type(action) == type(np.int64())) or (type(action) == type(np.int32())): 
-            # This check is needed because our game can have a single action outcome
-            observation_, reward, done = a_game.handle_action_for_player(action, a_player)
-        else:
-            observation_, reward, done = a_game.handle_action_for_player(action[0], a_player)
-        self.store_transition(observation, action, reward, observation_, done)
-        observation = observation_
-        self.learn()
+        # The following two lines were added in to store this information so we can decouple
+        # the learn method from the play_card method. So now learn can just be called by the player
+        # at the end of the trick.
+        self._last_seen_state = observation
+        self._last_taken_action = action
+
+        return action
 
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
@@ -304,36 +304,35 @@ class Agent():
         print(f"Called: {call}")
         return call
 
-    def train_call_generator(self):
-        if self.call_memory.mem_cntr < self.batch_size:
-           return
+#    def train_call_generator(self):
+#        if self.call_memory.mem_cntr < self.batch_size:
+#           return
 
-        if self.learn_step_counter % (self.replace * 8) == 0:
-            self.score_predictor.set_weights(self.call_generator.get_weights())
+#        if self.learn_step_counter % (self.replace * 8) == 0:
+#            self.score_predictor.set_weights(self.call_generator.get_weights())
 
-        states, actions, rewards, states_, dones = \
-                        self.call_memory.sample_buffer(self.batch_size)
+#        states, actions, rewards, states_, dones = \
+#                        self.call_memory.sample_buffer(self.batch_size)
 
-        # if the player failed the call: skew away from that call and toward all lower calls
-        # if they made: skew toward that call and all higher calls?
-        # Iterate across rewards to generate the call_target values?
-        call_targets = [[0 for i in range(8)] for i in range(self.batch_size)]
-        for index, reward in enumerate(rewards):
-            action = actions[index]
-            if reward > 0:
-                for i in range(8):
-                    if i >= action:
-                        call_targets[index][i] = reward/(reward*(i-action+1))
+#        call_targets = [[0 for i in range(8)] for i in range(self.batch_size)]
+#        for index, reward in enumerate(rewards):
+#            action = actions[index]
+#            if reward > 0:
+#                for i in range(8):
+#                    if i >= action:
+#                        call_targets[index][i] = reward/(reward*(i-action+1))
                 #   If reward is positive, skew towards action, and slightly toward the higher calls?
-            else:
-                for i in range(8):
-                    call_targets[index][i] = (-i + action - 2) * (1/(8 - action))
+#            else:
+#                for i in range(8):
+#                    call_targets[index][i] = (-i + action - 2) * (1/(8 - action))
                 #   If reward is negative, skew away from the call made, which is the action
-        call_targets = np.array(call_targets)
-        self.call_generator.train_on_batch(states, call_targets)
-        self.call_generator_trained = True
+#        call_targets = np.array(call_targets)
+#        self.call_generator.train_on_batch(states, call_targets)
+#        self.call_generator_trained = True
 
-    def learn(self):
+    def learn(self, a_player, a_game):
+        observation_, reward, done = a_game.get_updated_game_state_for_player(a_player)
+        self.store_transition(self._last_seen_state, self._last_taken_action, reward, observation_, done)
         if self.memory.mem_cntr < self.batch_size:
             return
 
