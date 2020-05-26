@@ -23,33 +23,28 @@ model = tf.keras.models.Sequential([
   tf.keras.layers.Dense(10) #the final layer is 10 elements and densely connected
 ])
 
-main_input = tf.keras.Input(shape=(28,28))
-
 inputA = tf.keras.Input(shape=(28,28))
-testA = tf.keras.layers.Flatten()(inputA)
-x = tf.keras.layers.Dense(32, activation="selu")(testA)
+x = tf.keras.layers.Flatten()(inputA)
+x = tf.keras.layers.Dense(32, activation="selu")(x)
 x = tf.keras.layers.Dropout(0.1)(x)
 x = tf.keras.layers.Dense(16, activation="selu")(x)
 x = tf.keras.Model(inputs=inputA, outputs=x)
 
 inputB = tf.keras.Input(shape=(28,28))
-testB = tf.keras.layers.Flatten()(inputB)
-y = tf.keras.layers.GaussianNoise(stddev=0.5)(testB)
-y = tf.keras.layers.Dense(16, activation="selu")(y)
+y = tf.keras.layers.GaussianNoise(stddev=0.35)(inputB)
+y = tf.keras.layers.Flatten()(y)
+y = tf.keras.layers.Dense(32, activation="selu")(y)
 y = tf.keras.layers.Dense(16, activation="selu")(y)
 y = tf.keras.Model(inputs=inputB, outputs=y)
 
 multi = tf.keras.layers.multiply([x.output, y.output])
 
-z = tf.keras.layers.Dense(16, activation="selu")(multi)
-z = tf.keras.layers.Dense(10, activation="selu")(z)
+z = tf.keras.layers.Dense(10, activation="selu")(multi)
 
 test_model = tf.keras.Model(inputs=[x.input, y.input], outputs=z)
 
 if True:
-  model = test_model
-
-  predictions = model([x_train[:1], x_train[:1] ]).numpy()
+  predictions = test_model([x_train[:1], x_train[:1] ]).numpy()
 
   tf.nn.softmax(predictions).numpy()
 
@@ -57,12 +52,12 @@ if True:
 
   loss_fn(y_train[:1], predictions).numpy()
 
-  model.compile(optimizer='adam',
+  test_model.compile(optimizer='adam',
                 loss=loss_fn,
                 metrics=['accuracy'])
 
-  model.fit([x_train, x_train], y_train, epochs=5)
-  model.evaluate([x_test, x_test], y_test, verbose=2)
+  test_model.fit([x_train, x_train], y_train, epochs=5)
+  test_model.evaluate([x_test, x_test], y_test, verbose=2)
 else:
   predictions = model(x_train[:1]).numpy()
 
