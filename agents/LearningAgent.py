@@ -57,6 +57,8 @@ class DuelingDeepQNetwork(keras.Model):
         A = self.A(x)
         A = tf.math.multiply(A, self._valid_actions_filter)
         A = tf.math.add(A, self._valid_actions_filter)
+        # ^All of the above code contained in this call method is shared with advantage?
+        # Can we just have call use advantage and remove the repeated code?
         # and A is the action output layer
         Q = (V + (A - tf.reduce_mean(A, axis=1, keepdims=True)))
         return Q
@@ -157,33 +159,28 @@ class Agent():
         self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims)
         # q_next is the "target network that we use the generate the values for the cost function"
         self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims)
-        self.call_generator = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
-        self.score_predictor = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
+#        self.call_generator = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
+#        self.score_predictor = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
 #        self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),
 #                                                        keras.layers.Dense(16, activation='relu'),
 #                                                        keras.layers.Dense(8, activation='sigmoid')])
-        '''
+        
         input1 = keras.layers.Input(shape=(32,))
-        y1 = keras.layers.Dense(32, activation='relu')(input1)
-        x1 = keras.layers.Dense(8, activation='relu')(y1)
+        x1 = keras.layers.Dense(32, activation='relu')(input1)
+        x1 = keras.layers.Dense(8, activation='relu')(x1)
+        x1 = keras.Model(inputs=input1, outputs=x1)
+
         input2 = keras.layers.Input(shape=(8,))
         x2 = keras.layers.Dense(8, activation='relu')(input2)
-        Multiply = keras.layers.Multiply()([x1, input2])
-        out = keras.layers.Dense(8)(Multiply)
-        model = keras.models.Model(inputs=[input1, input2], outputs=out)
-        self.call_generator = model
-        call_options = keras.layers.Input(shape=(8,))
-        temp2 = keras.layers.Dense(8, activation='sigmoid')(call_options)
-        cards = keras.layers.Input(shape=(32,))
-        temp = keras.layers.Dense(16, activation='relu')(cards)
-        temp = keras.layers.Dense(8, activation='relu')(cards)
-        multi = keras.layers.Multiply()([temp, temp2])
+        x2 = keras.Model(inputs=input2, outputs=x2)
+
+        multi = keras.layers.Multiply()([x1.output, x2.output])
         out = keras.layers.Dense(8)(multi)
-        self.call_generator = keras.models.Model(inputs=[cards, call_options], outputs=out)
-        '''
+
+        self.call_generator = keras.models.Model(inputs=[input1, input2], outputs=out)
 
         self.call_generator.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
-        self.score_predictor.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
+#        self.score_predictor.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         self.q_eval.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
         self.q_next.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
 
