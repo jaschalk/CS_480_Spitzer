@@ -23,17 +23,14 @@ class DuelingDeepQNetwork(keras.Model):
     '''
     # This is creating a custom model that will have the dueling deep Q behavior built into it
     '''
-    def __init__(self, n_actions, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims): 
+    def __init__(self, n_actions, fc1_dims, fc2_dims, fc3_dims): 
         super(DuelingDeepQNetwork, self).__init__()
         # ^Do the keras.Model init
         self._valid_actions_filter = [1 for i in range(8)]
         self.dense1 = keras.layers.Dense(fc1_dims, activation="selu")
         self.dense2 = keras.layers.Dense(fc2_dims, activation="selu")
         self.dense3 = keras.layers.Dense(fc3_dims, activation="selu")
-        self.dense4 = keras.layers.Dense(fc4_dims, activation="selu")
-        self.dense5 = keras.layers.Dense(fc5_dims, activation="selu")
-        self.dense6 = keras.layers.Dense(fc6_dims, activation="selu")
-        self.V = keras.layers.Dense(1, activation=None)
+        self.V = keras.layers.Dense(1, activation='softplus')
         # This looks to be a "value" layer that compresses the output of the network to a single value
         # We use the softplus function to force all of the values contained within actions are > 0.
         self.A = keras.layers.Dense(n_actions, activation='softplus')
@@ -44,32 +41,28 @@ class DuelingDeepQNetwork(keras.Model):
     def set_valid_actions_filter(self, a_valid_actions_filter):
         self._valid_actions_filter = a_valid_actions_filter
 
-    def call(self, state):
-        # State should be thought of as the input
+    def network_shared(self, state):
         x = self.dense1(state)
         x = self.dense2(x)
         x = self.dense3(x)
-        x = self.dense4(x)
-        x = self.dense5(x)
-        x = self.dense6(x)
+        return x
+
+    def call(self, state):
+        # State should be thought of as the input
+        x = self.network_shared(state)
         V = self.V(x)
         # V is the singular value layer
         A = self.A(x)
         A = tf.math.multiply(A, self._valid_actions_filter)
         A = tf.math.add(A, self._valid_actions_filter)
-        # ^All of the above code contained in this call method is shared with advantage?
+        # ^Most of the above code contained in this call method is shared with advantage?
         # Can we just have call use advantage and remove the repeated code?
         # and A is the action output layer
         Q = (V + (A - tf.reduce_mean(A, axis=1, keepdims=True)))
         return Q
 
     def advantage(self, state):
-        x = self.dense1(state)
-        x = self.dense2(x)
-        x = self.dense3(x)
-        x = self.dense4(x)
-        x = self.dense5(x)
-        x = self.dense6(x)
+        x = self.network_shared(state)
         A = self.A(x)
         #By performing an element wise multiplication between actions and the valid play list, we can
         #ensure that the action chosen is a valid action.
@@ -117,10 +110,10 @@ class Agent():
     '''
     This should be the actual agent that is making the decisions
     '''
-    def __init__(self, lr=1e-7, gamma=.55, n_actions=8, epsilon=.99, batch_size=64,
-                    input_dims=[1228], epsilon_dec=1e-4, epsilon_min=1e-3,
+    def __init__(self, lr=1e-7, gamma=.65, n_actions=8, epsilon=.85, batch_size=64,
+                    input_dims=[1228], epsilon_dec=5e-4, epsilon_min=1e-3,
                     mem_size=100000, fname='dueling_dqn.h5', fc1_dims=1228,
-                    fc2_dims=1228, fc3_dims=1228, fc4_dims=1024, fc5_dims=512, fc6_dims=256, replace=500):
+                    fc2_dims=99, fc3_dims=28, replace=256):
         self.score = 0
         # The action_space is the number of possible actions, for us this is 8
         self.action_space = [i for i in range(n_actions)]
@@ -156,9 +149,9 @@ class Agent():
         self._valid_call_list = tf.convert_to_tensor([0 for i in range(8)])
         self.call_memory = ReplayBuffer(mem_size, [32])
         # q_eval is the network that will look across the current state of the game to make a prediction
-        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims)
+        self.q_eval = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
         # q_next is the "target network that we use the generate the values for the cost function"
-        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims, fc4_dims, fc5_dims, fc6_dims)
+        self.q_next = DuelingDeepQNetwork(n_actions, fc1_dims, fc2_dims, fc3_dims)
 #        self.call_generator = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
 #        self.score_predictor = DuelingDeepQNetwork(n_actions=8,fc1_dims=32,fc2_dims=8,fc3_dims=8, fc4_dims=8, fc5_dims=8, fc6_dims=4)
 #        self.call_generator = tf.keras.models.Sequential([keras.layers.Dense(32),

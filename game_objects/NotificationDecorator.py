@@ -6,7 +6,7 @@ def decorator(func):
         # NOTE: Since this wrapper is calling the wrapped function first it's guaranteed that function will
         # be finished before the subscribers are notified.
         func(self, *args, **kwargs)
-        func_name = func.__name__
+        func_name = func.__name__ # This is a private property and we should see if there's a way to avoid this
         if func_name in self._subscribers.keys():
             for subscriber in self._subscribers[func_name]:
                 if hasattr(subscriber, func_name):

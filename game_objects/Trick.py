@@ -36,7 +36,7 @@ class Trick:
         return decorator
 
     @_notifier() # This needs the empty () because it implicitly takes self as an argument otherwise
-    def print_message(self, message):\
+    def print_message(self, message):
         pass
 #        print("Notification sent")
 

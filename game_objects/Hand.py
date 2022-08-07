@@ -24,6 +24,9 @@ class Hand:
     def get_cards_in_hand(self):
         return self._cards_in_hand
 
+    def get_card_at_index(self, index):
+        return self._cards_in_hand[index]
+
     def get_binary_representation(self):
         return self._binary_representation
 
@@ -59,7 +62,7 @@ class Hand:
                     trick_cards[index] = a_trick.get_played_cards_list()[index].get_card_id()
             display = f"\r\nAgent {self._my_player.get_controlling_agent()} is attempting to play a card that can't be played \r\n Cards in hand: {card_list} \r\n Valid Playlist: {self._valid_play_list} \r\n Playing: {a_card_index} \r\n To: {trick_cards}"
             raise Exception(display)
-        self._my_player._cards_played += 1<<(card_to_be_played_id)
+        self._my_player.log_played_card(card_to_be_played_id)
         self._binary_representation -= 1<<(card_to_be_played_id)
         self._cards_in_hand.pop(a_card_index).visit(a_trick)
 

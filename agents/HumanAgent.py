@@ -32,7 +32,10 @@ class HumanAgent:
             if card_to_play == cards_in_hand_list[index]:
                 return index
 
-if __name__ == "__main__":
+def main():
     agent_types = [HumanAgent(), Agent(), CustomAgent(), RandomAgent()]
     active_game = Game(0, agent_types)
     active_game.play_game()
+
+if __name__ == "__main__":
+    main()

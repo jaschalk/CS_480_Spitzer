@@ -36,18 +36,14 @@ def graph_results():
     points_taken = 0.0
     total_tricks_played = 0.0
     agent_win_counts = [0.0, 0.0, 0.0]
-    moving_average_size = 1500
-    ml_agent_player_numbers = []
-    agent_type_point_taken_lists = [0, 0, 0]
-    custom_agent_player_numbers = []
-    random_agent_player_numbers = []
+    moving_average_size = 5000
     random_agent_winrate_graph_data = [[],[]]
     custom_agent_winrate_graph_data = [[],[]]
     learning_agent_winrate_graph_data = [[],[]]
     learning_average_trick_points_graph_data = [[],[]]
     custom_average_trick_points_graph_data = [[],[]]
     random_average_trick_points_graph_data = [[],[]]
-    
+    agent_type_point_taken_lists = [0, 0, 0]    
     random_moving_average_list = []
     random_moving_average_trick_points_graph_data = [[],[]]
     custom_moving_average_list = []
@@ -89,16 +85,6 @@ def graph_results():
             learning_agent_winrate_graph_data[0].append(game_count)
             learning_agent_winrate_graph_data[1].append(learning_agent_win_ratio)
 
-            for index in range(4, 11, 2):
-                if i.group(index) == "LearningAgent":
-                    ml_agent_player_numbers.append((index-4)//2) # I don't know what this is doing right now?
-                if i.group(index) == "CustomAgent":
-                    custom_agent_player_numbers.append((index-4)//2)
-                if i.group(index) == "RandomAgent":
-                    random_agent_player_numbers.append((index-4)//2)
-            agent_numbers_lists = [ml_agent_player_numbers,
-                                     custom_agent_player_numbers,
-                                     random_agent_player_numbers]
 
             agent_average_trick_points_graph_data = [learning_average_trick_points_graph_data, 
                                                     custom_average_trick_points_graph_data, 
@@ -111,6 +97,20 @@ def graph_results():
                                                              random_moving_average_trick_points_graph_data]
 
             with open(associated_file_name, 'rb') as data_file:
+                ml_agent_player_numbers = []
+                custom_agent_player_numbers = []
+                random_agent_player_numbers = []
+                for index in range(4, 11, 2):
+                    if i.group(index) == "LearningAgent":
+                        ml_agent_player_numbers.append((index-4)//2) # I don't know what this is doing right now?
+                    if i.group(index) == "CustomAgent":
+                        custom_agent_player_numbers.append((index-4)//2)
+                    if i.group(index) == "RandomAgent":
+                        random_agent_player_numbers.append((index-4)//2)
+                agent_numbers_lists = [ml_agent_player_numbers,
+                                     custom_agent_player_numbers,
+                                     random_agent_player_numbers]
+
                 file_data = pickle.load(data_file)
                 trick_point_history = file_data[-1]["trick_point_history"]
                 for trick_index in range(8):
@@ -119,7 +119,7 @@ def graph_results():
                         for agent_type_index in range(3):
                             if player_id in agent_numbers_lists[agent_type_index]: # this feels like it's wrong right now, not sure why
                                 points_taken = trick_point_history[player_id][trick_index]
-                                agent_type_point_taken_lists[agent_type_index] += points_taken # this is a problem, make this a list instead I think 
+                                agent_type_point_taken_lists[agent_type_index] += points_taken
 
                                 agent_average_trick_points_graph_data[agent_type_index][0].append(total_tricks_played)
                                 agent_average_trick_points_graph_data[agent_type_index][1].append(agent_type_point_taken_lists[agent_type_index]/total_tricks_played)

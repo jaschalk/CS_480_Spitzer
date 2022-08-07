@@ -146,6 +146,22 @@ class Game:
       has_ended = (self.which_player_wins() != -1)
       return updated_game_state, player_reward, has_ended
 
+   def __find_call_made(self):
+      #This allows us to stop looking for calls as soon as we found one
+      calling_player_id = -1
+      call_index = 0
+      for player_index in range(4):
+         for call_made in range(1,8):
+            if(self._round.get_call_matrix()[player_index][call_made] == 1):
+               call_index = call_made
+               if call_index < 5:
+                  call_index = 0
+               else:
+                  call_index -= 3
+               calling_player_id = player_index
+               return (call_made, call_index, calling_player_id)
+      return (0, call_index, calling_player_id)
+
    def update_scores(self):
       call_index = 0
       calling_player_id = -1
@@ -154,23 +170,8 @@ class Game:
       point_value_index = -1
       played_queen_of_clubs = -1
       played_queen_of_spades = -1
-      def find_call_made():
-         #This allows us to stop looking for calls as soon as we found one
-         nonlocal calling_player_id
-         nonlocal call_index
-         for player_index in range(4):
-            for call_made in range(1,8):
-               if(self._round.get_call_matrix()[player_index][call_made] == 1):
-                  call_index = call_made
-                  if call_index < 5:
-                     call_index = 0
-                  else:
-                     call_index -= 3
-                  calling_player_id = player_index
-                  return call_made
-         return 0
-      call_made = find_call_made()
 
+      call_made, call_index, calling_player_id = self.__find_call_made()
       if(call_made == 0):
          for player_index in range(4):
             for trick_index in range(8):

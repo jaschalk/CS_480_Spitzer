@@ -29,6 +29,7 @@ class Player:
         self._trick_points = 0
         self._is_leading = False
         self._cards_played = 0
+        self._played_cards_list = [0 for _ in range(32)]
 
     def get_starting_cards(self):
         return self._hand.get_starting_cards()
@@ -91,6 +92,9 @@ class Player:
     def get_cards_played(self):
         return self._cards_played
 
+    def get_cards_played_as_list(self):
+        return self._played_cards_list
+
     def get_is_leading(self):
         return self._is_leading
 
@@ -113,11 +117,17 @@ class Player:
     def play_card_to(self, a_trick):
         #Player asks agent to pick a card to play. The value returned from the agent is used to ask the hand to play a card at the index returned to the trick.
         card_to_play_index = self._controlling_agent.play_card(self, self._parent_game)
+        card_id = self._hand.get_card_at_index(card_to_play_index).get_card_id()
+        self._played_cards_list[card_id] = 1
+        self._cards_played += 1<<(card_id)
         self._hand.play_card_at_index(a_trick, card_to_play_index)
 
     def learn(self):
         if isinstance(self._controlling_agent, Agent):
             self._controlling_agent.learn(self, self._parent_game)
+
+    def log_played_card(self, card_id):
+        self._cards_played += 1<<card_id
 
     def play_card_at_index(self, a_trick, card_to_play_index):
         self._hand.play_card_at_index(a_trick, card_to_play_index)

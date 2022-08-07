@@ -5,17 +5,17 @@ from agents.RandomAgent import RandomAgent
 from agents.HumanAgent import HumanAgent
 import time
 import random
-from SampleCode.GenericStuff import graph_results
+from SampleCode.DataProcessing import graph_results
 
 def run_training_batch(n_games):
     random.seed(time.localtime())
     agent = Agent()
     agent_types = [agent, CustomAgent(), RandomAgent()]
-#   agent_weights = [1.0/3.0, 1.0/3.0, 1]
+#    agent_weights = [1.0/3.0, 1.0/3.0, 1]
 #   ^ Weights needed for even distribution of learning agent and random agent
-#   agent_weights = [1.0/3.0, 1, 1]
+    agent_weights = [1.0/3.0, 1, 1]
 #   ^ Weights needed for even distribution of learning agent and custom agent
-    agent_weights = [1.0/9.0, 4.0/9.0, 1]
+#    agent_weights = [1.0/9.0, 4.0/9.0, 1]
     
 
     start = time.perf_counter()
@@ -40,7 +40,7 @@ def run_training_batch(n_games):
     return True
 
 if __name__ == "__main__":
-    for i in range(2):
-        batch_result = run_training_batch(250)
-        print("-------------Finished Batch-------------")
+    for i in range(20):
+        batch_result = run_training_batch(128)
+        print(f"-------------Finished Batch {i}-------------")
     graph_results()

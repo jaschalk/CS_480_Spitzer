@@ -277,7 +277,7 @@ class Round:
 
         #   The list of cards played so far, (4*8*32 elements)
         for player_num in range(4):
-            for trick_num in range(8):
+            for trick_num in range(8): # NOTE: Is it necessary to know the order that each card was played in?
                 for card_num in range(32):
                     game_state[0][index_of_write] = self._trick_history[player_num][trick_num][card_num]
                     index_of_write += 1
