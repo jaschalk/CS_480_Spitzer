@@ -4,9 +4,10 @@ def log_decorator():
     def actual_decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            func(*args, **kwargs)
             for subscriber in args[0].subscribers[func.__name__]:
                 getattr(subscriber, func.__name__)()
-            return func(*args, **kwargs)
+            return 
         return wrapper
     return actual_decorator
 
@@ -25,6 +26,7 @@ class TestHand:
     @log_decorator()
     def play_card(self):
         self.card_count -= 1
+        print(hand.card_count)
 
 class TestTrick:
 
@@ -44,4 +46,4 @@ if __name__ == "__main__":
     trick.subscribe_to(hand, "play_card")
     trick2.subscribe_to(hand, "play_card")
     hand.play_card()
-    print(hand.card_count)
+    
