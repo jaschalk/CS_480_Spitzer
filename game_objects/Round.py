@@ -32,8 +32,8 @@ class Round:
         self._trick_history = np.zeros((4,8,32),dtype=np.int8)
         self._call_matrix = np.zeros((4,8),dtype=np.int8)
     #NOTE publish subscribe code spike
-        self._current_trick.log_subscriber_to_message(self, "print_test")
-        self._current_trick.log_subscriber_to_message(self, "print_message")
+        self._current_trick.log_subscriber_to_message(self, "print_test", "print_test")
+        self._current_trick.log_subscriber_to_message(self, "print_message", "print_message")
 #        self._current_trick.notify_subscribers()
         self._current_trick.print_message("This is the message")
     #NOTE publish subscribe code spike

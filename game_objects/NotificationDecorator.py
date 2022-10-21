@@ -8,9 +8,9 @@ def decorator(func):
         func(self, *args, **kwargs)
         func_name = func.__name__
         if func_name in self._subscribers.keys():
-            for subscriber in self._subscribers[func_name]:
-                if hasattr(subscriber, func_name):
-                    getattr(subscriber, func_name)(*args, **kwargs)
+            for subscriber, message in self._subscribers[func_name]:
+                if hasattr(subscriber, message):
+                    getattr(subscriber, message)(*args, **kwargs)
                 else:
-                    raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {func_name}")
+                    raise Exception(f"Subscriber {subscriber} was sent a message it does not understand: {message}")
     return wrapper

@@ -21,10 +21,10 @@ class Trick:
         self._subscribers = {}
 
 #NOTE publish subscribe code spike
-    def log_subscriber_to_message(self, a_subscriber, a_message):
+    def log_subscriber_to_message(self, a_subscriber, a_function_name, a_message):
         if a_message not in self._subscribers.keys():
-            self._subscribers[a_message] = []
-        self._subscribers[a_message].append(a_subscriber)
+            self._subscribers[a_function_name] = [[a_subscriber, a_message]]
+        self._subscribers[a_message].append([a_subscriber, a_message])
         # So does this mean that all the subscribed messages should take no prams?
         # or do we also store the prams in the subscription as well?
         # For now the NotificationDecorator.decorator behavior is to pass along all parameters
@@ -36,9 +36,8 @@ class Trick:
         return decorator
 
     @_notifier() # This needs the empty () because it implicitly takes self as an argument otherwise
-    def print_message(self, message):\
-        pass
-#        print("Notification sent")
+    def print_message(self, message):
+        print("Notification sent")
 
 #NOTE publish subscribe code spike
 
